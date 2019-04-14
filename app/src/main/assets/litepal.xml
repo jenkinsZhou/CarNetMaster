@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="file" />
+    <version value="1" />
+    <list>
+        <mapping class="com.tourcoo.carnet.entity.account.UserInfoEntity" />
+        <mapping class="com.tourcoo.carnet.entity.account.UserInfo" />
+    </list>
+</litepal>
+

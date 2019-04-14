@@ -1,0 +1,333 @@
+package com.tourcoo.carnet.ui.car;
+
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ImageSpan;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.tourcoo.carnet.AccountInfoHelper;
+import com.tourcoo.carnet.R;
+import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
+import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
+import com.tourcoo.carnet.core.helper.LocateHelper;
+import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.permission.PermissionConstance;
+import com.tourcoo.carnet.core.permission.PermissionManager;
+import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.ToastUtil;
+import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
+import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.car.CarInfoEntity;
+import com.tourcoo.carnet.entity.event.BaseEvent;
+import com.tourcoo.carnet.retrofit.ApiRepository;
+import com.tourcoo.carnet.ui.factory.NearbyRepairFactoryActivity;
+import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
+import com.trello.rxlifecycle3.android.ActivityEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_CURING;
+import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_WASH;
+import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+
+/**
+ * @author :zhoujian
+ * @description :汽车保养
+ * @company :翼迈科技
+ * @date 2019年 03月 17日 11时38分
+ * @Email: 971613168@qq.com
+ */
+public class CarCuringActivity extends BaseTourCooTitleActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks {
+    private TextView tvConfirm;
+    private TextView tvLocation;
+    private TextView btnLocate;
+    private String currentPosition;
+    private EditText etRepairContent;
+
+    @Override
+    public int getContentLayout() {
+        return R.layout.activity_car_service;
+    }
+
+    @Override
+    public void initView(Bundle savedInstanceState) {
+        tvConfirm = findViewById(R.id.tvConfirm);
+        tvConfirm.setOnClickListener(this);
+        tvLocation = findViewById(R.id.tvLocation);
+        btnLocate = findViewById(R.id.btnLocate);
+        btnLocate.setOnClickListener(this);
+        etRepairContent = findViewById(R.id.etRepairContent);
+        getLocate();
+    }
+
+    @Override
+    public void setTitleBar(TitleBarView titleBar) {
+        super.setTitleBar(titleBar);
+        titleBar.setTitleMainText("上门保养");
+        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightText("历史保养");
+        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setOnRightTextClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TourcooUtil.startActivity(mContext, OrderHistoryActivity.class);
+                EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_CURING));
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tvConfirm:
+                doorToDoorService(AccountInfoHelper.getInstance().getCurrentCar());
+                break;
+            case R.id.btnLocate:
+                getLocate();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * 显示验证码
+     *
+     * @param vCode
+     */
+    private void showVCodeDialog(String vCode) {
+        String msg = "接单验证码:";
+        msg += vCode;
+        showAlertDialog("提交成功", msg, "我知道了");
+
+    }
+
+    private String showResult(AMapLocation location) {
+        StringBuffer sb = new StringBuffer();
+        if (null != location) {
+            //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
+            if (location.getErrorCode() == 0) {
+                sb.append("定位成功" + "\n");
+                sb.append("定位类型: " + location.getLocationType() + "\n");
+                sb.append("经    度    : " + location.getLongitude() + "\n");
+                sb.append("纬    度    : " + location.getLatitude() + "\n");
+                sb.append("精    度    : " + location.getAccuracy() + "米" + "\n");
+                sb.append("提供者    : " + location.getProvider() + "\n");
+                sb.append("速    度    : " + location.getSpeed() + "米/秒" + "\n");
+                sb.append("角    度    : " + location.getBearing() + "\n");
+                // 获取当前提供定位服务的卫星个数
+                sb.append("星    数    : " + location.getSatellites() + "\n");
+                sb.append("国    家    : " + location.getCountry() + "\n");
+                sb.append("省            : " + location.getProvince() + "\n");
+                sb.append("市            : " + location.getCity() + "\n");
+                sb.append("城市编码 : " + location.getCityCode() + "\n");
+                sb.append("区            : " + location.getDistrict() + "\n");
+                sb.append("区域 码   : " + location.getAdCode() + "\n");
+                sb.append("地    址    : " + location.getAddress() + "\n");
+                sb.append("兴趣点    : " + location.getPoiName() + "\n");
+                //定位完成的时间
+//                sb.append("定位时间: " + Utils.formatUTC(location.getTime(), "yyyy-MM-dd HH:mm:ss") + "\n");
+            } else {
+                //定位失败
+                sb.append("定位失败" + "\n");
+                sb.append("错误码:" + location.getErrorCode() + "\n");
+                sb.append("错误信息:" + location.getErrorInfo() + "\n");
+                sb.append("错误描述:" + location.getLocationDetail() + "\n");
+            }
+            sb.append("***定位质量报告***").append("\n");
+            sb.append("* WIFI开关：").append(location.getLocationQualityReport().isWifiAble() ? "开启" : "关闭").append("\n");
+//            sb.append("* GPS状态：").append(getGPSStatusString(location.getLocationQualityReport().getGPSStatus())).append("\n");
+            sb.append("* GPS星数：").append(location.getLocationQualityReport().getGPSSatellites()).append("\n");
+            sb.append("* 网络类型：" + location.getLocationQualityReport().getNetworkType()).append("\n");
+            sb.append("* 网络耗时：" + location.getLocationQualityReport().getNetUseTime()).append("\n");
+            sb.append("****************").append("\n");
+            //定位之后的回调时间
+//            sb.append("回调时间: " + Utils.formatUTC(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss") + "\n");
+            //解析定位结果，
+            return sb.toString();
+        } else {
+            return "定位失败，loc is null";
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        //权限已被用户授予
+        getLocate();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        //权限被用户拒绝
+        ToastUtil.showFailed("您未授予定位权限,请前往授权管理授予权限");
+        showLocateFailed();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        LocateHelper.getInstance().destroyLocationInstance();
+        super.onDestroy();
+    }
+
+    private void showLocating() {
+        tvLocation.setText("定位中...");
+    }
+
+
+    private void showLocateFailed() {
+        closeLoadingDialog();
+        tvLocation.setText("定位失败,未授予定位权限");
+        addLocateImage("定位失败,未授予定位权限");
+    }
+
+    private void showLocateSuccess(String address) {
+        tvLocation.setText(address);
+        closeLoadingDialog();
+        addLocateImage(address);
+    }
+
+    private void addLocateImage(String text) {
+        SpannableString ss = new SpannableString(text + "  ");
+        int len = ss.length();
+        //图片
+        Drawable d = ContextCompat.getDrawable(mContext, (R.mipmap.ic_positioning));
+        d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+        //构建ImageSpan
+        ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
+        ss.setSpan(span, len - 1, len, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        tvLocation.setText(ss);
+    }
+
+    /***
+     * 定位
+     */
+    private void locate() {
+        LocateHelper.getInstance().startLocation(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                String result = showResult(aMapLocation);
+                TourcooLogUtil.d(TAG, "回调结果:" + result);
+                if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
+                    showLocateSuccess(aMapLocation.getAddress());
+                    currentPosition = getPosition(aMapLocation);
+                } else {
+                    showLocateFailed();
+                }
+                LocateHelper.getInstance().stopLocation();
+//                closeProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 检查定位权限
+     */
+    private boolean checkLocatePermission() {
+        return PermissionManager.checkPermission(this, PermissionConstance.PERMS_LOCATE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // 将结果转发到EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+
+    private void getLocate() {
+        showLoadingDialog();
+        showLocating();
+        if (checkLocatePermission()) {
+            locate();
+        } else {
+            PermissionManager.requestPermission(mContext, PermissionConstance.TIP_PERMISSION_LOCATE, PermissionConstance.PERMISSION_CODE_LOCATE, PermissionConstance.PERMS_LOCATE);
+        }
+    }
+
+    private String getDetail() {
+        return etRepairContent.getText().toString();
+    }
+
+    /**
+     * 上门保养
+     */
+    private void doorToDoorService(CarInfoEntity carInfoEntity) {
+        if (TextUtils.isEmpty(getDetail())) {
+            ToastUtil.show("请输入内容");
+            return;
+        }
+        if (carInfoEntity == null || carInfoEntity.getBrandName() == null) {
+            ToastUtil.show("当前没有车辆,请先添加车辆");
+            return;
+        }
+        if (TextUtils.isEmpty(currentPosition)) {
+            ToastUtil.show("未获取位置信息");
+            return;
+        }
+        ApiRepository.getInstance().doorToDoorService(carInfoEntity, "", getDetail(), currentPosition, TYPE_CAR_CURING).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+                subscribe(new BaseLoadingObserver<BaseEntity>() {
+                    @Override
+                    public void onRequestNext(BaseEntity entity) {
+                        closeLoadingDialog();
+                        if (entity != null) {
+                            if (entity.code == CODE_REQUEST_SUCCESS) {
+                                clearUploadData();
+                                showVCodeDialog(entity.data.toString());
+                            } else {
+                                ToastUtil.showFailed(entity.message);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onRequestError(Throwable e) {
+                        closeLoadingDialog();
+                        super.onRequestError(e);
+                    }
+                });
+    }
+
+    /**
+     * 清空上一次上传的数据
+     */
+    private void clearUploadData() {
+        currentPosition = "";
+        tvLocation.setText("未获取位置信息");
+        etRepairContent.setText("");
+    }
+
+
+    /**
+     * 获取位置信息
+     *
+     * @return
+     */
+    private String getPosition(AMapLocation mapLocation) {
+        String position = "";
+        if (mapLocation == null) {
+            return position;
+        }
+        //经度
+        position += mapLocation.getLongitude();
+        position += ",";
+        //纬度
+        position += mapLocation.getLatitude();
+        return position;
+    }
+
+}

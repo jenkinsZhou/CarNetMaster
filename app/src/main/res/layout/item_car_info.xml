@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/bg_radius_12_white"
+            android:orientation="vertical">
+            <com.allen.library.SuperTextView
+                android:layout_marginTop="@dimen/dp_10"
+                android:id="@+id/stvPlatNumber"
+                style="@style/SupperTextStyleItemCarsManagement"
+                android:layout_width="match_parent"
+                app:sCenterTextString="xxx"
+                app:sLeftTextString="车牌号:" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvCarCategory"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="宝马"
+                    app:sLeftTextString="汽车品类:" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvCarModel"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="宝马"
+                    app:sLeftTextString="汽车型号:" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvCarDisplacement"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="1998ml"
+                    app:sLeftTextString="汽车排量:" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvEngineNumber"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="宝马"
+                    app:sLeftTextString="发动机编号:" />
+            </LinearLayout>
+
+            <include layout="@layout/line_horizontal_gray_1half_dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:orientation="horizontal">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvCarInsuranceInfo"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="宝马"
+                    app:sLeftTextString="车辆保险信息:" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvMaintainInfo"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="xxx"
+                    app:sLeftTextString="车辆保养信息:" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:orientation="horizontal">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvYearly"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="宝马"
+                    app:sLeftTextString="车辆年检信息:" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvMaintainRule"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="xxx"
+                    app:sLeftTextString="车辆保养规则：" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:orientation="horizontal">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvSwitchRemindMaintain"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="关"
+                    app:sLeftTextString="保养提醒:" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvSwitchRemindYear"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="宝马"
+                    app:sLeftTextString="年检提醒:" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:orientation="horizontal">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvSwitchRemindInsurance"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="开"
+                    app:sLeftTextString="保险提醒:" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvSwitchRemindFault"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="开"
+                    app:sLeftTextString="故障提醒:" />
+            </LinearLayout>
+
+            <include layout="@layout/line_horizontal_gray_1half_dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:orientation="horizontal">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvObdNumber"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="xxx"
+                    app:sLeftTextString="关联OBD:" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvObdReceiveMode"
+                    style="@style/SupperTextStyleItemCarsManagement"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    app:sCenterTextString="xxx"
+                    app:sLeftTextString="实时接收:" />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

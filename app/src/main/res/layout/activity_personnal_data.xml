@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@drawable/bg_radius_12_white"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_17"
+            android:paddingTop="@dimen/dp_24"
+            android:paddingRight="@dimen/dp_17"
+            android:paddingBottom="@dimen/dp_24">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="用户头像"
+                    android:textColor="@color/black_common"
+                    android:textSize="@dimen/sp_15" />
+
+                <ImageView
+                    android:id="@+id/ivRightArrow"
+                    android:layout_width="@dimen/dp_6"
+                    android:layout_height="@dimen/dp_11"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@mipmap/ic_more" />
+
+                <com.allen.library.CircleImageView
+                    android:id="@+id/cvAvatar"
+                    android:layout_width="@dimen/dp_38"
+                    android:layout_height="@dimen/dp_38"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_toStartOf="@+id/ivRightArrow"
+                    android:layout_toLeftOf="@+id/ivRightArrow"
+                    android:src="@mipmap/img_default_minerva" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relayMyNickName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="我的昵称"
+                    android:textColor="@color/black_common"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="醉若清风"
+                    android:textSize="@dimen/dp_13" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relayBindPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="绑定手机"
+                    android:textColor="@color/black_common"
+                    android:textSize="@dimen/sp_15" />
+
+                <ImageView
+                    android:id="@+id/ivPhoneRightArrow"
+                    android:layout_width="@dimen/dp_6"
+                    android:layout_height="@dimen/dp_11"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@mipmap/ic_more" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:layout_toLeftOf="@id/ivPhoneRightArrow"
+                    android:text="189*******86"
+                    android:textSize="@dimen/dp_13" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/relayRelevanceWeChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="关联微信"
+                    android:textColor="@color/black_common"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="z1478888888"
+                    android:textSize="@dimen/dp_13" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relayDrivingAge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="驾龄"
+                    android:textColor="@color/black_common"
+                    android:textSize="@dimen/sp_15" />
+
+                <ImageView
+                    android:id="@+id/ivDrivingAge"
+                    android:layout_width="@dimen/dp_11"
+                    android:layout_height="@dimen/dp_6"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_pulldown" />
+
+                <TextView
+                    android:id="@+id/tvDrivingAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:layout_toLeftOf="@id/ivDrivingAge"
+                    android:text="5年"
+                    android:textSize="@dimen/dp_13" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relayDriverLicenseNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="驾驶证号"
+                    android:textColor="@color/black_common"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:id="@+id/tvDriverLicenseNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="234567887611"
+                    android:textSize="@dimen/dp_13" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnEditPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@drawable/bg_radius_16_blue"
+            android:text="修改密码"
+            android:layout_marginBottom="@dimen/dp_41"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15" />
+    </RelativeLayout>
+
+
+</LinearLayout>

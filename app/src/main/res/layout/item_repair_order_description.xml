@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvCreateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_28"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_8"
+        android:paddingLeft="@dimen/dp_11"
+        android:paddingRight="@dimen/dp_11"
+        android:textSize="@dimen/sp_11"
+        android:textColor="#999999"
+        android:background="@drawable/bg_radius_gray_5"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:gravity="center"
+        android:text="2019年2月14日" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@drawable/bg_radius_12_white"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_15"
+        android:paddingBottom="@dimen/dp_5">
+
+        <LinearLayout
+            android:paddingTop="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="#171717"
+                android:textSize="@dimen/sp_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="订单编号:" />
+
+            <TextView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:textSize="@dimen/sp_12"
+                android:id="@+id/tvOrderNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5551111"
+                android:maxLength="10"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingTop="@dimen/dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvOrderType"
+                android:textColor="#171717"
+                android:textSize="@dimen/sp_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="故障简述:" />
+
+            <TextView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:textSize="@dimen/sp_12"
+                android:id="@+id/tvFaultDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="水温异常"
+                android:maxLength="10"
+                android:textColor="@color/red_common" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textSize="@dimen/sp_12"
+                android:textColor="#171717"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="维修厂:" />
+
+            <TextView
+                android:textSize="@dimen/sp_12"
+                android:id="@+id/tvMaintenanceShopLocate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="合肥成铭汽车修理厂 （潜山路店）" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_15"
+            android:background="#FFEAEAEA" />
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tvRepairStatus"
+                android:text="维修状态"
+                android:textSize="@dimen/sp_12"
+                android:layout_centerVertical="true"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvRightButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/selector_bg_radius_16_blue_hollow"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="取消服务"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sp_12"
+                />
+
+
+            <TextView
+                android:id="@+id/tvLeftButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_toLeftOf="@id/tvRightButton"
+                android:background="@drawable/selector_bg_radius_16_blue"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_5"
+                android:layout_gravity="center_vertical"
+                android:text="附近修理厂"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rlCallPhone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电话联系"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/smartRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/rlCallPhone"
+            android:layout_alignParentTop="true">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+               <LinearLayout
+                   android:orientation="vertical"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                   <cn.bingoogolapple.bgabanner.BGABanner
+                       android:id="@+id/bgaBanner"
+                       android:layout_width="match_parent"
+                       android:layout_height="@dimen/dp_187"
+                       app:banner_indicatorGravity="bottom|center_horizontal"
+                       app:banner_placeholderDrawable="@color/transparent"
+                       app:banner_pointContainerBackground="@android:color/transparent"
+                       app:banner_pointContainerLeftRightPadding="@dimen/dp_2"
+                       app:banner_pointDrawable="@drawable/selector_banner_point" />
+
+
+                   <!--汽车详情和评论区-->
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_above="@id/rlCallPhone"
+                       android:layout_alignParentTop="true"
+                       android:background="@color/colorWhite"
+                       android:orientation="vertical">
+
+                       <TextView
+                           android:id="@+id/tvGarageName"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="@dimen/dp_20"
+                           android:layout_marginTop="@dimen/dp_10"
+                           android:gravity="left"
+                           android:text="合肥成铭汽车修理厂(潜山路店）"
+                           android:textColor="#333333"
+                           android:textSize="@dimen/sp_15" />
+
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="@dimen/dp_20"
+                           android:layout_marginTop="@dimen/dp_5"
+                           android:orientation="horizontal">
+                           <!--擅长领域-->
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvGoodsField"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+                        <!--   <TextView
+                               style="@style/TextViewButtonBlueHollowRadius5dp"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="擅长领域"
+                               android:textSize="@dimen/sp_11" />
+
+                           <TextView
+                               style="@style/TextViewButtonBlueHollowRadius5dp"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_marginLeft="@dimen/dp_5"
+                               android:text="擅长领域"
+                               android:textSize="@dimen/sp_11" />
+
+                           <TextView
+                               style="@style/TextViewButtonBlueHollowRadius5dp"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_marginLeft="@dimen/dp_5"
+                               android:text="擅长领域"
+                               android:textSize="@dimen/sp_11" />-->
+                       </LinearLayout>
+
+                       <TextView
+                           android:id="@+id/tvGarageDescription"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="@dimen/dp_20"
+                           android:layout_marginTop="@dimen/dp_10"
+                           android:lineSpacingMultiplier="1.2"
+                           android:paddingBottom="@dimen/dp_8"
+                           android:text="合肥成铭汽车修理厂办公室地址位于和平路118号，于1997年07月16日在合肥市工商行政管理局注册成立，在工厂发展壮大的22年里，我们始终为客户提供良好的技术支持、健全的售后服务，主要经营汽车修理、保养、摩托车修理等业务。"
+                           android:textColor="#999999"
+                           android:textSize="@dimen/sp_11" />
+
+                       <View
+                           android:layout_width="match_parent"
+                           android:layout_height="@dimen/dp_10"
+                           android:background="#F4F5F7" />
+
+                       <LinearLayout
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="@dimen/dp_20"
+                           android:layout_marginTop="@dimen/dp_10"
+                           android:orientation="horizontal">
+
+                           <ImageView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_gravity="center_vertical"
+                               android:src="@mipmap/ic_historical_evaluation" />
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_marginLeft="@dimen/dp_9"
+                               android:text="历史评价"
+                               android:textColor="#171717"
+                               android:textSize="@dimen/sp_15" />
+                       </LinearLayout>
+
+                       <androidx.recyclerview.widget.RecyclerView
+                           android:id="@+id/rvComment"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="@dimen/dp_20">
+
+                       </androidx.recyclerview.widget.RecyclerView>
+
+                   </LinearLayout>
+
+
+
+
+               </LinearLayout>
+
+
+
+
+            </androidx.core.widget.NestedScrollView>
+
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

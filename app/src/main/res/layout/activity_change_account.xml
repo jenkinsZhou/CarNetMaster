@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F5F7"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvClickAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_35"
+            android:text="轻触头像以切换账号"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_18" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:layout_alignLeft="@id/tvClickAvatar"
+            android:layout_alignRight="@id/tvClickAvatar"
+            android:layout_marginRight="@dimen/dp_2"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:layout_below="@id/tvClickAvatar"
+            android:background="#D1D1D1">
+        </View>
+        <RelativeLayout
+            android:layout_below="@id/line"
+            android:layout_marginTop="@dimen/dp_22"
+            android:layout_marginLeft="@dimen/dp_93"
+            android:layout_marginRight="@dimen/dp_92"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.allen.library.CircleImageView
+                android:id="@+id/cvAvatar"
+                android:src="@mipmap/img_default_minerva"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50" />
+         <ImageView
+             android:id="@+id/ivAddAccount"
+             android:src="@mipmap/ic_add"
+             android:layout_alignParentRight="true"
+             android:layout_width="@dimen/dp_50"
+             android:layout_height="@dimen/dp_50" />
+
+            <TextView
+                android:id="@+id/tvNickName"
+                android:textColor="#333333"
+                android:text="醉若清风"
+                android:layout_marginTop="10dp"
+                android:textSize="@dimen/sp_14"
+                android:layout_below="@id/cvAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvChangeAccount"
+                android:textColor="#333333"
+                android:text="切换账号"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/sp_14"
+                android:layout_below="@id/cvAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_below="@id/tvChangeAccount"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.allen.library.CircleImageView
+                    android:layout_gravity="center_vertical"
+                    android:src="@color/colorPrimary"
+                    android:layout_width="@dimen/dp_8"
+                    android:layout_height="@dimen/dp_8" />
+
+                <TextView
+                    android:text="当前使用"
+                    android:textSize="@dimen/sp_10"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            
+            
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

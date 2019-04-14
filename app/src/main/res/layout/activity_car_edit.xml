@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgCommon"
+    android:orientation="vertical">
+    <!--添加车辆-->
+    <include layout="@layout/layout_title_bar" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_radius_5_white"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/dp_15">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="车牌号(必填)"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etPlateNumber"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="right"
+                            android:hint="请输入车牌号"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="汽车品类"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <LinearLayout
+                            android:id="@+id/llCarCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvCarCategory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="下拉选择"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:src="@mipmap/ic_pulldown" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="汽车型号"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+                        <!--车辆型号-->
+                        <LinearLayout
+                            android:id="@+id/llCarMode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvCarModel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="下拉选择"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:src="@mipmap/ic_pulldown" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="发动机编号(必填)"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etEngineNumber"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="right"
+                            android:hint="请输入发动机编号"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="汽车排量"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etDisplacement"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="right"
+                            android:hint="手动填写数据"
+                            android:textSize="@dimen/sp_13" />
+
+                    </LinearLayout>
+
+
+                    <include layout="@layout/line_horizontal_gray_1half_dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="车辆保险信息"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etCarInsuranceInfo"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="right"
+                            android:hint="手动填写数据"
+                            android:textSize="@dimen/sp_13" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="车辆年检信息"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etCarYearlyInspection"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="right"
+                            android:hint="手动填写数据"
+                            android:textSize="@dimen/sp_13" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="车辆保养信息"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etCarMaintainInfo"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="right"
+                            android:hint="手动填写数据"
+                            android:textSize="@dimen/sp_13" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="保险提醒"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <Switch
+                            android:id="@+id/switchRemindInsurance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:textColor="#333333"
+                            android:thumb="@drawable/switch_ios_thumb"
+                            android:track="@drawable/switch_ios_track_selector" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="年检提醒"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <Switch
+                            android:id="@+id/switchRemindYearlyInspection"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:textColor="#333333"
+                            android:thumb="@drawable/switch_ios_thumb"
+                            android:track="@drawable/switch_ios_track_selector" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="上次保险时间"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+                        <!--上次保险时间-->
+                        <LinearLayout
+                            android:id="@+id/llLastInsuranceDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvLastInsuranceTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="下拉选择"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:src="@mipmap/ic_pulldown" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--上次年检时间-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="上次年检时间"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <LinearLayout
+                            android:id="@+id/llLastYearlyInspectionDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvLastYearlyInspectionTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="下拉选择"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:src="@mipmap/ic_pulldown" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_10"
+                            android:layout_weight="1"
+                            android:text="保养提醒"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <Switch
+                            android:id="@+id/switchRemindMaintain"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:textColor="#333333"
+                            android:thumb="@drawable/switch_ios_thumb"
+                            android:track="@drawable/switch_ios_track_selector" />
+
+                    </LinearLayout>
+
+                    <include layout="@layout/line_horizontal_gray_1half_dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="保养规则选择"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+                        <!--上次保险时间-->
+                        <LinearLayout
+                            android:id="@+id/llMaintainRule"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvMaintainRule"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="下拉选择"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:src="@mipmap/ic_pulldown" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="车辆故障提醒"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <!--故障提醒方式-->
+                        <LinearLayout
+                            android:id="@+id/llFaultRemindType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvFaultRemindType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="下拉选择"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_13" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:src="@mipmap/ic_pulldown" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <include layout="@layout/line_horizontal_gray_1half_dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="关联OBD"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etObdNumber"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="right"
+                            android:hint="输入OBD编号"
+                            android:inputType="number"
+                            android:textSize="@dimen/sp_13" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llObdReceiveMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="OBD接收模式"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <TextView
+                            android:id="@+id/tvObdReceiveMode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="下拉选择"
+                            android:textColor="#999999"
+                            android:textSize="@dimen/sp_13" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:src="@mipmap/ic_pulldown" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvEditCarInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:background="@drawable/selector_bg_radius_16_blue"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/dp_8"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:text="保存车辆信息"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tvDeleteCarInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:background="@drawable/selector_bg_radius_16_red"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/dp_8"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:text="删除车辆"
+                    android:textColor="@color/white" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_30" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <android.inputmethodservice.KeyboardView
+            android:id="@+id/keyboard_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#DCDCDC"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:keyBackground="@drawable/selector_key"
+            android:keyTextColor="#000"
+            android:keyTextSize="18sp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="0.0"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

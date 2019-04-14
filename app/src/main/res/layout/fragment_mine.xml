@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_background_color_gray"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:background="@color/common_background_color_gray">
+
+            <RelativeLayout
+                android:id="@+id/relayHeader"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_90"
+                android:layout_marginTop="@dimen/dp_55"
+                android:background="@drawable/bg_radius_12_white">
+
+                <TextView
+                    android:id="@+id/tvNickName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dp_18"
+                    android:text="未知"
+                    android:textColor="#3E3E3E"
+                    android:textSize="@dimen/sp_17" />
+            </RelativeLayout>
+
+            <com.allen.library.CircleImageView
+                android:id="@+id/civAvatar"
+                android:layout_width="@dimen/dp_75"
+                android:layout_height="@dimen/dp_75"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp_18"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/img_default_minerva" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relayHeader"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@drawable/bg_radius_12_white"
+                android:orientation="vertical">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvPersonalData"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:background="@drawable/bg_radius_12_white"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sUseRipple="false"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sLeftIconRes="@mipmap/ic_personal_data"
+                    app:sLeftTextString="个人资料"
+                    app:sRightIconMarginRight="@dimen/dp_16" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvVehicleManagement"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sLeftIconRes="@mipmap/ic_vehicle_management"
+                    app:sLeftTextString="车辆管理" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvHistoryOder"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sLeftIconRes="@mipmap/ic_order_history"
+                    app:sLeftTextString="历史订单" />
+
+
+                <com.allen.library.SuperTextView
+                    android:visibility="gone"
+                    android:id="@+id/stvTripReport"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sLeftIconRes="@mipmap/ic_trip_report"
+                    app:sLeftTextString="行程报告" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvReportWarning"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sLeftIconRes="@mipmap/ic_alarm_reporting"
+                    app:sLeftTextString="报警记录" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvSystemMessage"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sRightTextString=""
+                    app:sRightTextColor="@color/red_common"
+                    app:sLeftIconRes="@mipmap/ic_system_message"
+                    app:sLeftTextString="系统消息" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvBasicSetting"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sLeftIconRes="@mipmap/ic_basic_setting"
+                    app:sLeftTextString="基础设置"
+                    />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/stvHelpFeedBack"
+                    style="@style/SupperTextStyleItemMineCenter"
+                    android:paddingRight="@dimen/dp_16"
+                    app:sUseRipple="false"
+                    android:background="@drawable/my_ripple"
+                    app:sBottomDividerLineMarginLeft="@dimen/dp_16"
+                    app:sLeftIconMarginLeft="@dimen/dp_16"
+                    app:sLeftIconRes="@mipmap/ic_help_feedback"
+                    app:sLeftTextString="帮助反馈" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+</LinearLayout>

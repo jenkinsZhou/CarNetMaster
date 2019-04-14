@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F5F7"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_15">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvWarrantyCompanyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="中国太平洋保险公司合肥分公司"
+                android:textColor="#171717"
+                android:textSize="@dimen/sp_17" />
+
+            <TextView
+                android:id="@+id/tvWarrantyCompanyDepiction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="中国太平洋保险（集团）股份有限公司（以下称“太平洋保险”）是在1991年5月13日成立的中国太平洋保险公司的基础上组建而成的保险集团公司，总部设在上海，是国内领先的“A+H”股上市综合性保险集团。
+太平洋保险以成为“行业健康稳定发展的引领者”为愿景，始终以客户需求为导向，专注保险主业，做精保险专业，创新保险产品和服务，提升客户体验，价值持续增长，实力不断增强，连续八年入选《财富》世界500 强，2018年位列第220位。为超过1.23亿位客户提供全方位风险保障解决方案以及财富规划和资产管理服务。"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_13" />
+
+            <com.allen.library.SuperTextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_22"
+                android:layout_marginTop="@dimen/dp_15"
+                android:background="#F4F5F7"
+                app:sCenterTextSize="@dimen/sp_15"
+                app:sCenterTextString="95518"
+                app:sCenterViewGravity="left_center"
+                app:sDividerLineType="none"
+                app:sLeftIconHeight="@dimen/dp_20"
+                app:sLeftIconRes="@mipmap/ic_alarm_telephone"
+                app:sLeftTextColor="@color/colorPrimary"
+                app:sLeftTextString="报警电话:"
+                app:sRightIconWidth="@dimen/dp_20"
+                app:sUseRipple="false">
+
+            </com.allen.library.SuperTextView>
+
+
+            <com.allen.library.SuperTextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_22"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="#F4F5F7"
+                app:sCenterTextSize="@dimen/sp_15"
+                app:sCenterTextString="合肥中心支公司"
+                app:sCenterViewGravity="left_center"
+                app:sDividerLineType="none"
+                app:sLeftIconHeight="@dimen/dp_20"
+                app:sLeftIconRes="@mipmap/ic_company_name"
+                app:sLeftTextColor="@color/colorPrimary"
+                app:sLeftTextString="分公司名称:"
+                app:sRightIconWidth="@dimen/dp_20"
+                app:sUseRipple="false">
+
+            </com.allen.library.SuperTextView>
+
+
+            <com.allen.library.SuperTextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_22"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="#F4F5F7"
+                app:sCenterTextSize="@dimen/sp_15"
+                app:sCenterTextString="安徽省合肥市黄山路385号"
+                app:sCenterViewGravity="left_center"
+                app:sDividerLineType="none"
+                app:sLeftIconHeight="@dimen/dp_20"
+                app:sLeftIconRes="@mipmap/ic_company_addres"
+                app:sLeftTextColor="@color/colorPrimary"
+                app:sLeftTextString="分公司店址:"
+                app:sRightIconWidth="@dimen/dp_20"
+                app:sUseRipple="false">
+
+            </com.allen.library.SuperTextView>
+
+
+            <com.allen.library.SuperTextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_22"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="#F4F5F7"
+                app:sCenterTextSize="@dimen/sp_15"
+                app:sCenterTextString="95518"
+                app:sCenterViewGravity="left_center"
+                app:sDividerLineType="none"
+                app:sLeftIconHeight="@dimen/dp_20"
+                app:sLeftIconRes="@mipmap/ic_alarm_telephone"
+                app:sLeftTextColor="@color/colorPrimary"
+                app:sLeftTextString="分公司电话:"
+                app:sRightIconWidth="@dimen/dp_20"
+                app:sUseRipple="false">
+
+            </com.allen.library.SuperTextView>
+
+            <TextView
+                style="@style/TextViewButtonBlueBgMatchParentStyle"
+                android:layout_marginTop="@dimen/dp_120"
+                android:text="电话联系" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

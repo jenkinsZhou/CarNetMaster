@@ -1,0 +1,144 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        debug {
+            keyAlias 'emi'
+            keyPassword 'android'
+            storeFile file('C:/Users/JenkinsZhou/android/android_key_release.jks')
+            storePassword 'android'
+        }
+        release {
+            keyAlias 'emi'
+            keyPassword 'android'
+            storeFile file('C:/Users/JenkinsZhou/android/android.jks')
+            storePassword 'android'
+        }
+    }
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.tourcoo.carnet"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0.0"
+        //JPush上注册的包名对应的appkey.
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "c4fec9d85b1879a67718c43d",
+                JPUSH_CHANNEL: "developer-default",
+        ]
+
+//        testInstrumentationRunner "androidx.activity_login_register.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        ndk {
+            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildToolsVersion '28.0.3'
+    //指定jdk版本
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.kaopiz:kprogresshud:1.2.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.apkfuns.log2file:log2file:1.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.android.support:appcompat-v7:28.0.1'
+    implementation 'com.android.support:design:28.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    //万能适配器
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation('com.squareup.retrofit2:retrofit:2.4.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation('com.squareup.retrofit2:converter-gson:2.4.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation('org.ligboy.retrofit2:converter-fastjson-android:2.1.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation files('libs/commons-lang-2.6.jar')
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.1'
+    implementation 'org.litepal.android:java:3.0.0'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0'
+    implementation 'org.simple:androideventbus:1.0.5.1'
+    implementation 'com.github.Bakumon:StatusLayoutManager:1.0.4'
+    implementation 'cn.bingoogolapple:bga-banner:2.1.7@aar'
+    implementation 'cn.bingoogolapple:bga-swipebacklayout:1.2.0@aar'
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    /*  //图片加载 4.X
+                  implementation('com.github.bumptech.glide:glide:4.7.1') {
+                      exclude group: 'com.android.support'
+                  }*/
+    //内存泄漏检测工具
+    implementation 'com.github.lygttpod:SuperTextView:2.1.8'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.trello.rxlifecycle3:rxlifecycle-components:3.0.0'
+    //滑动返回Activity
+    implementation 'cn.bingoogolapple:bga-swipebacklayout:1.2.0@aar'
+    //快速Tab库
+    implementation 'com.github.AriesHoo:TabLayout:1.0.2'
+    //页面事件交互
+    implementation 'org.simple:androideventbus:1.0.5.1'
+    //多状态视图切换
+    implementation 'com.github.Bakumon:StatusLayoutManager:1.0.4'
+    //retrofit2.0
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'
+    //webView库
+    implementation 'com.just.agentweb:agentweb:4.0.2'
+    //webView提供下载功能
+    implementation 'com.just.agentweb:download:4.0.2'
+    //下拉刷新库注意刷新头SmartRefreshHeader版本最好对应尤其头版本不要低于SmartRefreshLayout版本
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'
+    //图片选择器
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    //3D地图so及jar
+    implementation 'com.amap.api:3dmap:6.7.0'
+    //定位功能
+    implementation 'com.amap.api:location:4.5.0'
+    //搜索功能
+    implementation 'com.amap.api:search:6.5.0.1'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'pub.devrel:easypermissions:2.0.0'
+    //阿里fastjson
+    implementation 'com.alibaba:fastjson:1.1.54.android'
+    // 支付宝 SDK AAR 包所需的配置
+    implementation(name: 'alipaySdk-15.6.0-20190226104053', ext: 'aar')
+    //微信支付
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    //极光推送
+    implementation 'cn.jiguang.sdk:jpush:3.1.8'
+    implementation 'cn.jiguang.sdk:jcore:1.2.7'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+}

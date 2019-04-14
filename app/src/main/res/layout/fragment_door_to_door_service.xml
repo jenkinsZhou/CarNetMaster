@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <com.tourcoo.carnet.core.widget.custom.TourCooScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_background_color_gray">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlCarRepair"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_120"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_13"
+                android:background="@drawable/select_bg_radius_12_white"
+                android:clickable="true">
+
+
+                <ImageView
+                    android:id="@+id/ivRepair"
+                    android:layout_width="@dimen/dp_45"
+                    android:layout_height="@dimen/dp_48"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="42dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_repair" />
+
+                <TextView
+                    android:id="@+id/tvRepair"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivRepair"
+                    android:layout_marginLeft="@dimen/dp_32"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:layout_toRightOf="@id/ivRepair"
+                    android:text="上门维修"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_17" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvRepair"
+                    android:layout_alignLeft="@id/tvRepair"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:text="on-site repair"
+                    android:textColor="@color/text_gray_common"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlCarWash"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_120"
+                android:clickable="true"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_13"
+                android:background="@drawable/select_bg_radius_12_white">
+
+
+                <ImageView
+                    android:id="@+id/ivCarWash"
+                    android:layout_width="@dimen/dp_47"
+                    android:layout_height="@dimen/dp_47"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="42dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_car_wash" />
+
+                <TextView
+                    android:id="@+id/tvCarWash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivCarWash"
+                    android:layout_marginLeft="@dimen/dp_32"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:layout_toRightOf="@id/ivCarWash"
+                    android:text="上门洗车"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_17" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvCarWash"
+                    android:layout_alignLeft="@id/tvCarWash"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:text="mobile car wash"
+                    android:textColor="@color/text_gray_common"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rlCarCuring"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_120"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_13"
+                android:background="@drawable/bg_radius_12_white">
+
+
+                <ImageView
+                    android:id="@+id/ivOnCallService"
+                    android:layout_width="@dimen/dp_53"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="42dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/ic_car_maintenance" />
+
+                <TextView
+                    android:id="@+id/tvOnCallService"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/ivOnCallService"
+                    android:layout_marginLeft="@dimen/dp_32"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:layout_toRightOf="@id/ivOnCallService"
+                    android:text="上门保养"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_17" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvOnCallService"
+                    android:layout_alignLeft="@id/tvOnCallService"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:text="on-call service"
+                    android:textColor="@color/text_gray_common"
+                    android:textSize="@dimen/sp_15" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </com.tourcoo.carnet.core.widget.custom.TourCooScrollView>
+
+</LinearLayout>

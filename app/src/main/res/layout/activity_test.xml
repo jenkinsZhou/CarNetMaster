@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <com.tourcoo.carnet.core.widget.ratingstar.RatingStarView
+        android:id="@+id/rsv_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:background="#fff"
+        android:paddingLeft="0dp"
+        android:paddingTop="2dp"
+        android:paddingRight="0dp"
+        app:rsv_cornerRadius="4dp"
+        app:rsv_drawStrokeForEmptyStar="false"
+        app:rsv_drawStrokeForHalfStar="true"
+        app:rsv_enableSelectRating="true"
+        app:rsv_rating="1"
+        app:rsv_starBackgroundColor="@color/colorWhite"
+        app:rsv_starForegroundColor="#FFAB12"
+        app:rsv_starMargin="1dp"
+        app:rsv_starNum="5"
+        app:rsv_starThickness="0.7"
+        app:rsv_strokeColor="#457DD7"
+        app:rsv_strokeWidth="2px" />
+
+</LinearLayout>

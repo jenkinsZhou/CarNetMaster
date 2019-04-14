@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_radius_12_white"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dp_14"
+    android:paddingTop="@dimen/dp_16"
+    android:paddingRight="@dimen/dp_14"
+    android:paddingBottom="@dimen/dp_16">
+
+    <TextView
+        android:id="@+id/tvFaultTime"
+        android:textSize="@dimen/sp_12"
+        android:text="2019年1月16日 13:26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvFaultDescriptionRecord"
+        android:textSize="@dimen/sp_13"
+        android:layout_marginTop="@dimen/dp_5"
+        android:text="故障记录"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

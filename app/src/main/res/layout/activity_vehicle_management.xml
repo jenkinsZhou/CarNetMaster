@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_background_color_gray"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_16"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20">
+
+            <LinearLayout
+                android:background="@drawable/bg_radius_12_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+            >
+
+                <com.allen.library.SuperTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:sCenterTextColor="@color/black_common"
+                    app:sCenterTextString="宝马"
+                    app:sCenterViewGravity="left_center"
+                    app:sLeftTextColor="@color/text_gray_common"
+                    app:sLeftTextString="汽车品类:"
+                    app:sUseRipple="false">
+
+                </com.allen.library.SuperTextView>
+
+                <com.allen.library.SuperTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:sCenterTextColor="@color/black_common"
+                    app:sCenterTextString="宝马"
+                    app:sCenterViewGravity="left_center"
+                    app:sLeftTextColor="@color/text_gray_common"
+                    app:sLeftTextString="汽车品类:"
+                    app:sUseRipple="false">
+
+                </com.allen.library.SuperTextView>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dp_16"
+                android:paddingBottom="@dimen/dp_16">
+
+                <com.allen.library.SuperTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:sCenterTextColor="@color/black_common"
+
+                    app:sCenterViewGravity="left_center"
+                    app:sLeftTextColor="@color/text_gray_common"
+                    app:sLeftTextString="汽车品类:"
+                    app:sCenterTextString="宝马"
+                    app:sUseRipple="false">
+
+                </com.allen.library.SuperTextView>
+
+                <com.allen.library.SuperTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:sCenterTextColor="@color/black_common"
+                    app:sCenterTextString="宝马"
+                    app:sCenterViewGravity="left_center"
+                    app:sLeftTextColor="@color/text_gray_common"
+                    app:sLeftTextString="汽车品类:"
+                    app:sUseRipple="false">
+
+                </com.allen.library.SuperTextView>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

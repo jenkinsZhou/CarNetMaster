@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_background_color_gray"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_background_color_gray"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@drawable/bg_radius_12_white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:orientation="horizontal">
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:layout_marginBottom="@dimen/dp_16"
+                    android:orientation="horizontal">
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+                </LinearLayout>
+
+                <include layout="@layout/line_horizontal_gray_1dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:orientation="horizontal">
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="车辆保险信息:" />
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:orientation="horizontal">
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="车辆保险信息:" />
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:orientation="horizontal">
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="车辆保险信息:" />
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:orientation="horizontal">
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="车辆保险信息:" />
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+                </LinearLayout>
+
+                <include layout="@layout/line_horizontal_gray_1dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_6"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="关联OBD:" />
+
+                    <com.allen.library.SuperTextView
+                        style="@style/SupperTextStyleItemCarsManagement"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        app:sCenterTextString="宝马"
+                        app:sLeftTextString="汽车品类:" />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

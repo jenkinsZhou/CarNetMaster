@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="@dimen/dp_10"
+    android:background="@drawable/bg_radius_5_white"
+    android:layout_margin="@dimen/dp_10"
+    android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+           <TextView
+               android:text="2.4km"
+               android:layout_centerVertical="true"
+               android:textSize="@dimen/sp_12"
+               android:layout_alignParentRight="true"
+               android:layout_marginRight="@dimen/dp_10"
+               android:id="@+id/tvInsuranceCompanyDistance"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+            <TextView
+                android:textColor="#171717"
+                android:textSize="@dimen/sp_16"
+                android:text="中国太平洋保险公司合肥分公司"
+                android:layout_toLeftOf="@id/tvInsuranceCompanyDistance"
+                android:id="@+id/tvInsuranceCompanyName"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+            <TextView
+                android:textSize="@dimen/sp_14"
+                android:textColor="#999999"
+                android:layout_marginTop="@dimen/dp_12"
+                android:text="电话：0551-3190881"
+                android:id="@+id/tvInsuranceCompanyPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+    <TextView
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_14"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="地址：安徽省合肥市黄山路385号外运大厦 "
+        android:id="@+id/tvInsuranceCompanyAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
