@@ -67,8 +67,8 @@ public class MainTabActivity extends BaseMainActivity {
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        CheckVersionHelper.with(this)
-                .checkVersion(false);
+      /*  CheckVersionHelper.with(this)
+                .checkVersion(false);*/
         clientRegId = JPushInterface.getRegistrationID(this);
         TourcooLogUtil.i(TAG,"clientRegId："+clientRegId);
     }

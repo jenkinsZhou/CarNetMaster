@@ -23,6 +23,7 @@ public class CommonConstant {
 
     public static final String PREF_KEY_ACCOUNT = "PREF_KEY_ACCOUNT";
     public static final String PREF_KEY_PASSWORD = "PREF_KEY_PASSWORD";
+    public static final String PREF_KEY_IS_REMIND_PASSWORD = "PREF_KEY_IS_REMIND_PASSWORD";
 
     /**
      * 是否记住密码

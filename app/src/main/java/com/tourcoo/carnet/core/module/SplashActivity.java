@@ -74,11 +74,18 @@ public class SplashActivity extends BaseTitleActivity {
                     @Override
                     public void onComplete() {
                         super.onComplete();
-                        UserInfoEntity userInfoEntity = AccountInfoHelper.getInstance().findUserInfoByLocal();
-                        if (userInfoEntity != null && userInfoEntity.getUserInfo() != null) {
-                            AccountInfoHelper.getInstance().setUserInfoEntity(userInfoEntity);
-                            TourcooUtil.startActivity(mContext, MainTabActivity.class);
+                        //先判断有无记录账号信息
+                        if (AccountInfoHelper.getInstance().isRemindPassword()) {
+                            UserInfoEntity userInfoEntity = AccountInfoHelper.getInstance().findUserInfoByLocal();
+                            if (userInfoEntity != null && userInfoEntity.getUserInfo() != null) {
+                                AccountInfoHelper.getInstance().setUserInfoEntity(userInfoEntity);
+                                TourcooUtil.startActivity(mContext, MainTabActivity.class);
+                            } else {
+                                TourcooUtil.startActivity(mContext, LoginRegisterActivity.class);
+                            }
                         } else {
+                            //用户没有记住密码
+                            AccountInfoHelper.getInstance().deleteUserAccount();
                             TourcooUtil.startActivity(mContext, LoginRegisterActivity.class);
                         }
                         finish();

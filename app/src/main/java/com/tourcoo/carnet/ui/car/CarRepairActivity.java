@@ -1,6 +1,5 @@
 package com.tourcoo.carnet.ui.car;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,14 +35,12 @@ import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.TourcooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
 import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
-import com.tourcoo.carnet.ui.factory.NearbyRepairFactoryActivity;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
 import com.tourcoo.carnet.ui.repair.RepairFaultFragment;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -69,7 +66,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_REPAIR;
-import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_WASH;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
 

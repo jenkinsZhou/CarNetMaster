@@ -2,6 +2,8 @@ package com.tourcoo.carnet.retrofit;
 
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.FaultRepairEntity;
+import com.tourcoo.carnet.entity.account.UserInfo;
+import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
 import com.tourcoo.carnet.entity.garage.CommentInfo;
 import com.tourcoo.carnet.entity.garage.GarageEntity;
@@ -280,15 +282,52 @@ public interface ApiService {
      * @param map
      * @return
      */
-    @POST("comment/findMothIncomeList")
-    Observable<BaseEntity<CommentEntity>> findMothIncomeList(@QueryMap Map<String, Object> map);
+    @POST("comment/findGarageCommentList")
+    Observable<BaseEntity<CommentEntity>> findGarageCommentList(@QueryMap Map<String, Object> map);
 
     /**
      * 获取服务器中app当前版本
+     *
      * @param map
      * @return
      */
     @POST("app/version/last/appVersionInfo")
     Observable<BaseEntity> appVersionInfo(@QueryMap Map<String, Object> map);
+
+    /**
+     * 修改个人资料
+     *
+     * @param map
+     * @return
+     */
+    @POST("signLogin/editOwnerInfo")
+    Observable<BaseEntity> editOwnerInfo(@QueryMap Map<String, Object> map);
+
+    /**
+     * 查看个人资料
+     *
+     * @param map
+     * @return
+     */
+    @POST("signLogin/getUserInfo")
+    Observable<BaseEntity<UserInfoEntity>> getUserInfo(@QueryMap Map<String, Object> map);
+
+    /**
+     * 修改密码
+     * @param map
+     * @return
+     */
+    @POST("signLogin/restPassword")
+    Observable<BaseEntity> restPassword(@QueryMap Map<String, Object> map);
+
+
+    /**
+     * 更换手机号
+     * @param map
+     * @return
+     */
+    @POST("signLogin/changeMobile")
+    Observable<BaseEntity> changeMobile(@QueryMap Map<String, Object> map);
+
 
 }

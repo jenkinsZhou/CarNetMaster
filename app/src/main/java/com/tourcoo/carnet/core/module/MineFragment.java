@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.allen.library.CircleImageView;
 import com.allen.library.SuperTextView;
@@ -21,8 +22,10 @@ import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.MessageInfo;
+import com.tourcoo.carnet.entity.account.UserInfo;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.event.BaseEvent;
+import com.tourcoo.carnet.entity.event.UserInfoRefreshEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.tourcoo.carnet.ui.MsgSystemActivity;
 import com.tourcoo.carnet.ui.factory.DoorToDoorServiceDetailActivity;
@@ -30,13 +33,16 @@ import com.tourcoo.carnet.ui.account.PersonalDataActivity;
 import com.tourcoo.carnet.ui.car.CarsManagementActivity;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
 import com.tourcoo.carnet.ui.setting.BaseSettingActivity;
+import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 
 import static com.tourcoo.carnet.core.common.EventConstant.EVENT_REQUEST_MSG_COUNT;
+import static com.tourcoo.carnet.core.common.RequestConfig.BASE;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
 /**
@@ -49,10 +55,11 @@ import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 public class MineFragment extends BaseTitleFragment implements View.OnClickListener {
     private SuperTextView stvSystemMessage;
     private UserInfoEntity mUserInfoEntity;
-    public static final int CODE_REQUEST_MSG = 1;
+    public static final int CODE_REQUEST_MSG = 100;
     private int messageCount;
     private TextView tvNickName;
     private CircleImageView civAvatar;
+    public static final int CODE_REQUEST_USER_INFO = 101;
 
     @Override
     public int getContentLayout() {
@@ -62,6 +69,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     @Override
     public void initView(Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
+        org.greenrobot.eventbus.EventBus.getDefault().register(this);
         mContentView.findViewById(R.id.stvPersonalData).setOnClickListener(this);
         mContentView.findViewById(R.id.stvVehicleManagement).setOnClickListener(this);
         mContentView.findViewById(R.id.stvBasicSetting).setOnClickListener(this);
@@ -79,7 +87,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     @Override
     public void loadData() {
         super.loadData();
-        showUserInfo();
+        showUserInfo(mUserInfoEntity);
         requestNoReadCount();
     }
 
@@ -100,7 +108,9 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.stvPersonalData:
-                TourcooUtil.startActivity(mContext, PersonalDataActivity.class);
+                Intent userInfoIntent = new Intent();
+                userInfoIntent.setClass(mContext, PersonalDataActivity.class);
+                startActivityForResult(userInfoIntent, CODE_REQUEST_USER_INFO);
                 break;
             case R.id.stvVehicleManagement:
                 TourcooUtil.startActivity(mContext, CarsManagementActivity.class);
@@ -174,6 +184,10 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
             case CODE_REQUEST_MSG:
                 requestNoReadCount();
                 break;
+            case CODE_REQUEST_USER_INFO:
+                TourcooLogUtil.i(TAG, "收到回调");
+                showUserInfo(AccountInfoHelper.getInstance().getUserInfoEntity());
+                break;
             default:
                 break;
         }
@@ -199,15 +213,72 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        org.greenrobot.eventbus.EventBus.getDefault().unregister(this);
     }
 
 
-    private void showUserInfo() {
-        if (mUserInfoEntity != null && mUserInfoEntity.getUserInfo() != null) {
-            if (TextUtils.isEmpty(mUserInfoEntity.getUserInfo().getNickname())) {
+    private void showUserInfo(UserInfoEntity userInfoEntity) {
+        if (userInfoEntity != null && userInfoEntity.getUserInfo() != null) {
+            if (TextUtils.isEmpty(userInfoEntity.getUserInfo().getNickname())) {
                 tvNickName.setText("未填写");
+            } else {
+                tvNickName.setText(userInfoEntity.getUserInfo().getNickname());
             }
-            GlideManager.loadImg(mUserInfoEntity.getUserInfo().getAvatar(), civAvatar, TourcooUtil.getDrawable(R.mipmap.img_default_minerva));
+            GlideManager.loadImg(BASE + userInfoEntity.getUserInfo().getAvatar(), civAvatar, TourcooUtil.getDrawable(R.mipmap.img_default_minerva));
         }
+    }
+
+    /**
+     * 刷新个人信息事件
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN)
+    public void refreshUserInfo(UserInfoRefreshEvent event) {
+        if (event != null) {
+            TourcooLogUtil.i(TAG, "接收到消息");
+            sycUserInfo();
+        }
+    }
+
+
+    /**
+     * 同步个人信息
+     */
+    private void sycUserInfo() {
+        TourcooLogUtil.i(TAG, "syc服务器用户信息");
+        ApiRepository.getInstance().getUserInfo().compose(bindUntilEvent(FragmentEvent.DESTROY)).
+                subscribe(new BaseObserver<BaseEntity<UserInfoEntity>>() {
+                    @Override
+                    public void onRequestNext(BaseEntity<UserInfoEntity> entity) {
+                        if (entity != null) {
+                            if (entity.code == CODE_REQUEST_SUCCESS) {
+                                if (entity.data != null) {
+                                    updateUserInfo(entity.data.getUserInfo());
+                                    showUserInfo(AccountInfoHelper.getInstance().getUserInfoEntity());
+                                }
+                            } else {
+                                ToastUtil.showFailed(entity.message);
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    /**
+     * 更新用户信息
+     *
+     * @param userInfo
+     */
+    private void updateUserInfo(UserInfo userInfo) {
+        if (userInfo == null) {
+            TourcooLogUtil.e(TAG, "userInfo== null 无法更新");
+            return;
+        }
+        int userId = AccountInfoHelper.getInstance().getUserInfoEntity().getUserInfo().getUserId();
+        userInfo.setUserId(userId);
+        TourcooLogUtil.i("更新syc", userInfo);
+        AccountInfoHelper.getInstance().updateAndSaveUserInfo(userInfo);
     }
 }

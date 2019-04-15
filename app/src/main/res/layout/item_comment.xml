@@ -14,11 +14,13 @@
             android:id="@+id/civAvatar"
             android:src="@mipmap/icon192"
             android:layout_centerVertical="true"
-            android:layout_width="@dimen/dp_48"
-            android:layout_height="@dimen/dp_48" />
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_42" />
         <TextView
             android:id="@+id/tvNickName"
             android:text="昵称"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_12"
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_toRightOf="@id/civAvatar"
             android:layout_centerVertical="true"
@@ -49,12 +51,14 @@
             app:rsv_strokeWidth="2px" />
 
         <TextView
+            android:id="@+id/tvTime"
             android:gravity="right"
             android:text="2019-02-15 14:23"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_alignParentRight="true"
             android:layout_toLeftOf="@id/rsvRating"
+            android:textSize="@dimen/sp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
@@ -63,6 +67,7 @@
         android:layout_marginTop="@dimen/dp_10"
         android:text="汽修师傅态度非常好，车子都修理好了，感谢~"
         android:id="@+id/tvComment"
+        android:textSize="@dimen/sp_10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

@@ -39,6 +39,16 @@ public class UserInfo extends LitePalSupport {
     private String driverAge;
     private String driverLicense;
     private long id;
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     private String mobile;
     private String nickname;
     private String openid;

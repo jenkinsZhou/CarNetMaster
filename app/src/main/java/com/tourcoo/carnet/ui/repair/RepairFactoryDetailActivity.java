@@ -155,16 +155,16 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     @Override
     public void loadData() {
         super.loadData();
-        findMothIncomeList(garageInfo.getId(), 1, pageSize);
+        findGarageCommentList(garageInfo.getId(), 1, pageSize);
     }
 
 
     private void refreshComment() {
-        findMothIncomeList(garageInfo.getId(), 1, pageSize);
+        findGarageCommentList(garageInfo.getId(), 1, pageSize);
     }
 
     private void loadMoreComment(int page) {
-        findMothIncomeList(garageInfo.getId(), page, pageSize);
+        findGarageCommentList(garageInfo.getId(), page, pageSize);
     }
 
     private void setBanner(List<String> images) {
@@ -209,14 +209,14 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
      * @param index
      * @param pageSize
      */
-    private void findMothIncomeList(String garageId, int index, int pageSize) {
-        ApiRepository.getInstance().findMothIncomeList(garageId, index, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+    private void findGarageCommentList(String garageId, int index, int pageSize) {
+        ApiRepository.getInstance().findGarageCommentList(garageId, index, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity<CommentEntity>>() {
                     @Override
                     public void onRequestNext(BaseEntity<CommentEntity> entity) {
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
-                                httpRequestSuccessCallback(entity.data.getComment());
+                                httpRequestSuccessCallback(entity.data.getElements());
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }

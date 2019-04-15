@@ -161,7 +161,6 @@ public class HttpRequestControlImpl implements HttpRequestControl {
                 }
                 return;
             }
-
             //可根据不同错误展示不同错误布局  showCustomLayout(R.layout.xxx);
             statusLayoutManager.showErrorLayout();
         }

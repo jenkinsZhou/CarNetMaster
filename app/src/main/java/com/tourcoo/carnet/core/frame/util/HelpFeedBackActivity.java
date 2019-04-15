@@ -164,7 +164,6 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
     }
 
 
-
     private void initItemClick() {
         uploadImageAdapter.setOnItemClickListener(new UploadImageAdapter.OnItemClickListener() {
             @Override
@@ -253,15 +252,6 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
     }
 
 
-
-
-
-
-
-
-
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -327,7 +317,6 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
     private void clearInput() {
         etRepairContent.setText("");
     }
-
 
 
     /**
@@ -426,13 +415,17 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
     private void showHudProgressDialog() {
         if (hud != null) {
             hud.setProgress(0);
-            hud.show();
+        } else {
+            initProgressDialog();
         }
+        hud.show();
     }
 
     private void updateProgress(int progress) {
         TourcooLogUtil.i("进度：" + progress);
-        hud.setProgress(progress);
+        if (hud != null) {
+            hud.setProgress(progress);
+        }
     }
 
     private void closeHudProgressDialog() {
@@ -440,6 +433,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
             hud.setProgress(0);
             hud.dismiss();
         }
+        hud = null;
     }
 
     private static class MyHandler extends Handler {

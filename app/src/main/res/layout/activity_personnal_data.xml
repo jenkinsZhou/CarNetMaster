@@ -44,7 +44,7 @@
                     android:layout_centerVertical="true"
                     app:srcCompat="@mipmap/ic_more" />
 
-                <com.allen.library.CircleImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/cvAvatar"
                     android:layout_width="@dimen/dp_38"
                     android:layout_height="@dimen/dp_38"
@@ -69,11 +69,15 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="我的昵称"
+                    android:id="@+id/nickName"
                     android:textColor="@color/black_common"
                     android:textSize="@dimen/sp_15" />
 
                 <TextView
+                    android:id="@+id/tvNickName"
                     android:layout_width="wrap_content"
+                    android:layout_toRightOf="@id/nickName"
+                    android:gravity="right"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="醉若清风"
@@ -89,6 +93,7 @@
                 android:paddingBottom="@dimen/dp_10">
 
                 <TextView
+                    android:id="@+id/bindPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -105,9 +110,12 @@
                     app:srcCompat="@mipmap/ic_more" />
 
                 <TextView
+                    android:id="@+id/tvMobile"
+                    android:gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="12dp"
+                    android:layout_toRightOf="@id/bindPhone"
                     android:layout_toLeftOf="@id/ivPhoneRightArrow"
                     android:text="189*******86"
                     android:textSize="@dimen/dp_13" />
@@ -116,6 +124,7 @@
 
 
             <RelativeLayout
+                android:visibility="gone"
                 android:id="@+id/relayRelevanceWeChat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,6 +156,7 @@
                 android:paddingBottom="@dimen/dp_10">
 
                 <TextView
+                    android:id="@+id/drivingAge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -167,7 +177,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="12dp"
+                    android:layout_toRightOf="@id/drivingAge"
                     android:layout_toLeftOf="@id/ivDrivingAge"
+                    android:gravity="right"
                     android:text="5年"
                     android:textSize="@dimen/dp_13" />
 
@@ -181,6 +193,7 @@
                 android:paddingBottom="@dimen/dp_10">
 
                 <TextView
+                    android:id="@+id/tvDriverLicense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -189,9 +202,11 @@
                     android:textSize="@dimen/sp_15" />
 
                 <TextView
+                    android:layout_toRightOf="@id/tvDriverLicense"
                     android:id="@+id/tvDriverLicenseNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="right"
                     android:layout_alignParentRight="true"
                     android:text="234567887611"
                     android:textSize="@dimen/dp_13" />
@@ -200,16 +215,15 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnEditPassword"
+        <TextView
+            android:id="@+id/tvEditPassword"
+            style="@style/TextViewButtonBlueBgMatchParentStyleBase"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
-            android:background="@drawable/bg_radius_16_blue"
             android:text="修改密码"
-            android:layout_marginBottom="@dimen/dp_41"
+            android:layout_marginBottom="@dimen/dp_50"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_15" />
     </RelativeLayout>

@@ -208,7 +208,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         findViewById(R.id.tvEditCarInfo).setOnClickListener(this);
         findViewById(R.id.llObdReceiveMode).setOnClickListener(this);
         initKeyBoard();
-        initCarId(currentCarInfo);
+        initCarInfo(currentCarInfo);
         showCurrentSetting(currentCarInfo);
     }
 
@@ -732,7 +732,8 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         }
         Map<String, Object> hashMap = new HashMap<>(15);
         //车辆类型
-        hashMap.put("id", mCurrentCategory.getId());
+        hashMap.put("id", currentCarInfo.getId());
+        TourcooLogUtil.i(TAG, "车辆ID：" + currentCarInfo.getId());
         hashMap.put("modelId", mCurrentCarModel.getId());
         //发动机编号(必填)
         hashMap.put("engine", getCarEngineNumber());
@@ -1167,7 +1168,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         tvObdReceiveMode.setText(TourcooUtil.getNotNullValue(value));
     }
 
-    private void initCarId(CarInfoEntity carInfoEntity) {
+    private void initCarInfo(CarInfoEntity carInfoEntity) {
         if (carInfoEntity == null) {
             return;
         }

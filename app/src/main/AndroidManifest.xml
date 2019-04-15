@@ -73,7 +73,7 @@
         <activity android:name=".ui.account.PersonalDataActivity" />
         <activity android:name=".ui.car.CarsManagementActivity" />
         <activity android:name=".ui.setting.BaseSettingActivity" />
-        <activity android:name=".ui.account.EditPasswordSuccessActivity" />
+        <activity android:name=".ui.account.EditSuccessActivity" />
         <activity android:name=".ui.account.ChangeAccountActivity" />
         <activity android:name=".ui.setting.AboutUsActivity" />
         <activity android:name=".ui.car.CarWashActivity" />
@@ -144,6 +144,7 @@
         <activity android:name=".ui.order.LookEvaluationActivity" />
         <activity android:name=".ui.car.CarEditActivity" />
         <activity android:name=".core.frame.util.HelpFeedBackActivity" />
+        <activity android:name=".ui.account.ChangePhoneNumberActivity" />
 
         <!-- Required SDK 核心功能 -->
         <!-- since 3.0.9 Required SDK 核心功能 -->

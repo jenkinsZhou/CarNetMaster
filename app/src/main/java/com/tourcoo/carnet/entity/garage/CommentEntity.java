@@ -10,57 +10,51 @@ import java.util.List;
  * @Email: 971613168@qq.com
  */
 public class CommentEntity {
+
+
     /**
-     * total : 0
-     * current : 1
-     * pages : 0
-     * size : 10
-     * comment : []
+     * currentPage : 1
+     * elements : [{"createTime":"2019-04-12 17:06:42","detail":"陈舟为评价3星无图片","images":"","level":3,"nickName":"陈舟为","ownerIconUrl":"img/2019-04-15-f460402c-5225-42e1-9af3-aa47c33fe641.png","reply":""},{"createTime":"2019-04-12 13:24:33","detail":"莫","images":"img/2019-04-12-cae76e57-b458-49f5-98b7-b01b9c468db0.png","level":2,"nickName":"","ownerIconUrl":"","reply":""},{"createTime":"2019-04-11 19:02:46","detail":"无语","images":"","level":3,"nickName":"","ownerIconUrl":"","reply":""},{"createTime":"2019-04-11 19:01:27","detail":"好","images":"","level":5,"nickName":"","ownerIconUrl":"","reply":""},{"createTime":"2019-04-11 18:53:17","detail":"哦哦哦哦","images":"","level":5,"nickName":"","ownerIconUrl":"","reply":""}]
+     * pages : 2
+     * totalElements : 10
      */
 
-    private String total;
-    private String current;
-    private String pages;
-    private String size;
-    private List<CommentInfo> comment;
+    private int currentPage;
+    private int pages;
+    private String totalElements;
+    private List<CommentInfo> elements;
 
-    public String getTotal() {
-        return total;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-    public void setTotal(String total) {
-        this.total = total;
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 
-    public String getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(String current) {
-        this.current = current;
-    }
-
-    public String getPages() {
+    public int getPages() {
         return pages;
     }
 
-    public void setPages(String pages) {
+    public void setPages(int pages) {
         this.pages = pages;
     }
 
-    public String getSize() {
-        return size;
+    public String getTotalElements() {
+        return totalElements;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setTotalElements(String totalElements) {
+        this.totalElements = totalElements;
     }
 
-    public List<CommentInfo> getComment() {
-        return comment;
+    public List<CommentInfo> getElements() {
+        return elements;
     }
 
-    public void setComment(List<CommentInfo> comment) {
-        this.comment = comment;
+    public void setElements(List<CommentInfo> elements) {
+        this.elements = elements;
     }
+
+
 }

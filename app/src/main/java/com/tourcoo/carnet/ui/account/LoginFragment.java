@@ -21,6 +21,7 @@ import com.tourcoo.carnet.core.module.MainTabActivity;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.util.TourcooUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.account.UserInfo;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.FragmentEvent;
@@ -35,6 +36,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.tourcoo.carnet.core.common.CommonConstant.PREF_KEY_ACCOUNT;
 import static com.tourcoo.carnet.core.common.CommonConstant.PREF_KEY_IS_REMEMBER_ACCOUNT;
+import static com.tourcoo.carnet.core.common.CommonConstant.PREF_KEY_IS_REMIND_PASSWORD;
 import static com.tourcoo.carnet.core.common.CommonConstant.PREF_KEY_PASSWORD;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
@@ -99,10 +101,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         tvGetCode.setOnClickListener(this);
         tvVerificationCodeLogin.setOnClickListener(this);
         showLoginByAccount();
+        cBoxRemeberPassword.setChecked(AccountInfoHelper.getInstance().isRemindPassword());
         //显保存的账号和密码
         if (isRemberPassword()) {
             etPhone.setText((CharSequence) SharedPreferencesUtil.get(PREF_KEY_ACCOUNT, ""));
             etPassword.setText((CharSequence) SharedPreferencesUtil.get(PREF_KEY_PASSWORD, ""));
+        } else {
+            etPhone.setText("");
+            etPassword.setText("");
         }
     }
 
@@ -307,6 +313,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             SharedPreferencesUtil.put(PREF_KEY_PASSWORD, getPasword());
             SharedPreferencesUtil.put(PREF_KEY_ACCOUNT, getPhoneNumber());
         }
+        //记录用户是否保存账号
+        SharedPreferencesUtil.put(PREF_KEY_IS_REMIND_PASSWORD, isRemberPassword());
         loginByPassword(getPhoneNumber(), getPasword());
     }
 
@@ -347,10 +355,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                         }
                         if (entity.code == CODE_REQUEST_SUCCESS) {
                             ToastUtil.showSuccess(entity.message);
-                            if (entity.code == CODE_REQUEST_SUCCESS) {
                                 //验证码发送成功开始，倒计时
                                 countDownTime();
-                            }
                         } else {
                             ToastUtil.showFailed(entity.message);
                         }
@@ -397,7 +403,16 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             return null;
         }
         try {
-            return JSON.parseObject(jsonStr, UserInfoEntity.class);
+            TourcooLogUtil.e(TAG, "用户信息:" + jsonStr);
+            UserInfoEntity userInfoEntity = JSON.parseObject(jsonStr, UserInfoEntity.class);
+            JSONObject data = JSONObject.parseObject(jsonStr);
+            JSONObject userInfo = data.getJSONObject("userInfo");
+            int userId = userInfo.getIntValue("id");
+            if (userInfoEntity.getUserInfo() != null) {
+                userInfoEntity.getUserInfo().setUserId(userId);
+                TourcooLogUtil.i(TAG, "设置成功:" + userId);
+            }
+            return userInfoEntity;
         } catch (Exception e) {
             TourcooLogUtil.e(TAG, "错误" + e.toString());
             return null;
@@ -412,6 +427,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         }
         UserInfoEntity userInfoEntity = parseUserInfo(JSONObject.toJSONString(entity.data));
         if (userInfoEntity != null) {
+            TourcooLogUtil.i(TAG, "车主id：" + userInfoEntity.getUserInfo().getUserId());
             saveUserInfo(userInfoEntity);
             TourcooUtil.startActivity(mContext, MainTabActivity.class);
             if (mContext != null) {

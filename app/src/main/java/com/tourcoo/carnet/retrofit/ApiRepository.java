@@ -7,6 +7,8 @@ import com.tourcoo.carnet.core.frame.retrofit.TourCoolRetrofit;
 import com.tourcoo.carnet.core.frame.retrofit.TourCoolTransformer;
 import com.tourcoo.carnet.core.log.widget.utils.DateUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.account.UserInfo;
+import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
 import com.tourcoo.carnet.entity.garage.CommentInfo;
 import com.tourcoo.carnet.entity.garage.GarageEntity;
@@ -413,12 +415,12 @@ public class ApiRepository extends BaseRepository {
      * @param pageSize
      * @return
      */
-    public Observable<BaseEntity<CommentEntity>> findMothIncomeList(String garageId, int pageIndex, int pageSize) {
+    public Observable<BaseEntity<CommentEntity>> findGarageCommentList(String garageId, int pageIndex, int pageSize) {
         Map<String, Object> params = new HashMap<>(3);
         params.put("garageId", garageId);
         params.put("pageIndex", pageIndex + "");
         params.put("pageSize", pageSize + "");
-        return TourCoolTransformer.switchSchedulersIo(getApiService().findMothIncomeList(params).retryWhen(new RetryWhen()));
+        return TourCoolTransformer.switchSchedulersIo(getApiService().findGarageCommentList(params).retryWhen(new RetryWhen()));
     }
 
     /**
@@ -430,6 +432,55 @@ public class ApiRepository extends BaseRepository {
         Map<String, Object> params = new HashMap<>(1);
         params.put("deviceType", "android");
         return TourCoolTransformer.switchSchedulersIo(getApiService().findObdReceiveList().retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 修改个人信息
+     *
+     * @return
+     */
+    public Observable<BaseEntity> editOwnerInfo(Map<String, Object> params) {
+        return TourCoolTransformer.switchSchedulersIo(getApiService().editOwnerInfo(params).retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 查看个人信息
+     *
+     * @return
+     */
+    public Observable<BaseEntity<UserInfoEntity>> getUserInfo() {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("userType", "0");
+        return TourCoolTransformer.switchSchedulersIo(getApiService().getUserInfo(params).retryWhen(new RetryWhen()));
+    }
+
+
+    /**
+     * 查看个人信息
+     *
+     * @return
+     */
+    public Observable<BaseEntity> restPassword(String mobile, String password, String vCode) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("mobile", mobile);
+        params.put("password", password);
+        params.put("userType", "0");
+        params.put("vCode", vCode);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().restPassword(params).retryWhen(new RetryWhen()));
+    }
+
+
+    /**
+     * 查看个人信息
+     *
+     * @return
+     */
+    public Observable<BaseEntity> changeMobile(String mobile, String vCode) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("mobile", mobile);
+        params.put("userType", "0");
+        params.put("vCode", vCode);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().changeMobile(params).retryWhen(new RetryWhen()));
     }
 
 

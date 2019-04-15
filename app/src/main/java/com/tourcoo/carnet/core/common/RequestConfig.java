@@ -1,5 +1,7 @@
 package com.tourcoo.carnet.core.common;
 
+import com.tourcoo.carnet.core.log.TourcooLogUtil;
+
 /**
  * @author :JenkinsZhou
  * @description :请求相关配置

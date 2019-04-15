@@ -254,7 +254,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 if (entity.data.toString().contains(TAG_REGISTER)) {
-                                    UserInfoEntity userInfoEntity = parseUserInfoEntity(entity.data);
+                                    UserInfoEntity userInfoEntity = parseUserInfo(JSONObject.toJSONString(entity.data));
                                     if (userInfoEntity != null) {
                                         //todo 保存用户信息
                                         AccountInfoHelper.getInstance().setUserInfoEntity(userInfoEntity);
@@ -275,15 +275,27 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-    private UserInfoEntity parseUserInfoEntity(Object data) {
+    private UserInfoEntity parseUserInfo(String jsonStr) {
+        if (TextUtils.isEmpty(jsonStr)) {
+            return null;
+        }
         try {
-            String jsonStr = JSONObject.toJSONString(data);
-            return JSON.parseObject(jsonStr, UserInfoEntity.class);
+            TourcooLogUtil.e(TAG, "用户信息:" + jsonStr);
+            UserInfoEntity userInfoEntity = JSON.parseObject(jsonStr, UserInfoEntity.class);
+            JSONObject data = JSONObject.parseObject(jsonStr);
+            JSONObject userInfo = data.getJSONObject("userInfo");
+            int userId = userInfo.getIntValue("id");
+            if(userInfoEntity.getUserInfo() != null){
+                userInfoEntity.getUserInfo().setUserId(userId);
+                TourcooLogUtil.i(TAG, "设置成功:" + userId);
+            }
+            return userInfoEntity;
         } catch (Exception e) {
-            TourcooLogUtil.e(TAG, "异常：" + e.toString());
+            TourcooLogUtil.e(TAG, "错误" + e.toString());
             return null;
         }
     }
+
   /*  userInfoEntity;
             TourcooLogUtil.i(TAG,userInfoEntity.getToken());
             TourcooLogUtil.i(TAG,userInfoEntity.getUserInfo().getCreateTime());

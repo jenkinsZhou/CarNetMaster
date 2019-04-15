@@ -29,55 +29,27 @@
                     android:layout_width="@dimen/dp_76"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="新密码"
+                    android:text="新手机号码"
                     android:textColor="#000000"
                     android:textSize="@dimen/sp_14" />
 
                 <EditText
-                    android:id="@+id/etPasswordNew"
+                    android:id="@+id/etNewPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/dp_32"
                     android:background="@null"
-                    android:inputType="textPassword"
+                    android:inputType="phone"
                     android:gravity="center_vertical"
-                    android:hint="请输入密码"
+                    android:hint="请输入手机号"
                     android:textSize="@dimen/sp_14" />
 
             </LinearLayout>
 
             <include layout="@layout/line_horizontal_gray_1half_dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_46"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvPasswordConfirm"
-                    android:layout_width="@dimen/dp_76"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="确认新密码"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/sp_14" />
-
-                <EditText
-                    android:id="@+id/etPasswordConfirm"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dp_32"
-                    android:background="@null"
-                    android:inputType="textPassword"
-                    android:gravity="center_vertical"
-                    android:hint="请确认新密码"
-                    android:textSize="@dimen/sp_14" />
-
-            </LinearLayout>
-
-            <include layout="@layout/line_horizontal_gray_1half_dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -125,13 +97,13 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvEditPassword"
+            android:id="@+id/tvBindConfirm"
             style="@style/TextViewButtonBlueBgMatchParentStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_38"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/dp_40"
-            android:text="修改密码" />
+            android:text="确认修改" />
 
 
     </RelativeLayout>
