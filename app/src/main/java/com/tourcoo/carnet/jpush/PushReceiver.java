@@ -8,7 +8,7 @@ import android.util.Log;
 
 
 import com.google.gson.Gson;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 
 
@@ -25,7 +25,7 @@ public class PushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        TourcooLogUtil.i("点地方1asd击率");
+        TourCooLogUtil.i("点地方1asd击率");
         Bundle bundle = intent.getExtras();
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             /**
@@ -33,7 +33,7 @@ public class PushReceiver extends BroadcastReceiver {
              *
              * 注册JPush成功时回调，此时registrationID的值才不为空
              */
-            TourcooLogUtil.i("点地方1asd击率");
+            TourCooLogUtil.i("点地方1asd击率");
 //
 //           InspectApplication.registrationID=bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
 //            Log.d(TAG,"[PushReceiver] 接收Registration Id : "+InspectApplication.registrationID);
@@ -76,14 +76,14 @@ public class PushReceiver extends BroadcastReceiver {
                 //自定义activity的处理
                 //如果app的进程虽然仍然在但Task栈已经空了，比如用户点击Back键退出应用，但进程还没有被系统回收，
                 //如果直接启动对应Activity,再按Back键就不会返回MainActivity了。所以在启动对应Activity前，要先启动MainActivity
-                TourcooLogUtil.i("点地方1asd击率");
+                TourCooLogUtil.i("点地方1asd击率");
 
             }
 
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[PushReceiver] 用户点击打开了通知");
-            TourcooLogUtil.i("用户点击打开了通知");
+            TourCooLogUtil.i("用户点击打开了通知");
             /**
              * 用户点击了通知。
              *
@@ -97,7 +97,7 @@ public class PushReceiver extends BroadcastReceiver {
              */
             String pushData = bundle.getString(JPushInterface.EXTRA_EXTRA);
             ToastUtil.show("点击率");
-            TourcooLogUtil.i("点地方1asd击率");
+            TourCooLogUtil.i("点地方1asd击率");
 //
             if (!"".equals(pushData) && !"null".equals(pushData) && pushData != null) {
                 //接收到推送进行刷新
@@ -105,7 +105,7 @@ public class PushReceiver extends BroadcastReceiver {
 
             }
         }
-        TourcooLogUtil.i("点地方1asd击率");
+        TourCooLogUtil.i("点地方1asd击率");
 
     }
 

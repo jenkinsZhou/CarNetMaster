@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.tourcoo.carnet.core.frame.util.FileUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -84,7 +84,7 @@ public abstract class BaseDownloadObserver extends BaseObserver<ResponseBody> {
         this.mDestFileName = destFileName;
         this.mDialog = dialog;
         this.mIsRangeEnable = isRangeEnable;
-        TourcooLogUtil.i("BaseDownloadObserver", "mDestFileDir:" + mDestFileDir);
+        TourCooLogUtil.i("BaseDownloadObserver", "mDestFileDir:" + mDestFileDir);
     }
 
     /**

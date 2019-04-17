@@ -11,12 +11,11 @@ import android.widget.FrameLayout;
 
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
-import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.interfaces.IBaseView;
 import com.tourcoo.carnet.core.frame.interfaces.IRefreshLoadView;
 import com.tourcoo.carnet.core.frame.manager.RxJavaManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tourcoo.carnet.core.widget.confirm.AlertDialog;
 import com.trello.rxlifecycle3.android.FragmentEvent;
@@ -60,7 +59,7 @@ public abstract class BaseFragment extends RxFragment implements IBaseView {
         if (manager != null) {
             size = manager.getFragments().size();
         }
-        TourcooLogUtil.i(TAG, TAG + ";FragmentManager承载Fragment数量:" + size);
+        TourCooLogUtil.i(TAG, TAG + ";FragmentManager承载Fragment数量:" + size);
         return size <= 1;
     }
 
@@ -96,7 +95,7 @@ public abstract class BaseFragment extends RxFragment implements IBaseView {
                 onVisibleChanged(true);
             }
         }
-        TourcooLogUtil.i(TAG, TAG + ";mIsVisibleChanged:" + mIsVisibleChanged
+        TourCooLogUtil.i(TAG, TAG + ";mIsVisibleChanged:" + mIsVisibleChanged
                 + ";getUserVisibleHint:" + getUserVisibleHint()
                 + ";isHidden:" + isHidden() + ";isVisible:" + isVisible());
         return mContentView;
@@ -135,7 +134,7 @@ public abstract class BaseFragment extends RxFragment implements IBaseView {
     @Override
     public void onResume() {
         super.onResume();
-        TourcooLogUtil.i(TAG, "onResume-isAdded:" + isAdded() + ";getUserVisibleHint:" + getUserVisibleHint()
+        TourCooLogUtil.i(TAG, "onResume-isAdded:" + isAdded() + ";getUserVisibleHint:" + getUserVisibleHint()
                 + ";isHidden:" + isHidden() + ";isVisible:" + isVisible() + ";isResume:" + isResumed() + ";isVisibleToUser:" + isVisibleToUser(this) + ";host:");
         if (isAdded() && isVisibleToUser(this)) {
             onVisibleChanged(true);
@@ -213,7 +212,7 @@ public abstract class BaseFragment extends RxFragment implements IBaseView {
      * @param isVisibleToUser
      */
     protected void onVisibleChanged(final boolean isVisibleToUser) {
-        TourcooLogUtil.i(TAG, "onVisibleChanged-isVisibleToUser:" + isVisibleToUser);
+        TourCooLogUtil.i(TAG, "onVisibleChanged-isVisibleToUser:" + isVisibleToUser);
         mIsVisibleChanged = true;
         if (isVisibleToUser) {
             //避免因视图未加载子类刷新UI抛出异常

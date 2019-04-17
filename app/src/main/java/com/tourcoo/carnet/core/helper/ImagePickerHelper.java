@@ -9,7 +9,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.BaseHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.widget.core.util.StatusBarUtil;
 
 import java.util.List;
@@ -76,7 +76,7 @@ public class ImagePickerHelper extends BaseHelper {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        TourcooLogUtil.i("onActivityResult", "path:");
+        TourCooLogUtil.i("onActivityResult", "path:");
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode != mRequestCode) {
                 return;

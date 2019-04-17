@@ -8,19 +8,16 @@ import android.widget.TextView;
 
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.util.ToastUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.core.widget.custom.EmiViewPager;
 import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.entity.event.OrderEvent;
-import com.tourcoo.carnet.ui.repair.RepairDepotListFragment;
 import com.tourcoo.carnet.ui.repair.HistoryFaultRepairFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +27,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_REPAIR;
 
 /**
  * @author :zhoujian
@@ -44,6 +44,7 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
     private TextView tvTabRepair;
     private TextView tvTabService;
     private MyHandler mMyHandler = new MyHandler();
+    private String type ;
 
     @Override
     public int getContentLayout() {
@@ -58,6 +59,8 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         tvTabRepair.setOnClickListener(this);
         tvTabService.setOnClickListener(this);
         EventBus.getDefault().register(this);
+        type = getIntent().getStringExtra(EXTRA_ORDER_TYPE);
+          TourCooLogUtil.i(TAG, "测试类型:"+type);
     }
 
     @Override
@@ -78,17 +81,24 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         orderHistoryViewPager.addOnPageChangeListener(this);
         orderHistoryViewPager.setAdapter(pagerAdapter);
         //必须在 viewPager.setAdapter()之后使用
-        showHistoryFault();
+        if (TYPE_REPAIR.equals(type)) {
+            showHistoryFault();
+              TourCooLogUtil.i(TAG, "接收到");
+        } else {
+            showHistoryService();
+            TourCooLogUtil.e(TAG, "接收到");
+        }
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvTabRepair:
-              showHistoryFault();
+                showHistoryFault();
                 break;
             case R.id.tvTabService:
-             showHistoryService();
+                showHistoryService();
                 break;
             default:
                 break;
@@ -163,30 +173,36 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         super.onDestroy();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onBaseEvent(BaseEvent event) {
         EventBus.getDefault().postSticky(new OrderEvent(event.id));
         mMyHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                showHistoryService();
+                if (TYPE_REPAIR.equals(type)) {
+                    showHistoryFault();
+                    TourCooLogUtil.i(TAG, "接收到");
+                } else {
+                    showHistoryService();
+                    TourCooLogUtil.e(TAG, "接收到");
+                }
             }
-        },100);
+        }, 100);
     }
 
-    private void showHistoryService(){
+    private void showHistoryService() {
         setSelect(tvTabService);
         setUnSelect(tvTabRepair);
         orderHistoryViewPager.setCurrentItem(1);
     }
 
-    private void showHistoryFault(){
+    private void showHistoryFault() {
         setSelect(tvTabRepair);
         setUnSelect(tvTabService);
         orderHistoryViewPager.setCurrentItem(0);
     }
 
-    private static class MyHandler extends Handler{
+    private static class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

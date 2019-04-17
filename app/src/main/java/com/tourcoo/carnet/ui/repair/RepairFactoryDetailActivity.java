@@ -3,8 +3,9 @@ package com.tourcoo.carnet.ui.repair;
 import android.accounts.AccountsException;
 import android.accounts.NetworkErrorException;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,13 +34,10 @@ import com.tourcoo.carnet.core.frame.base.activity.WebViewActivity;
 import com.tourcoo.carnet.core.frame.manager.GlideManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.frame.util.NetworkUtil;
-import com.tourcoo.carnet.core.frame.widget.NaViLoadMoreView;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.threadpool.ThreadPoolManager;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
-import com.tourcoo.carnet.core.widget.core.util.SizeUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
@@ -75,14 +73,14 @@ import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
  * @date 2019年03月25日18:42
  * @Email: 971613168@qq.com
  */
-public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implements OnRefreshListener, OnLoadMoreListener, View.OnClickListener, BaseQuickAdapter.RequestLoadMoreListener {
+public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implements OnRefreshListener, OnLoadMoreListener, View.OnClickListener{
     protected BGABanner banner;
     private List<String> mImageList = new ArrayList<>();
     private GarageInfo garageInfo;
     private SmartRefreshLayout smartRefreshLayout;
     private TextView tvGarageName;
     private TextView tvGarageDescription;
-    private int pageSize = 5;
+    private int pageSize = 10;
     private RecyclerView rvGoodsField;
     private RecyclerView rvComment;
     private View emptyView;
@@ -93,11 +91,15 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     private static final int REFRESH = 2;
     private StatusLayoutManager mStatusLayoutManager;
     private int currentPage = 1;
+
     /**
      * 擅长领域
      */
     private GoodFieldAdapter mGoodFieldAdapter;
 
+    /**
+     * 评论列表适配器
+     */
     private CommentAdapter mCommentAdapter;
     private List<String> tagList = new ArrayList<>();
     public static final String  EXTRA_GARAGE_DETAIL = "EXTRA_GARAGE_DETAIL";
@@ -133,7 +135,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
             }
         }
         for (String image : mImageList) {
-            TourcooLogUtil.d("图片url:" + image);
+            TourCooLogUtil.d("图片url:" + image);
         }
         initTagList(garageInfo);
         mGoodFieldAdapter.bindToRecyclerView(rvGoodsField);
@@ -159,11 +161,14 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     }
 
 
+
+
     private void refreshComment() {
         findGarageCommentList(garageInfo.getId(), 1, pageSize);
     }
 
     private void loadMoreComment(int page) {
+          TourCooLogUtil.i(TAG, "当前请求的页码:"+page+"---当前每页请求数量:"+pageSize);
         findGarageCommentList(garageInfo.getId(), page, pageSize);
     }
 
@@ -195,8 +200,8 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
 
     private void showDetail() {
         if (garageInfo != null) {
-            tvGarageName.setText(TourcooUtil.getNotNullValue(garageInfo.getName()));
-            tvGarageDescription.setText(TourcooUtil.getNotNullValue(garageInfo.getSynopsis()));
+            tvGarageName.setText(TourCooUtil.getNotNullValue(garageInfo.getName()));
+            tvGarageDescription.setText(TourCooUtil.getNotNullValue(garageInfo.getSynopsis()));
         } else {
             ToastUtil.showFailed("获取失败");
         }
@@ -253,7 +258,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         ConfirmDialog.Builder builder = new ConfirmDialog.Builder(mContext);
         builder.setMessageGravity(Gravity.CENTER_HORIZONTAL);
         builder.setTitle("联系修理厂").setFirstMessage(garageInfo.getMobile())
-                .setFirstTextColor(TourcooUtil.getColor(R.color.blueCommon))
+                .setFirstTextColor(TourCooUtil.getColor(R.color.blueCommon))
                 .setFirstMsgSize(15).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -263,8 +268,8 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
                 .setPositiveButton("呼叫", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ToastUtil.show("呼叫");
                         dialog.dismiss();
+                        call(garageInfo.getMobile());
 //                        ApiRepository.getInstance().updateApp()
                     }
                 });
@@ -293,36 +298,18 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     }
 
 
-    private void showDataByStatus() {
-        if (mCommentAdapter.getData().isEmpty()) {
-            mStatusLayoutManager.showEmptyLayout();
-            smartRefreshLayout.setEnableLoadMore(false);
-        } else {
-            mStatusLayoutManager.showSuccessLayout();
-            smartRefreshLayout.setEnableLoadMore(true);
-        }
-
-    }
-
-    private void showEmptyView() {
-        mCommentAdapter.setEmptyView(emptyView);
-    }
 
 
-    private void showErrorView() {
-        mCommentAdapter.setEmptyView(errorView);
-    }
 
     private void initCommentAdapter() {
         mCommentAdapter = new CommentAdapter();
         mCommentAdapter.removeAllFooterView();
         mCommentAdapter.bindToRecyclerView(rvComment);
-        mCommentAdapter.setOnLoadMoreListener(this, rvComment);
     }
 
 
     private void handleError(Throwable e) {
-        TourcooLogUtil.e(TAG, e.toString());
+        TourCooLogUtil.e(TAG, e.toString());
         int reason = R.string.exception_other_error;
 //        int code = FastError.EXCEPTION_OTHER_ERROR;
         if (!NetworkUtil.isConnected(CarNetApplication.getContext())) {
@@ -466,46 +453,26 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     }
 
 
-    private void setLoadMoreView() {
-        mCommentAdapter.setLoadMoreView(new NaViLoadMoreView.Builder(mContext)
-                .setLoadingTextFakeBold(true)
-                .setLoadingSize(SizeUtil.dp2px(20))
-//                                .setLoadTextColor(Color.MAGENTA)
-//                                //设置Loading 颜色-5.0以上有效
-//                                .setLoadingProgressColor(Color.MAGENTA)
-//                                //设置Loading drawable--会使Loading颜色失效
-//                                .setLoadingProgressDrawable(R.drawable.dialog_loading_wei_bo)
-//                                //设置全局TextView颜色
-//                                .setLoadTextColor(Color.MAGENTA)
-//                                //设置全局TextView文字字号
-//                                .setLoadTextSize(SizeUtil.dp2px(14))
-//                                .setLoadingText("努力加载中...")
-//                                .setLoadingTextColor(Color.GREEN)
-//                                .setLoadingTextSize(SizeUtil.dp2px(14))
-//                                .setLoadEndText("我是有底线的")
-//                                .setLoadEndTextColor(Color.GREEN)
-//                                .setLoadEndTextSize(SizeUtil.dp2px(14))
-//                                .setLoadFailText("哇哦!出错了")
-//                                .setLoadFailTextColor(Color.RED)
-//                                .setLoadFailTextSize(SizeUtil.dp2px(14))
-                .build());
 
-    }
 
 
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         currentPage++;
-        TourcooLogUtil.i("触发了onLoadMoreRequested:请求的页码:" + currentPage);
+        TourCooLogUtil.i("触发了onLoadMoreRequested:请求的页码:" + currentPage);
         refreshFlag = LOAD_MORE;
         mStatusLayoutManager.showSuccessLayout();
         loadMoreComment(currentPage);
     }
 
-    @Override
-    public void onLoadMoreRequested() {
-        TourcooLogUtil.d("触发了onLoadMore:请求的页码:" + currentPage);
-        smartRefreshLayout.finishLoadMore();
+    /**
+     * 调用拨号功能
+     * @param phone 电话号码
+     */
+    private void call(String phone) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
 }

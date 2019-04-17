@@ -3,7 +3,7 @@ package com.tourcoo.carnet.entity;
 import android.text.TextUtils;
 
 import com.tourcoo.carnet.CarNetApplication;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 
 /**
  * @Author: AriesHoo on 2018/11/19 14:17
@@ -32,8 +32,8 @@ public class UpdateEntity {
     public String size;
 
     public boolean isSuccess() {
-        int code = TourcooUtil.getVersionCode(CarNetApplication.getContext());
-        String name = TourcooUtil.getVersionName(CarNetApplication.getContext());
+        int code = TourCooUtil.getVersionCode(CarNetApplication.getContext());
+        String name = TourCooUtil.getVersionName(CarNetApplication.getContext());
         if (versionCode > code || (versionCode == code && name.compareTo(versionName) < 0)) {
             return true;
         }

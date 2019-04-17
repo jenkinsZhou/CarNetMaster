@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tourcoo.carnet.R;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 
 /**
@@ -35,7 +35,7 @@ public class ErrorActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_error_activity);
         errorInformation = CrashManager.getAllErrorDetailsFromIntent(ErrorActivity.this, getIntent());
-        TourcooLogUtil.e(TAG, "errorInformation:" + errorInformation);
+        TourCooLogUtil.e(TAG, "errorInformation:" + errorInformation);
         //查看
         Button btnCheck = findViewById(R.id.btn_check);
         btnCheck.setOnClickListener(new View.OnClickListener() {

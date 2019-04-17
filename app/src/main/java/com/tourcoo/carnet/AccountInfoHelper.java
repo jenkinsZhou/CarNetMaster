@@ -3,7 +3,7 @@ package com.tourcoo.carnet;
 import android.text.TextUtils;
 
 import com.tourcoo.carnet.core.frame.util.SharedPreferencesUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.entity.account.UserInfo;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
@@ -29,6 +29,7 @@ public class AccountInfoHelper {
     private UserInfoEntity mUserInfoEntity;
     private CarInfoEntity currentCar;
     private static final String TAG = "AccountInfoHelper";
+    private String openId = "";
     /**
      * 车辆信息列表
      */
@@ -101,7 +102,7 @@ public class AccountInfoHelper {
             LitePal.deleteAll(UserInfo.class);
             userInfo.save();
             mUserInfoEntity.setUserInfo(LitePal.findFirst(UserInfo.class));
-            TourcooLogUtil.i("更新成功", userInfo);
+            TourCooLogUtil.i("更新成功", userInfo);
         }
     }
 
@@ -147,39 +148,53 @@ public class AccountInfoHelper {
         boolean flag;
         try {
             flag = (boolean) SharedPreferencesUtil.get(PREF_KEY_IS_REMIND_PASSWORD, true);
-            TourcooLogUtil.e(TAG, "正常:" + flag);
+            TourCooLogUtil.e(TAG, "正常:" + flag);
         } catch (Exception e) {
             flag = true;
-            TourcooLogUtil.e(TAG, "出现异常了");
+            TourCooLogUtil.e(TAG, "出现异常了");
         }
         return flag;
     }
 
     /**
      * 修改本地存储的用户密码
+     *
      * @param newPass
      */
     public void changePassWord(String newPass) {
         if (TextUtils.isEmpty(newPass)) {
-            TourcooLogUtil.e(TAG, "密码为空");
+            TourCooLogUtil.e(TAG, "密码为空");
             return;
         }
-        TourcooLogUtil.i(TAG, "修改成功:"+newPass);
+        TourCooLogUtil.i(TAG, "修改成功:" + newPass);
         SharedPreferencesUtil.put(PREF_KEY_PASSWORD, newPass);
     }
 
     /**
      * 修改本地存储的用户手机号
+     *
      * @param newPhone
      */
     public void changeMobile(String newPhone) {
         if (TextUtils.isEmpty(newPhone)) {
-            TourcooLogUtil.e(TAG, "手机号为空");
+            TourCooLogUtil.e(TAG, "手机号为空");
             return;
         }
-        TourcooLogUtil.i(TAG, "手机号修改成功:"+newPhone);
+        TourCooLogUtil.i(TAG, "手机号修改成功:" + newPhone);
         SharedPreferencesUtil.put(PREF_KEY_ACCOUNT, newPhone);
     }
 
+    public void setWeChatOpenId(String openId) {
+        if (!TextUtils.isEmpty(openId)) {
+            this.openId = openId;
+        }
+    }
 
+    public String getOpenId() {
+        if(TextUtils.isEmpty(openId)){
+            openId = "";
+        }
+          TourCooLogUtil.i(TAG, "openId=" +openId);
+        return openId;
+    }
 }

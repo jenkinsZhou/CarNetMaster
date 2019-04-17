@@ -24,9 +24,9 @@ import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.base.activity.BaseRefreshLoadActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.helper.LocateHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.garage.GarageEntity;
@@ -65,6 +65,7 @@ public class NearbyRepairFactoryActivity extends BaseRefreshLoadActivity impleme
     @Override
     public void initView(Bundle savedInstanceState) {
         mDefaultPage = 1;
+        mDefaultPageSize = 6;
         /*
          * 设置离线地图存储目录，在下载离线地图或初始化地图设置;
          * 使用过程中可自行设置, 若自行设置了离线地图存储的路径，
@@ -88,7 +89,7 @@ public class NearbyRepairFactoryActivity extends BaseRefreshLoadActivity impleme
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("附近修理厂");
         titleBar.setRightText("重新定位");
-        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,15 +207,15 @@ public class NearbyRepairFactoryActivity extends BaseRefreshLoadActivity impleme
 
     @Override
     public void loadData(int page) {
-        TourcooLogUtil.i(TAG, "已执行：" + page);
-        findNearbyGarages(String.valueOf(page), String.valueOf(mDefaultPageSize));
+        TourCooLogUtil.i(TAG, "已执行：" + page);
+        findNearbyGarages(String.valueOf(page), String.valueOf(3));
     }
 
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         mDefaultPage = 1;
-        super.onRefresh(refreshlayout);
+        refreshRequest();
     }
 
     @Override
@@ -261,7 +262,7 @@ public class NearbyRepairFactoryActivity extends BaseRefreshLoadActivity impleme
                     return;
                 }
                 //拿到位置信息后才请求接口
-                TourcooLogUtil.i("当前经纬度:" + currentPosition);
+                TourCooLogUtil.i("当前经纬度:" + currentPosition);
                 refreshRequest();
             }
         });
@@ -291,7 +292,7 @@ public class NearbyRepairFactoryActivity extends BaseRefreshLoadActivity impleme
      * 获取附近修理厂列表
      */
     private void findNearbyGarages(String pageIndex, String pageSize) {
-        TourcooLogUtil.i("当前请求的页码：", pageIndex + "默认每页的数目" + pageSize);
+        TourCooLogUtil.i(TAG, "当前请求的页码:"+pageIndex + "默认每页的数目:" + pageSize);
         ApiRepository.getInstance().findNearbyGarages(currentPosition, "100", pageIndex, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity>(getIHttpRequestControl()) {
                     @Override
@@ -301,20 +302,19 @@ public class NearbyRepairFactoryActivity extends BaseRefreshLoadActivity impleme
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 GarageEntity garageEntity = parseGarageEntity(JSONObject.toJSONString(entity.data));
                                 if (garageEntity != null) {
-                                    TourcooLogUtil.i("本次数据页码：getPages:", garageEntity.getPages());
-                                    TourcooLogUtil.i("本次数据页码：getCurrent:", garageEntity.getCurrent());
-                                    TourcooLogUtil.i("本次数据长度：", garageEntity.getGarageList().size());
                                     UiConfigManager.getInstance().getHttpRequestControl().httpRequestSuccess(getIHttpRequestControl(), garageEntity.getGarageList() == null ? new ArrayList<>() : garageEntity.getGarageList(), null);
                                 }
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }
                         }
+                        mRefreshLayout.finishRefresh();
                     }
 
                     @Override
                     public void onRequestError(Throwable e) {
                         super.onRequestError(e);
+                        mRefreshLayout.finishRefresh();
                         mStatusManager.showErrorLayout();
                     }
                 });
@@ -360,6 +360,7 @@ public class NearbyRepairFactoryActivity extends BaseRefreshLoadActivity impleme
 
     private void refreshRequest() {
         mDefaultPage = 1;
-        findNearbyGarages("1", mDefaultPageSize + "");
+        depotDescriptionAdapter.getData().clear();
+        findNearbyGarages(mDefaultPage+"", mDefaultPageSize + "");
     }
 }

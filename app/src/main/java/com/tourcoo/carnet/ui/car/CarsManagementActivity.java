@@ -13,15 +13,12 @@ import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.CarInfoAdapter;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.base.activity.BaseRefreshLoadActivity;
-import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
-import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.entity.event.CarRefreshEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -108,7 +105,7 @@ public class CarsManagementActivity extends BaseRefreshLoadActivity {
 
                     @Override
                     public void onRequestError(Throwable e) {
-                        TourcooLogUtil.e(TAG, "请求异常:" + e.toString());
+                        TourCooLogUtil.e(TAG, "请求异常:" + e.toString());
                         mStatusManager.showErrorLayout();
                         mRefreshLayout.finishRefresh();
 
@@ -121,7 +118,7 @@ public class CarsManagementActivity extends BaseRefreshLoadActivity {
         try {
             return JSONObject.parseArray(JSON.toJSONString(jsonArrayStr), CarInfoEntity.class);
         } catch (Exception e) {
-            TourcooLogUtil.e(TAG, "解析失败:" + e.toString());
+            TourCooLogUtil.e(TAG, "解析失败:" + e.toString());
             return new ArrayList<>();
         }
     }

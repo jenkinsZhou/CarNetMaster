@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 
 /**
  * @author :zhoujian
@@ -44,7 +44,7 @@ public class ViewColorUtil {
                     if (item != null) {
                         //使用该方法避免同一Drawable被全局修改
                         item = item.mutate();
-                        TourcooUtil.getTintDrawable(item, Color.argb(mIsLight ? alpha : 255 - alpha, mIsLight ? 0 : 255, mIsLight ? 0 : 255, mIsLight ? 0 : 255));
+                        TourCooUtil.getTintDrawable(item, Color.argb(mIsLight ? alpha : 255 - alpha, mIsLight ? 0 : 255, mIsLight ? 0 : 255, mIsLight ? 0 : 255));
                     }
                 }
                 if (!showText) {
@@ -55,7 +55,7 @@ public class ViewColorUtil {
             } else if (rootView instanceof ImageView) {
                 //使用该方法避免同一Drawable被全局修改
                 Drawable drawable = ((ImageView) rootView).getDrawable().mutate();
-                TourcooUtil.getTintDrawable(drawable, Color.argb(mIsLight ? alpha : 255 - alpha, mIsLight ? 0 : 255, mIsLight ? 0 : 255, mIsLight ? 0 : 255));
+                TourCooUtil.getTintDrawable(drawable, Color.argb(mIsLight ? alpha : 255 - alpha, mIsLight ? 0 : 255, mIsLight ? 0 : 255, mIsLight ? 0 : 255));
             } else if (rootView instanceof ViewGroup) {
                 ViewGroup contentView = (ViewGroup) rootView;
                 int size = contentView.getChildCount();

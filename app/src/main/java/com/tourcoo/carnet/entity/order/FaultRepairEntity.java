@@ -1,4 +1,6 @@
-package com.tourcoo.carnet.entity;
+package com.tourcoo.carnet.entity.order;
+
+import com.tourcoo.carnet.entity.BaseEntity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -148,6 +150,16 @@ public class FaultRepairEntity extends BaseEntity<FaultRepairEntity> implements 
         private String car_id;
         private int paytype;
         private int status;
+
+        private String images = "";
+
+        public String getImages() {
+            return images;
+        }
+
+        public void setImages(String images) {
+            this.images = images;
+        }
 
         public int getOrderType() {
             return orderType;

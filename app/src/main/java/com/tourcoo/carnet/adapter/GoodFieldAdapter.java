@@ -3,7 +3,7 @@ package com.tourcoo.carnet.adapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.carnet.R;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 
 import java.util.List;
 
@@ -23,6 +23,6 @@ public class GoodFieldAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, String item) {
-        helper.setText(R.id.tvGoodField, TourcooUtil.getNotNullValue(item));
+        helper.setText(R.id.tvGoodField, TourCooUtil.getNotNullValue(item));
     }
 }

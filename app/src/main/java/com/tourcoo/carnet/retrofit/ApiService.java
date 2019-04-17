@@ -1,16 +1,16 @@
 package com.tourcoo.carnet.retrofit;
 
 import com.tourcoo.carnet.entity.BaseEntity;
-import com.tourcoo.carnet.entity.FaultRepairEntity;
-import com.tourcoo.carnet.entity.account.UserInfo;
+import com.tourcoo.carnet.entity.garage.CommentDetail;
+import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
-import com.tourcoo.carnet.entity.garage.CommentInfo;
 import com.tourcoo.carnet.entity.garage.GarageEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
 import com.tourcoo.carnet.entity.MessageInfo;
 import com.tourcoo.carnet.entity.car.CarFaultRemindType;
 import com.tourcoo.carnet.entity.car.PayInfo;
+import com.tourcoo.carnet.entity.order.OrderDetail;
 
 import java.util.List;
 import java.util.Map;
@@ -314,6 +314,7 @@ public interface ApiService {
 
     /**
      * 修改密码
+     *
      * @param map
      * @return
      */
@@ -323,11 +324,55 @@ public interface ApiService {
 
     /**
      * 更换手机号
+     *
      * @param map
      * @return
      */
     @POST("signLogin/changeMobile")
     Observable<BaseEntity> changeMobile(@QueryMap Map<String, Object> map);
+
+    /**
+     * 反馈
+     *
+     * @param map
+     * @return
+     */
+    @POST("owner/feedback/add")
+    Observable<BaseEntity> feedBack(@Body Map<String, Object> map);
+
+
+    /**
+     * 获取指定订单详情
+     *
+     * @param map
+     * @return
+     */
+    @POST("order/findDetail")
+    Observable<BaseEntity<OrderDetail>> findDetail(@QueryMap Map<String, Object> map);
+
+    /**
+     * 获取评论详情
+     * @param map
+     * @return
+     */
+    @POST("order/findComment")
+    Observable<BaseEntity<List<CommentDetail>>> findComment(@QueryMap Map<String, Object> map);
+
+    /**
+     * 微信登录
+     * @param map
+     * @return
+     */
+    @POST("signLogin/loginByWechat")
+    Observable<BaseEntity> loginByWechat(@QueryMap Map<String, Object> map);
+
+    /**
+     * 绑定手机号
+     * @param map
+     * @return
+     */
+    @POST("signLogin/bindMobile")
+    Observable<BaseEntity> bindMobile(@QueryMap Map<String, Object> map);
 
 
 }

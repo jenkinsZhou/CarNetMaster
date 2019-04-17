@@ -27,8 +27,8 @@ import com.tourcoo.carnet.core.frame.retrofit.TourCoolRetrofit;
 import com.tourcoo.carnet.core.frame.util.FileUtil;
 import com.tourcoo.carnet.core.frame.util.NotificationUtil;
 import com.tourcoo.carnet.core.frame.util.StackUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.action.ActionSheetDialog;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
@@ -112,7 +112,7 @@ public class WebViewActivity extends BaseWebActivity {
             } else if (!mIsShowTitle) {
                 showActionSheet();
             }
-            TourcooLogUtil.d("onLongClick:hitTestResult-Type:" + hitTestResult.getType() + ";Extra:" + hitTestResult.getExtra());
+            TourCooLogUtil.d("onLongClick:hitTestResult-Type:" + hitTestResult.getType() + ";Extra:" + hitTestResult.getExtra());
             return true;
         });
     }
@@ -141,7 +141,7 @@ public class WebViewActivity extends BaseWebActivity {
      * @param url
      */
     private void downImg(String url) {
-        String fileName = "/" + System.currentTimeMillis() + "_" + TourcooUtil.getRandom(100000) + ".jpg";
+        String fileName = "/" + System.currentTimeMillis() + "_" + TourCooUtil.getRandom(100000) + ".jpg";
         TourCoolRetrofit.getInstance().downloadFile(url)
                 .subscribe(new BaseDownloadObserver(mFilePath, fileName) {
                     @Override
@@ -161,7 +161,7 @@ public class WebViewActivity extends BaseWebActivity {
 
                     @Override
                     public void onProgress(float progress, long current, long total) {
-                        TourcooLogUtil.i(TAG, "progress:" + progress);
+                        TourCooLogUtil.i(TAG, "progress:" + progress);
                     }
                 });
     }
@@ -180,7 +180,7 @@ public class WebViewActivity extends BaseWebActivity {
     public void onBackPressed() {
         Activity activity = StackUtil.getInstance().getPrevious();
         if (activity == null) {
-            TourcooUtil.startActivity(mContext, MainActivity.class);
+            TourCooUtil.startActivity(mContext, MainActivity.class);
         }
         super.onBackPressed();
 

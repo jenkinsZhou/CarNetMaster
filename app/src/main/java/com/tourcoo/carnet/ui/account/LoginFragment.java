@@ -1,5 +1,6 @@
 package com.tourcoo.carnet.ui.account;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,23 +11,28 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.carnet.AccountInfoHelper;
 import com.tourcoo.carnet.R;
+import com.tourcoo.carnet.core.common.WxConfig;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseFragment;
 import com.tourcoo.carnet.core.frame.manager.RxJavaManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.util.SharedPreferencesUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.module.MainTabActivity;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
-import com.tourcoo.carnet.entity.account.UserInfo;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
+import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 
-import org.litepal.LitePal;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,7 @@ import static com.tourcoo.carnet.core.common.CommonConstant.PREF_KEY_IS_REMEMBER
 import static com.tourcoo.carnet.core.common.CommonConstant.PREF_KEY_IS_REMIND_PASSWORD;
 import static com.tourcoo.carnet.core.common.CommonConstant.PREF_KEY_PASSWORD;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS_NOT_REGISTER;
 
 /**
  * /* TourCoolRetrofit.getInstance().setBaseUrl("https://www.apiopen.top/");
@@ -59,6 +66,7 @@ import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
  * @Email: 971613168@qq.com
  */
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
+    private IWXAPI api;
     /**
      * 默认账号密码登录
      */
@@ -77,6 +85,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     private int count = COUNT;
     private CheckBox cBoxRemeberPassword;
     private LinearLayout llVerifyCodeAndPassword;
+    public static final String EXTRA_LOGIN = "EXTRA_LOGIN";
+
+    public static final int ACTION_LOGIN = 112;
 
     @Override
     public int getContentLayout() {
@@ -85,6 +96,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         etPhone = mContentView.findViewById(R.id.etPhone);
         etCode = mContentView.findViewById(R.id.etCode);
         cBoxRemeberPassword = mContentView.findViewById(R.id.cBoxRemeberPassword);
@@ -100,6 +112,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         llAccountLogin.setOnClickListener(this);
         tvGetCode.setOnClickListener(this);
         tvVerificationCodeLogin.setOnClickListener(this);
+        mContentView.findViewById(R.id.ivLoginWeChat).setOnClickListener(this);
         showLoginByAccount();
         cBoxRemeberPassword.setChecked(AccountInfoHelper.getInstance().isRemindPassword());
         //显保存的账号和密码
@@ -110,6 +123,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             etPhone.setText("");
             etPassword.setText("");
         }
+        registToWX();
     }
 
     private String getPhoneNumber() {
@@ -144,6 +158,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         showView(llVerifyCode);
         showView(llAccountLogin);
         hideView(llVerifyCodeAndPassword);
+        hideView(cBoxRemeberPassword);
     }
 
     /**
@@ -155,6 +170,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         hideView(llAccountLogin);
         showView(llVerifyCodeAndPassword);
         hideView(lineVerifyCode);
+        showView(cBoxRemeberPassword);
     }
 
     private void hideView(View view) {
@@ -194,7 +210,10 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                 doSendVCode();
                 break;
             case R.id.tvForgetPassword:
-                TourcooUtil.startActivity(mContext, EditPasswordActivity.class);
+                TourCooUtil.startActivity(mContext, ForgetPasswordActivity.class);
+                break;
+            case R.id.ivLoginWeChat:
+                wxLogin();
                 break;
             default:
                 break;
@@ -299,7 +318,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             ToastUtil.show("请先输入手机号");
             return;
         }
-        if (!TourcooUtil.isMobileNumber(getPhoneNumber())) {
+        if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
             ToastUtil.show("请输入正确的手机号");
             return;
         }
@@ -327,7 +346,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             ToastUtil.show("请先输入手机号");
             return;
         }
-        if (!TourcooUtil.isMobileNumber(getPhoneNumber())) {
+        if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
             ToastUtil.show("请输入正确的手机号");
             return;
         }
@@ -355,8 +374,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                         }
                         if (entity.code == CODE_REQUEST_SUCCESS) {
                             ToastUtil.showSuccess(entity.message);
-                                //验证码发送成功开始，倒计时
-                                countDownTime();
+                            //验证码发送成功开始，倒计时
+                            countDownTime();
                         } else {
                             ToastUtil.showFailed(entity.message);
                         }
@@ -373,7 +392,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             ToastUtil.show("请先输入手机号");
             return;
         }
-        if (!TourcooUtil.isMobileNumber(getPhoneNumber())) {
+        if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
             ToastUtil.show("请输入正确的手机号");
             return;
         }
@@ -403,18 +422,18 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             return null;
         }
         try {
-            TourcooLogUtil.e(TAG, "用户信息:" + jsonStr);
+            TourCooLogUtil.e(TAG, "用户信息:" + jsonStr);
             UserInfoEntity userInfoEntity = JSON.parseObject(jsonStr, UserInfoEntity.class);
             JSONObject data = JSONObject.parseObject(jsonStr);
             JSONObject userInfo = data.getJSONObject("userInfo");
             int userId = userInfo.getIntValue("id");
             if (userInfoEntity.getUserInfo() != null) {
                 userInfoEntity.getUserInfo().setUserId(userId);
-                TourcooLogUtil.i(TAG, "设置成功:" + userId);
+                TourCooLogUtil.i(TAG, "设置成功:" + userId);
             }
             return userInfoEntity;
         } catch (Exception e) {
-            TourcooLogUtil.e(TAG, "错误" + e.toString());
+            TourCooLogUtil.e(TAG, "错误" + e.toString());
             return null;
         }
     }
@@ -427,9 +446,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         }
         UserInfoEntity userInfoEntity = parseUserInfo(JSONObject.toJSONString(entity.data));
         if (userInfoEntity != null) {
-            TourcooLogUtil.i(TAG, "车主id：" + userInfoEntity.getUserInfo().getUserId());
+            TourCooLogUtil.i(TAG, "车主id：" + userInfoEntity.getUserInfo().getUserId());
             saveUserInfo(userInfoEntity);
-            TourcooUtil.startActivity(mContext, MainTabActivity.class);
+            TourCooUtil.startActivity(mContext, MainTabActivity.class);
             if (mContext != null) {
                 mContext.finish();
             }
@@ -440,12 +459,97 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void saveUserInfo(UserInfoEntity userInfoEntity) {
-        TourcooLogUtil.i("解析的数据：", userInfoEntity.getToken());
-        TourcooLogUtil.i("解析的数据", userInfoEntity.getUserInfo().getCreateTime());
+        TourCooLogUtil.i("解析的数据：", userInfoEntity.getToken());
+        TourCooLogUtil.i("解析的数据", userInfoEntity.getUserInfo().getCreateTime());
         //todo 暂时存在内存中 后期存在本地数据库
         AccountInfoHelper.getInstance().deleteUserAccount();
         AccountInfoHelper.getInstance().setUserInfoEntity(userInfoEntity);
         AccountInfoHelper.getInstance().saveUserInfo(userInfoEntity);
-
     }
+
+    private void registToWX() {
+        //AppConst.WEIXIN.APP_ID是指你应用在微信开放平台上的AppID，记得替换。
+        api = WXAPIFactory.createWXAPI(mContext, WxConfig.APP_ID, false);
+        // 将该app注册到微信
+        api.registerApp(WxConfig.APP_ID);
+    }
+
+
+    public void wxLogin() {
+        if (!api.isWXAppInstalled()) {
+            ToastUtil.showFailed("您还未安装微信客户端");
+            return;
+        }
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "diandi_wx_login";
+        api.sendReq(req);
+    }
+
+
+    /**
+     * 微信登录
+     *
+     * @param openId
+     */
+    private void loginByWechat(String openId) {
+        ApiRepository.getInstance().loginByWechat(openId).compose(bindUntilEvent(FragmentEvent.DESTROY)).
+                subscribe(new BaseLoadingObserver<BaseEntity>() {
+                    @Override
+                    public void onRequestNext(BaseEntity entity) {
+                        if (entity != null) {
+                            if (entity.code == CODE_REQUEST_SUCCESS_NOT_REGISTER) {
+                                weChatLoginCallback(entity);
+                            } else if (entity.code == CODE_REQUEST_SUCCESS) {
+                                doSkipByCondition(entity);
+                            } else {
+                                ToastUtil.showFailed(entity.message);
+                            }
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroy() {
+        if (api != null) {
+            api.detach();
+        }
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 微信登录回调
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN)
+    public void loginSuccess(BaseEvent event) {
+        if (event != null) {
+            TourCooLogUtil.i(TAG, "接收到消息:" + event.tag);
+            loginByWechat(event.tag);
+        }
+    }
+
+
+    private void weChatLoginCallback(BaseEntity entity) {
+        UserInfoEntity userInfoEntity = parseUserInfo(com.alibaba.fastjson.JSONObject.toJSONString(entity.data));
+        if (userInfoEntity != null) {
+            TourCooLogUtil.i(TAG, "车主id：" + userInfoEntity.getUserInfo().getUserId());
+            saveUserInfo(userInfoEntity);
+            TourCooUtil.startActivity(mContext, MainTabActivity.class);
+            if (mContext != null) {
+                mContext.finish();
+            }
+        } else {
+//          去绑定手机号
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_LOGIN, ACTION_LOGIN);
+            intent.setClass(mContext, BindPhoneNumberActivity.class);
+            startActivity(intent);
+        }
+    }
+
+
 }

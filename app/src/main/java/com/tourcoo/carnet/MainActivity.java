@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.dialog.alert.EmiAlertDialog;
 import com.tourcoo.carnet.core.widget.core.util.SizeUtil;
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.base_activity_main);
         context = this;
         initAlert();
-        TourcooLogUtil.d("测试安达市大所多啥所发生奥术大师大大所多奥术大师大所多的");
+        TourCooLogUtil.d("测试安达市大所多啥所发生奥术大师大大所多奥术大师大所多的");
       /*  findViewById(R.id.btnTest).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

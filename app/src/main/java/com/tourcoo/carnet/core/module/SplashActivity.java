@@ -13,16 +13,13 @@ import com.tourcoo.carnet.core.frame.base.activity.BaseTitleActivity;
 import com.tourcoo.carnet.core.frame.manager.RxJavaManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.frame.util.StackUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.util.StatusBarUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.ui.account.LoginRegisterActivity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
-
-import org.litepal.LitePal;
 
 import androidx.core.content.ContextCompat;
 import io.reactivex.disposables.Disposable;
@@ -46,7 +43,7 @@ public class SplashActivity extends BaseTitleActivity {
 
     @Override
     public void beforeInitView(Bundle savedInstanceState) {
-        TourcooLogUtil.i(TAG, "isTaskRoot:" + isTaskRoot() + ";getCurrent:" + StackUtil.getInstance().getCurrent());
+        TourCooLogUtil.i(TAG, "isTaskRoot:" + isTaskRoot() + ";getCurrent:" + StackUtil.getInstance().getCurrent());
         //防止应用后台后点击桌面图标造成重启的假象---MIUI及Flyme上发现过(原生未发现)
         if (!isTaskRoot()) {
             finish();
@@ -66,7 +63,7 @@ public class SplashActivity extends BaseTitleActivity {
         }
         ivBg = findViewById(R.id.sp_bg);
         Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_back);
-        TourcooUtil.getTintDrawable(drawable, Color.WHITE);
+        TourCooUtil.getTintDrawable(drawable, Color.WHITE);
         RxJavaManager.getInstance().setTimer(500)
                 .compose(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new BaseObserver<Long>() {
@@ -79,26 +76,26 @@ public class SplashActivity extends BaseTitleActivity {
                             UserInfoEntity userInfoEntity = AccountInfoHelper.getInstance().findUserInfoByLocal();
                             if (userInfoEntity != null && userInfoEntity.getUserInfo() != null) {
                                 AccountInfoHelper.getInstance().setUserInfoEntity(userInfoEntity);
-                                TourcooUtil.startActivity(mContext, MainTabActivity.class);
+                                TourCooUtil.startActivity(mContext, MainTabActivity.class);
                             } else {
-                                TourcooUtil.startActivity(mContext, LoginRegisterActivity.class);
+                                TourCooUtil.startActivity(mContext, LoginRegisterActivity.class);
                             }
                         } else {
                             //用户没有记住密码
                             AccountInfoHelper.getInstance().deleteUserAccount();
-                            TourcooUtil.startActivity(mContext, LoginRegisterActivity.class);
+                            TourCooUtil.startActivity(mContext, LoginRegisterActivity.class);
                         }
                         finish();
                     }
 
                     @Override
                     public void onNext(Long entity) {
-                        TourcooLogUtil.d(TAG, "延时时间:" + entity);
+                        TourCooLogUtil.d(TAG, "延时时间:" + entity);
                     }
 
                     @Override
                     public void onRequestNext(Long entity) {
-                        TourcooLogUtil.i(TAG, "延时时间:" + entity);
+                        TourCooLogUtil.i(TAG, "延时时间:" + entity);
                     }
                 });
     }

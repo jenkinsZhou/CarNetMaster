@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_alert_line"
+    android:orientation="vertical">
 
+    <include layout="@layout/layout_title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_10"
+        android:background="@drawable/bg_radius_5_white"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_10">
+
+        <TextView
+            android:id="@+id/tvCommentDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="askodjoajdklaj" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvImageComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <com.tourcoo.carnet.core.widget.ratingstar.RatingStarView
+                android:id="@+id/rsvRating"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_15"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_toRightOf="@id/tvNickName"
+                android:clickable="false"
+                android:focusable="false"
+                android:padding="2dp"
+                app:rsv_cornerRadius="4dp"
+                app:rsv_drawStrokeForEmptyStar="false"
+                app:rsv_drawStrokeForHalfStar="true"
+                app:rsv_enableSelectRating="true"
+                app:rsv_rating="1"
+                app:rsv_starBackgroundColor="#D2D2D2"
+                app:rsv_starForegroundColor="#FFAB12"
+                app:rsv_starMargin="1dp"
+                app:rsv_starNum="5"
+                app:rsv_starThickness="0.7"
+                app:rsv_strokeColor="#457DD7"
+                app:rsv_strokeWidth="2px" />
+
+            <TextView
+                android:id="@+id/tvCommentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="2019年2月14日 12:38"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:id="@+id/tvLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@id/rsvRating"
+                android:text="4分" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

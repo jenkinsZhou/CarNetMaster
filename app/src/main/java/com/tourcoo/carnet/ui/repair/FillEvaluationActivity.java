@@ -17,18 +17,17 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.tourcoo.carnet.AccountInfoHelper;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.UploadImageAdapter;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.UploadProgressBody;
 import com.tourcoo.carnet.core.frame.retrofit.UploadRequestListener;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
-import com.tourcoo.carnet.entity.FaultRepairEntity;
+import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -356,7 +355,7 @@ public class FillEvaluationActivity extends BaseTourCooTitleActivity implements 
 
             @Override
             public void onFail(Throwable e) {
-                TourcooLogUtil.e("异常：" + e.toString());
+                TourCooLogUtil.e("异常：" + e.toString());
                 closeHudProgressDialog();
             }
         });
@@ -410,7 +409,7 @@ public class FillEvaluationActivity extends BaseTourCooTitleActivity implements 
     }
 
     private void updateProgress(int progress) {
-        TourcooLogUtil.i("进度：" + progress);
+        TourCooLogUtil.i("进度：" + progress);
         hud.setProgress(progress);
     }
 

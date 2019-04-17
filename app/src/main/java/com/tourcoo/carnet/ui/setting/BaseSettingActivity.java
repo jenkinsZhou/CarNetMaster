@@ -11,12 +11,11 @@ import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.util.DataCleanManager;
 import com.tourcoo.carnet.core.frame.util.SharedPreferencesUtil;
 import com.tourcoo.carnet.core.frame.util.StackUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.module.MainTabActivity;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
-import com.tourcoo.carnet.ui.account.ChangeAccountActivity;
 import com.tourcoo.carnet.ui.account.LoginRegisterActivity;
 
 import static com.tourcoo.carnet.core.frame.util.DataCleanManager.EMPTY_CACHE;
@@ -58,15 +57,15 @@ public class BaseSettingActivity extends BaseTourCooTitleActivity implements Vie
                 SharedPreferencesUtil.clearAll(mContext);
                 Activity activity = StackUtil.getInstance().getActivity(MainTabActivity.class);
                 if (activity != null) {
-                    TourcooLogUtil.i("执行了:");
+                    TourCooLogUtil.i("执行了:");
                     activity.finish();
                 }
-                TourcooUtil.startActivity(mContext, LoginRegisterActivity.class);
+                TourCooUtil.startActivity(mContext, LoginRegisterActivity.class);
                 finish();
 
                 break;
             case R.id.stvAboutUs:
-                TourcooUtil.startActivity(mContext, AboutUsActivity.class);
+                TourCooUtil.startActivity(mContext, AboutUsActivity.class);
                 break;
             case R.id.stvClearCache:
                 cleanCache();

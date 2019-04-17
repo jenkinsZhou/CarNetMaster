@@ -32,10 +32,10 @@ import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.UploadProgressBody;
 import com.tourcoo.carnet.core.frame.retrofit.UploadRequestListener;
 import com.tourcoo.carnet.core.helper.LocateHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
@@ -92,6 +92,20 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     private Message message;
     private String currentPosition;
     /**
+     * 上门服务订单
+     */
+    public static final String EXTRA_ORDER_TYPE = "EXTRA_ORDER_TYPE";
+
+
+    /**
+     * 故障报修订单
+     */
+    public static final String TYPE_REPAIR = "1";
+    /**
+     * 服务订单
+     */
+    public static final String TYPE_SERVICE = "2";
+    /**
      * 回调回来的图片ur集合
      */
     private String mImages = "";
@@ -120,12 +134,15 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     public void setTitleBar(TitleBarView titleBar) {
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("故障报修");
-        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
         titleBar.setRightText("报修历史");
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TourcooUtil.startActivity(mContext, OrderHistoryActivity.class);
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                intent.setClass(mContext, OrderHistoryActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -219,7 +236,10 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         builder.setPositiveButton("查看订单", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                TourcooUtil.startActivity(mContext, OrderHistoryActivity.class);
+                Intent intent = new Intent();
+                intent.setClass(mContext, OrderHistoryActivity.class);
+                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                startActivity(intent);
                 dialog.dismiss();
             }
         });
@@ -227,7 +247,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        TourcooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
+                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
                         dialog.dismiss();
                     }
                 });
@@ -390,7 +410,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
             public void onLocationChanged(AMapLocation aMapLocation) {
                 String result = showResult(aMapLocation);
                 mapLocation = aMapLocation;
-                TourcooLogUtil.d(TAG, "回调结果:" + result);
+                TourCooLogUtil.d(TAG, "回调结果:" + result);
                 closeLoadingDialog();
                 if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
                     showLocateSuccess(aMapLocation.getAddress());
@@ -590,7 +610,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
 
             @Override
             public void onFail(Throwable e) {
-                TourcooLogUtil.e("异常：" + e.toString());
+                TourCooLogUtil.e("异常：" + e.toString());
                 closeHudProgressDialog();
             }
         });
@@ -640,7 +660,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     }
 
     private void updateProgress(int progress) {
-        TourcooLogUtil.i("进度：" + progress);
+        TourCooLogUtil.i("进度：" + progress);
         hud.setProgress(progress);
     }
 
@@ -682,4 +702,6 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         tvLocation.setText("未获取位置信息");
         uploadImageAdapter.notifyDataSetChanged();
     }
+
+
 }

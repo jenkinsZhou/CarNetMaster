@@ -3,7 +3,7 @@ package com.tourcoo.carnet.core.frame.retrofit;
 import android.content.Context;
 
 import com.tourcoo.carnet.core.frame.util.NetworkUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -97,7 +97,7 @@ public class RetryWhen implements Function<Observable<? extends Throwable>, Obse
                         || throwable instanceof SocketException
                         || throwable instanceof TimeoutException) {
                     if (++mRetryCount <= mRetryMaxTime) {
-                        TourcooLogUtil.e(TAG, "网络请求错误,将在 " + mRetryDelay + " ms后进行重试, 重试次数 " + mRetryCount + ";throwable:" + throwable);
+                        TourCooLogUtil.e(TAG, "网络请求错误,将在 " + mRetryDelay + " ms后进行重试, 重试次数 " + mRetryCount + ";throwable:" + throwable);
                         return Observable.timer(mRetryDelay, TimeUnit.MILLISECONDS);
                     }
                 }

@@ -10,6 +10,7 @@ package com.tourcoo.carnet.core.common;
 public class CommonConstant {
     public static final String TAG = "NaViMaster";
     public static final String TAG_PRE_SUFFIX = "NaViConfig";
+    public static final String TOKEN_INVALID = "登录失效";
     public static final long TOAST_DURATION_DEFAULT = 2000L;
     public final static String EXCEPTION_NOT_INIT = "You've to call static method init() first in Application";
     public final static String EXCEPTION_NOT_INIT_FAST_MANAGER = "You've to call static method init(Application) first in Application";

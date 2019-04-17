@@ -2,7 +2,7 @@ package com.tourcoo.carnet.core.frame.util;
 
 import android.app.Activity;
 
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.util.Stack;
 
@@ -55,7 +55,7 @@ public class StackUtil {
     public Activity getCurrent() {
         if (mActivityStack != null && mActivityStack.size() != 0) {
             Activity activity = mActivityStack.lastElement();
-            TourcooLogUtil.i(TAG, "get current activity:" + activity.getClass().getSimpleName());
+            TourCooLogUtil.i(TAG, "get current activity:" + activity.getClass().getSimpleName());
             return activity;
         } else {
             return null;
@@ -70,7 +70,7 @@ public class StackUtil {
     public Activity getPrevious() {
         if (mActivityStack != null && mActivityStack.size() >= 2) {
             Activity activity = mActivityStack.get(mActivityStack.size() - 2);
-            TourcooLogUtil.i(TAG, "get Previous Activity:" + activity.getClass().getSimpleName());
+            TourCooLogUtil.i(TAG, "get Previous Activity:" + activity.getClass().getSimpleName());
             return activity;
         } else {
             return null;
@@ -105,7 +105,7 @@ public class StackUtil {
             mActivityStack = new Stack();
         }
         mActivityStack.add(activity);
-        TourcooLogUtil.i(TAG, "push stack activity:" + activity.getClass().getSimpleName());
+        TourCooLogUtil.i(TAG, "push stack activity:" + activity.getClass().getSimpleName());
         return sInstance;
     }
 
@@ -122,13 +122,13 @@ public class StackUtil {
      */
     public StackUtil pop(Activity activity, boolean isFinish) {
         if (activity != null) {
-            TourcooLogUtil.i(TAG, "remove current activity:" + activity.getClass().getSimpleName() + ";isFinishing" + activity.isFinishing());
+            TourCooLogUtil.i(TAG, "remove current activity:" + activity.getClass().getSimpleName() + ";isFinishing" + activity.isFinishing());
             if (isFinish) {
                 activity.finish();
             }
             if (mActivityStack != null && mActivityStack.contains(activity)) {
                 mActivityStack.remove(activity);
-                TourcooLogUtil.i(TAG, "remove current activity:" + activity.getClass().getSimpleName() + ";size:" + mActivityStack.size());
+                TourCooLogUtil.i(TAG, "remove current activity:" + activity.getClass().getSimpleName() + ";size:" + mActivityStack.size());
             }
         }
         return sInstance;
@@ -199,7 +199,7 @@ public class StackUtil {
             }
         } catch (Exception e) {
             System.exit(-1);
-            TourcooLogUtil.e(TAG, "exit():" + e.getMessage());
+            TourCooLogUtil.e(TAG, "exit():" + e.getMessage());
         }
         return sInstance;
     }

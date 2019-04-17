@@ -2,6 +2,7 @@ package com.tourcoo.carnet.core.frame.base.activity;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.tourcoo.carnet.core.frame.manager.WrapContentLinearLayoutManager;
+import com.tourcoo.carnet.core.threadpool.ThreadPoolManager;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,9 +38,10 @@ public abstract class BaseRefreshLoadActivity<T> extends BaseTitleActivity imple
     protected StatusLayoutManager mStatusManager;
     private BaseQuickAdapter mQuickAdapter;
     protected int mDefaultPage = 1;
-    protected int mDefaultPageSize = 10;
+    protected int mDefaultPageSize = 6;
     protected RefreshLoadDelegate<T> mRefreshLoadDelegate;
     private Class<?> mClass;
+    private MyHandler mMyHandler = new MyHandler();
 
     @Override
     public void beforeInitView(Bundle savedInstanceState) {
@@ -155,7 +158,15 @@ public abstract class BaseRefreshLoadActivity<T> extends BaseTitleActivity imple
 
     @Override
     public void onLoadMoreRequested() {
-        loadData(++mDefaultPage);
+        //延迟加载更多
+        mMyHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadData(++mDefaultPage);
+            }
+        }, 500);
+
+
     }
 
     @Override
@@ -165,6 +176,9 @@ public abstract class BaseRefreshLoadActivity<T> extends BaseTitleActivity imple
 
     @Override
     protected void onDestroy() {
+        if (mMyHandler != null) {
+            mMyHandler.removeCallbacksAndMessages(null);
+        }
         if (mRefreshLoadDelegate != null) {
             mRefreshLoadDelegate.onDestroy();
         }
@@ -177,5 +191,8 @@ public abstract class BaseRefreshLoadActivity<T> extends BaseTitleActivity imple
         textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
     }
 
+    private static class MyHandler extends Handler {
+
+    }
 
 }

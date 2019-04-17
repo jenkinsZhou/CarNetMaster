@@ -8,6 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="MyTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
     <style name="Theme.MyAppTheme" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <!-- 这里的trans自己写一个#00000000即可-->

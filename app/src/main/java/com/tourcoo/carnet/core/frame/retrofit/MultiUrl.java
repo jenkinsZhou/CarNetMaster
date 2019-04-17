@@ -3,7 +3,7 @@ package com.tourcoo.carnet.core.frame.retrofit;
 import android.text.TextUtils;
 
 import com.tourcoo.carnet.core.common.ExceptionConstant;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class MultiUrl {
                 }
                 //如果请求url不包含默认的BaseUrl也不进行拦截
                 if (request != null && request.url() != null && !request.url().toString().contains(mBaseUrl)) {
-                    TourcooLogUtil.i(TAG, "无统一BaseUrl不拦截:" + request.url() + ";BaseUrl:" + mBaseUrl);
+                    TourCooLogUtil.i(TAG, "无统一BaseUrl不拦截:" + request.url() + ";BaseUrl:" + mBaseUrl);
                     return chain.proceed(request);
                 }
                 return chain.proceed(processRequest(request));
@@ -123,14 +123,14 @@ public class MultiUrl {
         HttpUrl httpUrl = getHeaderHttpUrl(request, newBuilder);
         if (null != httpUrl) {
             HttpUrl newUrl = mUrlParser.parseUrl(httpUrl, request.url());
-            TourcooLogUtil.i(MultiUrl.TAG, "Header 模式重定向Url:BaseRefreshFragment Url is { " + mBaseUrl + " }" + ";New Url is { " + newUrl + " }" + ";Old Url is { " + request.url() + " }");
+            TourCooLogUtil.i(MultiUrl.TAG, "Header 模式重定向Url:BaseRefreshFragment Url is { " + mBaseUrl + " }" + ";New Url is { " + newUrl + " }" + ";Old Url is { " + request.url() + " }");
             return newBuilder
                     .url(newUrl)
                     .build();
         }
         httpUrl = getMethodHttpUrl(request);
         if (null != httpUrl) {
-            TourcooLogUtil.i(MultiUrl.TAG, "Method 模式重定向Url:BaseRefreshFragment Url is { " + mBaseUrl + " }" + ";New Url is { " + httpUrl + " }" + ";Old Url is { " + request.url() + " }");
+            TourCooLogUtil.i(MultiUrl.TAG, "Method 模式重定向Url:BaseRefreshFragment Url is { " + mBaseUrl + " }" + ";New Url is { " + httpUrl + " }" + ";Old Url is { " + request.url() + " }");
             return newBuilder
                     .url(httpUrl)
                     .build();
@@ -139,7 +139,7 @@ public class MultiUrl {
         HttpUrl httpUrlBase = getGlobalBaseUrl();
         if (httpUrlBase != null && !httpUrlBase.toString().equals(mBaseUrl)) {
             HttpUrl httpNew = checkUrl(request.url().toString().replace(mBaseUrl, httpUrlBase.toString()));
-            TourcooLogUtil.i(MultiUrl.TAG, "重定向Url:BaseRefreshFragment Url is { " + httpUrlBase.toString() + " }" + ";New Url is { " + httpNew + " }" + ";Old Url is { " + request.url() + " }");
+            TourCooLogUtil.i(MultiUrl.TAG, "重定向Url:BaseRefreshFragment Url is { " + httpUrlBase.toString() + " }" + ";New Url is { " + httpNew + " }" + ";Old Url is { " + request.url() + " }");
             return newBuilder
                     .url(httpNew)
                     .build();
@@ -194,7 +194,7 @@ public class MultiUrl {
         if (isContainKey) {
             methodKey = methodKey.substring(0, methodKey.indexOf("?"));
         }
-        TourcooLogUtil.d(TAG, "BaseRefreshFragment Url is { " + mBaseUrl + " }" + ";Old Url is{" + url.newBuilder().toString() + "};Method is <<" + methodKey + ">>");
+        TourCooLogUtil.d(TAG, "BaseRefreshFragment Url is { " + mBaseUrl + " }" + ";Old Url is{" + url.newBuilder().toString() + "};Method is <<" + methodKey + ">>");
         //如果
         if (!mHeaderPriorityEnable && mBaseUrlMap.containsKey(methodKey)) {
             return checkUrl(getBaseUrl(methodKey).toString() + method);
@@ -381,7 +381,7 @@ public class MultiUrl {
     private String getHeaderBaseUrlKey(Request request) {
         Headers heads = request.headers();
         if (heads != null) {
-            TourcooLogUtil.i(TAG, "header:" + heads.toString());
+            TourCooLogUtil.i(TAG, "header:" + heads.toString());
         }
         List<String> headers = request.headers(BASE_URL_NAME);
         if (headers == null || headers.size() == 0) {

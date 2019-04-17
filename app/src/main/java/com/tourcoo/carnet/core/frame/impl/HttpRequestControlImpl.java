@@ -10,7 +10,7 @@ import com.tourcoo.carnet.core.frame.interfaces.HttpRequestControl;
 import com.tourcoo.carnet.core.frame.interfaces.HttpRequestListener;
 import com.tourcoo.carnet.core.frame.interfaces.IRequestControl;
 import com.tourcoo.carnet.core.frame.util.NetworkUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
@@ -52,7 +52,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
         StatusLayoutManager statusLayoutManager = requestControl.getStatusLayoutManager();
         int page = requestControl.getCurrentPage();
         int size = requestControl.getPageSize();
-        TourcooLogUtil.i(TAG, "smartRefreshLayout:" + smartRefreshLayout + ";adapter:" + adapter + ";status:" + ";page:" + page + ";class:" + requestControl.getRequestClass());
+        TourCooLogUtil.i(TAG, "当前请求的page" + page + ",每次请求的数量:" + size);
         if (smartRefreshLayout != null) {
             smartRefreshLayout.finishRefresh();
         }
@@ -95,7 +95,7 @@ public class HttpRequestControlImpl implements HttpRequestControl {
 
     @Override
     public void httpRequestError(IRequestControl requestControl, Throwable e) {
-        TourcooLogUtil.e(TAG, e.toString());
+        TourCooLogUtil.e(TAG, e.toString());
         int reason = R.string.exception_other_error;
 //        int code = FastError.EXCEPTION_OTHER_ERROR;
         if (!NetworkUtil.isConnected(CarNetApplication.getContext())) {

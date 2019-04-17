@@ -3,6 +3,7 @@ package com.tourcoo.carnet.ui.account;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -14,10 +15,10 @@ import com.tourcoo.carnet.core.frame.base.activity.WebViewActivity;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseFragment;
 import com.tourcoo.carnet.core.frame.manager.RxJavaManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.module.MainTabActivity;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
@@ -53,6 +54,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     private EditText etVcode;
     private EditText etPassword;
     private EditText etPasswordConfirm;
+    private CheckBox cBoxAgree;
 
     @Override
     public int getContentLayout() {
@@ -69,6 +71,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
         etVcode = mContentView.findViewById(R.id.etVcode);
         etPassword = mContentView.findViewById(R.id.etPassword);
         etPasswordConfirm = mContentView.findViewById(R.id.etPasswordConfirm);
+        cBoxAgree = mContentView.findViewById(R.id.cBoxAgree);
     }
 
 
@@ -105,7 +108,12 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                 doSendVCode();
                 break;
             case R.id.tvRegister:
-                doRegister();
+                if(cBoxAgree.isChecked()){
+                    doRegister();
+                }else {
+                    ToastUtil.show("您未同意注册条例");
+                }
+
                 break;
             default:
                 break;
@@ -117,7 +125,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             ToastUtil.show("请先输入手机号");
             return;
         }
-        if (!TourcooUtil.isMobileNumber(getPhoneNumber())) {
+        if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
             ToastUtil.show("请输入正确的手机号");
             return;
         }
@@ -236,7 +244,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             ToastUtil.show("请先输入手机号");
             return;
         }
-        if (!TourcooUtil.isMobileNumber(getPhoneNumber())) {
+        if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
             ToastUtil.show("请输入正确的手机号");
             return;
         }
@@ -258,7 +266,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
                                     if (userInfoEntity != null) {
                                         //todo 保存用户信息
                                         AccountInfoHelper.getInstance().setUserInfoEntity(userInfoEntity);
-                                        TourcooUtil.startActivity(mContext, MainTabActivity.class);
+                                        TourCooUtil.startActivity(mContext, MainTabActivity.class);
                                         mContext.finish();
                                     }
                                 } else {
@@ -280,18 +288,18 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             return null;
         }
         try {
-            TourcooLogUtil.e(TAG, "用户信息:" + jsonStr);
+            TourCooLogUtil.e(TAG, "用户信息:" + jsonStr);
             UserInfoEntity userInfoEntity = JSON.parseObject(jsonStr, UserInfoEntity.class);
             JSONObject data = JSONObject.parseObject(jsonStr);
             JSONObject userInfo = data.getJSONObject("userInfo");
             int userId = userInfo.getIntValue("id");
             if(userInfoEntity.getUserInfo() != null){
                 userInfoEntity.getUserInfo().setUserId(userId);
-                TourcooLogUtil.i(TAG, "设置成功:" + userId);
+                TourCooLogUtil.i(TAG, "设置成功:" + userId);
             }
             return userInfoEntity;
         } catch (Exception e) {
-            TourcooLogUtil.e(TAG, "错误" + e.toString());
+            TourCooLogUtil.e(TAG, "错误" + e.toString());
             return null;
         }
     }

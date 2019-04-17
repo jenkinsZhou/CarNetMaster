@@ -22,9 +22,9 @@ import com.tourcoo.carnet.core.frame.interfaces.ActivityFragmentControl;
 import com.tourcoo.carnet.core.frame.interfaces.ActivityKeyEventControl;
 import com.tourcoo.carnet.core.frame.util.SnackBarUtil;
 import com.tourcoo.carnet.core.frame.util.StackUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.module.SplashActivity;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.util.FindViewUtil;
 import com.tourcoo.carnet.core.widget.core.util.RomUtil;
@@ -92,7 +92,7 @@ public class ActivityControlImpl implements ActivityFragmentControl, ActivityKey
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mCurrentVolume, AudioManager.FLAG_PLAY_SOUND);
         // 获取当前音乐音量
         mCurrentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        TourcooLogUtil.i(TAG, "max:" + mMaxVolume + ";min:" + mMinVolume + ";current:" + mCurrentVolume);
+        TourCooLogUtil.i(TAG, "max:" + mMaxVolume + ";min:" + mMinVolume + ";current:" + mCurrentVolume);
         SnackBarUtil.with(StackUtil.getInstance().getCurrent().getWindow().getDecorView())
                 .setBgColor(Color.LTGRAY)
                 .setMessageColor(Color.MAGENTA)
@@ -108,11 +108,11 @@ public class ActivityControlImpl implements ActivityFragmentControl, ActivityKey
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 volume(1, false);
-                TourcooLogUtil.i(TAG, "volumeDown-activity:" + activity.getClass().getSimpleName());
+                TourCooLogUtil.i(TAG, "volumeDown-activity:" + activity.getClass().getSimpleName());
                 return true;
             case KeyEvent.KEYCODE_VOLUME_UP:
                 volume(1, true);
-                TourcooLogUtil.i(TAG, "volumeUp-activity:" + activity.getClass().getSimpleName());
+                TourCooLogUtil.i(TAG, "volumeUp-activity:" + activity.getClass().getSimpleName());
                 return true;
             default:
                 break;
@@ -174,7 +174,7 @@ public class ActivityControlImpl implements ActivityFragmentControl, ActivityKey
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             } catch (Exception e) {
                 e.printStackTrace();
-                TourcooLogUtil.e(TAG, "setRequestedOrientation:" + e.getMessage());
+                TourCooLogUtil.e(TAG, "setRequestedOrientation:" + e.getMessage());
             }
         }
     }
@@ -228,8 +228,8 @@ public class ActivityControlImpl implements ActivityFragmentControl, ActivityKey
     }
 
     private KeyboardHelper.OnKeyboardVisibilityChangedListener mOnKeyboardVisibilityChangedListener = (activity, isOpen, heightDiff, navigationHeight) -> {
-        View mContent = TourcooUtil.getRootView(activity);
-        TourcooLogUtil.i("onKeyboardVisibilityChanged", "activity:" + activity + ";isOpen:" + isOpen + ";heightDiff:" + heightDiff + ";navigationHeight:" + navigationHeight);
+        View mContent = TourCooUtil.getRootView(activity);
+        TourCooLogUtil.i("onKeyboardVisibilityChanged", "activity:" + activity + ";isOpen:" + isOpen + ";heightDiff:" + heightDiff + ";navigationHeight:" + navigationHeight);
         return false;
     };
 
@@ -259,7 +259,7 @@ public class ActivityControlImpl implements ActivityFragmentControl, ActivityKey
             @Override
             public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment f) {
                 super.onFragmentDestroyed(fm, f);
-                TourcooLogUtil.i(TAG, "onFragmentDestroyed:" + f.getClass().getSimpleName());
+                TourCooLogUtil.i(TAG, "onFragmentDestroyed:" + f.getClass().getSimpleName());
             }
         };
     }
@@ -272,7 +272,7 @@ public class ActivityControlImpl implements ActivityFragmentControl, ActivityKey
      */
     private void setStatusBarActivity(Activity activity) {
         if (PictureBaseActivity.class.isAssignableFrom(activity.getClass())) {
-            View contentView = TourcooUtil.getRootView(activity);
+            View contentView = TourCooUtil.getRootView(activity);
             //该属性会影响适配滑动返回效果
             contentView.setFitsSystemWindows(false);
             ImageView imageView = contentView != null ? contentView.findViewById(R.id.picture_left_back) : null;

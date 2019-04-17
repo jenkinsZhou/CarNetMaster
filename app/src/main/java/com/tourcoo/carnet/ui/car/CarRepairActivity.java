@@ -30,10 +30,10 @@ import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.UploadProgressBody;
 import com.tourcoo.carnet.core.frame.retrofit.UploadRequestListener;
 import com.tourcoo.carnet.core.helper.LocateHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
@@ -67,6 +67,8 @@ import retrofit2.Response;
 
 import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_REPAIR;
 
 
 /**
@@ -85,6 +87,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
     private List<LocalMedia> selectList = new ArrayList<>();
     private List<String> imageList = new ArrayList<>();
     private AMapLocation mapLocation;
+    private String mAddress;
     private EditText etRepairContent;
     private KProgressHUD hud;
     private MyHandler mHandler = new MyHandler(this);
@@ -100,6 +103,14 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         return R.layout.fragment_fault_repair;
     }
 
+
+    private String getAddress(AMapLocation mapLocation) {
+        String address = "";
+        if (mapLocation == null) {
+            return address;
+        }
+        return mapLocation.getAddress();
+    }
     @Override
     public void initView(Bundle savedInstanceState) {
         mContentView.findViewById(R.id.ivCamera).setOnClickListener(this);
@@ -120,11 +131,14 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("上门维修");
         titleBar.setRightText("历史维修");
-        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TourcooUtil.startActivity(mContext,OrderHistoryActivity.class);
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                intent.setClass(mContext, OrderHistoryActivity.class);
+                startActivity(intent);
                 EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_REPAIR));
             }
         });
@@ -371,11 +385,12 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
             public void onLocationChanged(AMapLocation aMapLocation) {
                 String result = showResult(aMapLocation);
                 mapLocation = aMapLocation;
-                TourcooLogUtil.d(TAG, "回调结果:" + result);
+                TourCooLogUtil.d(TAG, "回调结果:" + result);
                 closeLoadingDialog();
                 if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
                     showLocateSuccess(aMapLocation.getAddress());
                     currentPosition = getPosition(aMapLocation);
+                    mAddress = getAddress(aMapLocation);
                 } else {
                     showLocateFailed();
                 }
@@ -453,7 +468,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
             ToastUtil.show("请输入故障描述");
             return;
         }
-        ApiRepository.getInstance().doorToDoorService(carInfoEntity, mImages, getDetail(), currentPosition,TYPE_CAR_REPAIR).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+        ApiRepository.getInstance().doorToDoorService(carInfoEntity, mImages, getDetail(), currentPosition,TYPE_CAR_REPAIR,mAddress).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
                     @Override
                     public void onRequestNext(BaseEntity entity) {
@@ -567,7 +582,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
 
             @Override
             public void onFail(Throwable e) {
-                TourcooLogUtil.e("异常：" + e.toString());
+                TourCooLogUtil.e("异常：" + e.toString());
                 closeHudProgressDialog();
             }
         });
@@ -617,7 +632,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
     }
 
     private void updateProgress(int progress) {
-        TourcooLogUtil.i("进度：" + progress);
+        TourCooLogUtil.i("进度：" + progress);
         hud.setProgress(progress);
     }
 

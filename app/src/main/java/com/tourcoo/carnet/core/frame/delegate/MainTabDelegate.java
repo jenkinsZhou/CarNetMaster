@@ -13,7 +13,7 @@ import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.entity.TabEntity;
 import com.tourcoo.carnet.core.frame.interfaces.IHomeView;
 import com.tourcoo.carnet.core.frame.manager.TabLayoutManager;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.widget.core.util.FindViewUtil;
 
 import java.util.ArrayList;
@@ -241,6 +241,6 @@ public class MainTabDelegate {
             mSavedInstanceState.clear();
             mSavedInstanceState = null;
         }
-        TourcooLogUtil.e(TAG, "onDestroy");
+        TourCooLogUtil.e(TAG, "onDestroy");
     }
 }

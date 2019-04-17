@@ -33,11 +33,11 @@ import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.frame.util.NetworkUtil;
 import com.tourcoo.carnet.core.helper.LocateHelper;
 import com.tourcoo.carnet.core.helper.TitleBarViewHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectListener;
@@ -122,7 +122,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
 
     @Override
     public int getContentLayout() {
-        return R.layout.fragment_home_test;
+        return R.layout.fragment_home;
     }
 
     @Override
@@ -271,7 +271,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
                 }
                 break;
             case R.id.ivSearch:
-                TourcooUtil.startActivity(mContext, FastSearchActivity.class);
+                TourCooUtil.startActivity(mContext, FastSearchActivity.class);
                 break;
             case R.id.ivRedDot:
                 //系统消息
@@ -343,7 +343,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
                                                 //设置当前车辆
                                                 AccountInfoHelper.getInstance().setDefaultCar(infoEntity);
                                                 showCurrentCarInfo(infoEntity);
-                                                TourcooLogUtil.i("车辆信息已保存");
+                                                TourCooLogUtil.i("车辆信息已保存");
                                                 break;
                                             }
                                         }
@@ -367,7 +367,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
         try {
             return JSONObject.parseArray(JSON.toJSONString(jsonArrayStr), CarInfoEntity.class);
         } catch (Exception e) {
-            TourcooLogUtil.e(TAG, "解析失败:" + e.toString());
+            TourCooLogUtil.e(TAG, "解析失败:" + e.toString());
             return null;
         }
     }
@@ -504,7 +504,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
         }
         tvCurrentCarBrand.setText(carInfoEntity.getBrandName());
         tvSwitchCarBrand.setText("切换车辆");
-        Drawable drawable = TourcooUtil.getDrawable(R.mipmap.icon_drop_down);
+        Drawable drawable = TourCooUtil.getDrawable(R.mipmap.icon_drop_down);
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         tvSwitchCarBrand.setCompoundDrawables(null, null, drawable, null);
         tvSwitchCarBrand.setCompoundDrawablePadding(SizeUtil.dp2px(5));

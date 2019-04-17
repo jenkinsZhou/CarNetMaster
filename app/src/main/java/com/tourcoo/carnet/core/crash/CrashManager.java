@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.crash.imp.ISave;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -82,19 +82,19 @@ public final class CrashManager {
     public static void init(Context context) {
         try {
             if (context == null) {
-                TourcooLogUtil.e("context为null");
+                TourCooLogUtil.e("context为null");
             } else {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                    TourcooLogUtil.e("API版本过低");
+                    TourCooLogUtil.e("API版本过低");
                 }
                 //INSTALL!
                 Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
 
                 if (oldHandler != null && oldHandler.getClass().getName().startsWith(CAOC_HANDLER_PACKAGE_NAME)) {
-                    TourcooLogUtil.e("已经处理异常");
+                    TourCooLogUtil.e("已经处理异常");
                 } else {
                     if (oldHandler != null && !oldHandler.getClass().getName().startsWith(DEFAULT_HANDLER_PACKAGE_NAME)) {
-                        TourcooLogUtil.e("已经处理异常");
+                        TourCooLogUtil.e("已经处理异常");
                     }
 
                     application = (Application) context.getApplicationContext();
@@ -125,7 +125,7 @@ public final class CrashManager {
                                     } else if (!enableAppRestart) {
                                         restartActivityClass = null;
                                     }
-                                    TourcooLogUtil.e(TAG, "异常原因：" + stackTraceString);
+                                    TourCooLogUtil.e(TAG, "异常原因：" + stackTraceString);
                                     intent.putExtra(EXTRA_STACK_TRACE, stackTraceString);
                                     intent.putExtra(EXTRA_RESTART_ACTIVITY_CLASS, restartActivityClass);
                                     intent.putExtra(EXTRA_SHOW_ERROR_DETAILS, showErrorDetails);

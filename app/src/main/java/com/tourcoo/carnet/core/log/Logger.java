@@ -254,7 +254,7 @@ public final class Logger implements Printer {
      */
     private StackTraceElement getCurrentStackTrace() {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-        int stackOffset = getStackOffset(trace, TourcooLogUtil.class);
+        int stackOffset = getStackOffset(trace, TourCooLogUtil.class);
         if (stackOffset == -1) {
             stackOffset = getStackOffset(trace, Logger.class);
             if (stackOffset == -1) {

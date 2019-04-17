@@ -18,8 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tourcoo.carnet.CarNetApplication;
-import com.tourcoo.carnet.R;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.util.List;
 import java.util.Random;
@@ -37,7 +36,7 @@ import static com.tourcoo.carnet.core.log.widget.config.LogConstant.TAG;
  * @date 2019年 03月 015日 10时46分
  * @Email: 971613168@qq.com
  */
-public class TourcooUtil {
+public class TourCooUtil {
 
     private static int ACTIVITY_SINGLE_FLAG = Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
@@ -55,7 +54,7 @@ public class TourcooUtil {
             int labelRes = packageInfo.applicationInfo.labelRes;
             return context.getResources().getText(labelRes);
         } catch (PackageManager.NameNotFoundException e) {
-            TourcooLogUtil.e(TAG, "getAppName:" + e.getMessage());
+            TourCooLogUtil.e(TAG, "getAppName:" + e.getMessage());
         }
         return null;
     }
@@ -130,7 +129,7 @@ public class TourcooUtil {
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            TourcooLogUtil.e("getVersionName:" + e.getMessage());
+            TourCooLogUtil.e("getVersionName:" + e.getMessage());
         }
         return "";
     }
@@ -149,7 +148,7 @@ public class TourcooUtil {
                 }
             }
         } catch (PackageManager.NameNotFoundException e) {
-            TourcooLogUtil.e("getVersionCode:" + e.getMessage());
+            TourCooLogUtil.e("getVersionCode:" + e.getMessage());
         }
         return -1;
     }
@@ -166,7 +165,7 @@ public class TourcooUtil {
             Class.forName(className);
             isExit = true;
         } catch (ClassNotFoundException e) {
-            TourcooLogUtil.e("isClassExist:" + e.getMessage());
+            TourCooLogUtil.e("isClassExist:" + e.getMessage());
         }
         return isExit;
     }
@@ -236,7 +235,7 @@ public class TourcooUtil {
             marketIntent.setData(Uri.parse(mAddress));
             mContext.startActivity(marketIntent);
         } catch (Exception e) {
-            TourcooLogUtil.e("jumpMarket:" + e.getMessage());
+            TourCooLogUtil.e("jumpMarket:" + e.getMessage());
         }
     }
 

@@ -21,7 +21,7 @@ import com.tourcoo.carnet.core.frame.interfaces.ToastControl;
 import com.tourcoo.carnet.core.frame.util.StackUtil;
 import com.tourcoo.carnet.core.frame.widget.LoadingDialog;
 import com.tourcoo.carnet.core.frame.widget.NaViLoadMoreView;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.util.SizeUtil;
 import com.tourcoo.carnet.core.widget.core.util.StatusBarUtil;
@@ -123,7 +123,7 @@ public class UiConfigImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot,
      */
     @Override
     public void setRecyclerView(RecyclerView recyclerView, Class<?> cls) {
-        TourcooLogUtil.i(TAG, "setRecyclerView-" + cls.getSimpleName() + "context:" + recyclerView.getContext() + ";:" + (Activity.class.isAssignableFrom(recyclerView.getContext().getClass())) + ";:" + (recyclerView.getContext() instanceof Activity));
+        TourCooLogUtil.i(TAG, "setRecyclerView-" + cls.getSimpleName() + "context:" + recyclerView.getContext() + ";:" + (Activity.class.isAssignableFrom(recyclerView.getContext().getClass())) + ";:" + (recyclerView.getContext() instanceof Activity));
     }
 
     @Override

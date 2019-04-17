@@ -7,24 +7,23 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.log.widget.utils.DateUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
-import com.tourcoo.carnet.entity.FaultRepairEntity;
+import com.tourcoo.carnet.core.util.TourCooUtil;
+import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_WASH;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.FaultRepairInfo.TYPE_CAR_CURING;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.FaultRepairInfo.TYPE_CAR_REPAIR;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.TYPE_STATUS_ORDER_CANCELED;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.TYPE_STATUS_ORDER_CLOSE;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.TYPE_STATUS_ORDER_FINISH;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.TYPE_STATUS_ORDER_IN_SERVICE;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_EVALUATE;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_ORDER;
-import static com.tourcoo.carnet.entity.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_PAY;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.FaultRepairInfo.TYPE_CAR_CURING;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.FaultRepairInfo.TYPE_CAR_REPAIR;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CANCELED;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CLOSE;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_FINISH;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_IN_SERVICE;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_EVALUATE;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_ORDER;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_PAY;
 
 /**
  * @author :JenkinsZhou
@@ -40,9 +39,9 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
 
     @Override
     protected void convert(BaseViewHolder helper, FaultRepairEntity.FaultRepairInfo item) {
-        helper.setText(R.id.tvOrderNumber, TourcooUtil.getNotNullValue(item.getOut_trade_no()));
+        helper.setText(R.id.tvOrderNumber, TourCooUtil.getNotNullValue(item.getOut_trade_no()));
         helper.setText(R.id.tvFaultDescription, item.getDetail());
-        helper.setText(R.id.tvMaintenanceShopLocate, TourcooUtil.getNotNullValue(item.getGarageName()));
+        helper.setText(R.id.tvMaintenanceShopLocate, TourCooUtil.getNotNullValue(item.getGarageName()));
         helper.setText(R.id.tvCreateTime, DateUtil.stampToDateChineseCharacter(item.getCreate_time()));
         TextView tvRepairStatus = helper.getView(R.id.tvRepairStatus);
         TextView tvLeftButton = helper.getView(R.id.tvLeftButton);
@@ -74,8 +73,8 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
                 break;
             case TYPE_STATUS_ORDER_IN_SERVICE:
                 helper.setText(R.id.tvRepairStatus, "维修中");
-                setVisibility(tvLeftButton, false);
                 setHollowText(tvRightButton, "取消服务");
+                setVisibility(tvLeftButton, false);
                 setVisibility(tvRightButton, false);
                 break;
             case TYPE_STATUS_ORDER_WAIT_PAY:
@@ -95,7 +94,7 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
                 helper.setText(R.id.tvRepairStatus, "已完成");
                 setVisibility(tvLeftButton, false);
                 setVisibility(tvRightButton, true);
-                setHollowText(tvRightButton, "查看评价");
+                setHollowText(tvRightButton, "查看服务");
                 break;
             case TYPE_STATUS_ORDER_CANCELED:
                 helper.setText(R.id.tvRepairStatus, "已取消");
@@ -106,8 +105,9 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
             case TYPE_STATUS_ORDER_CLOSE:
                 helper.setText(R.id.tvRepairStatus, "已关闭");
                 setVisibility(tvLeftButton, false);
-                setVisibility(tvRightButton, false);
+                setVisibility(tvRightButton, true);
                 setHollowText(tvRightButton, "已关闭");
+                setHollowText(tvRightButton, "查看评价");
                 break;
             default:
                 break;
@@ -121,8 +121,8 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
      * @param text
      */
     private void setHollowText(TextView textView, String text) {
-        textView.setTextColor(TourcooUtil.getColor(R.color.blueCommon));
-        textView.setBackground(TourcooUtil.getDrawable(R.drawable.selector_bg_radius_16_blue_hollow));
+        textView.setTextColor(TourCooUtil.getColor(R.color.blueCommon));
+        textView.setBackground(TourCooUtil.getDrawable(R.drawable.selector_bg_radius_16_blue_hollow));
         textView.setText(text);
     }
 
@@ -133,8 +133,8 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
      * @param text
      */
     private void setSolidText(TextView textView, String text) {
-        textView.setTextColor(TourcooUtil.getColor(R.color.colorWhite));
-        textView.setBackground(TourcooUtil.getDrawable(R.drawable.selector_bg_radius_16_blue));
+        textView.setTextColor(TourCooUtil.getColor(R.color.colorWhite));
+        textView.setBackground(TourCooUtil.getDrawable(R.drawable.selector_bg_radius_16_blue));
         textView.setText(text);
         setVisibility(textView, true);
     }

@@ -1,7 +1,5 @@
 package com.tourcoo.carnet.core.common;
 
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-
 /**
  * @author :JenkinsZhou
  * @description :请求相关配置
@@ -12,7 +10,7 @@ import com.tourcoo.carnet.core.log.TourcooLogUtil;
 public class RequestConfig {
     public static final String TAG = "RequestConfig";
     public static final int CODE_REQUEST_SUCCESS = 1;
-
+    public static final int CODE_REQUEST_SUCCESS_NOT_REGISTER = -100;
     /**
      *顾总电脑IP
      */

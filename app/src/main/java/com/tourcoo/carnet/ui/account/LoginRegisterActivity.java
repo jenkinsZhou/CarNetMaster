@@ -14,7 +14,6 @@ import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.helper.LocateHelper;
 import com.tourcoo.carnet.core.helper.TitleBarViewHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
 import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.ToastUtil;

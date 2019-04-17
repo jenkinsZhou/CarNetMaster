@@ -7,16 +7,16 @@ import com.tourcoo.carnet.core.frame.retrofit.TourCoolRetrofit;
 import com.tourcoo.carnet.core.frame.retrofit.TourCoolTransformer;
 import com.tourcoo.carnet.core.log.widget.utils.DateUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
-import com.tourcoo.carnet.entity.account.UserInfo;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
+import com.tourcoo.carnet.entity.garage.CommentDetail;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
-import com.tourcoo.carnet.entity.garage.CommentInfo;
 import com.tourcoo.carnet.entity.garage.GarageEntity;
 import com.tourcoo.carnet.entity.MessageInfo;
 import com.tourcoo.carnet.entity.car.CarFaultRemindType;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
-import com.tourcoo.carnet.entity.FaultRepairEntity;
+import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.car.PayInfo;
+import com.tourcoo.carnet.entity.order.OrderDetail;
 
 import java.util.HashMap;
 import java.util.List;
@@ -176,6 +176,9 @@ public class ApiRepository extends BaseRepository {
         if (!TextUtils.isEmpty(images)) {
             params.put("images", images);
         }
+        if (!TextUtils.isEmpty(address)) {
+            params.put("address", address);
+        }
         return TourCoolTransformer.switchSchedulersIo(getApiService().reportFault(params).retryWhen(new RetryWhen()));
     }
 
@@ -189,7 +192,7 @@ public class ApiRepository extends BaseRepository {
      * @param type
      * @return
      */
-    public Observable<BaseEntity> doorToDoorService(CarInfoEntity carInfoEntity, String images, String detail, String position, int type) {
+    public Observable<BaseEntity> doorToDoorService(CarInfoEntity carInfoEntity, String images, String detail, String position, int type, String address) {
         if (carInfoEntity == null) {
             carInfoEntity = new CarInfoEntity();
         }
@@ -204,6 +207,9 @@ public class ApiRepository extends BaseRepository {
         params.put("type", type);
         if (!TextUtils.isEmpty(images)) {
             params.put("images", images);
+        }
+        if (!TextUtils.isEmpty(address)) {
+            params.put("address", address);
         }
         return TourCoolTransformer.switchSchedulersIo(getApiService().reportFault(params).retryWhen(new RetryWhen()));
     }
@@ -456,7 +462,7 @@ public class ApiRepository extends BaseRepository {
 
 
     /**
-     * 查看个人信息
+     * 充值密码
      *
      * @return
      */
@@ -481,6 +487,70 @@ public class ApiRepository extends BaseRepository {
         params.put("userType", "0");
         params.put("vCode", vCode);
         return TourCoolTransformer.switchSchedulersIo(getApiService().changeMobile(params).retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 用户反馈
+     *
+     * @param map
+     * @return
+     */
+    public Observable<BaseEntity> feedback(Map<String, Object> map) {
+        return TourCoolTransformer.switchSchedulersIo(getApiService().feedBack(map).retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 获取指定订单详情
+     *
+     * @param id
+     * @return
+     */
+    public Observable<BaseEntity<OrderDetail>> findDetail(String id) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().findDetail(params).retryWhen(new RetryWhen()));
+    }
+
+
+    /**
+     * 获取指定评论详情
+     *
+     * @param id
+     * @return
+     */
+    public Observable<BaseEntity<List<CommentDetail>>> findComment(String id) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("orderId", id);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().findComment(params).retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 微信登录
+     *
+     * @param openid
+     * @return
+     */
+    public Observable<BaseEntity> loginByWechat(String openid) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("openid", openid);
+        params.put("userType", TYPE_USER_CAR_OWER);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().loginByWechat(params).retryWhen(new RetryWhen()));
+    }
+
+    /**
+     * 绑定手机号
+     * @param openid
+     * @param mobile
+     * @param vCode
+     * @return
+     */
+    public Observable<BaseEntity> bindMobile(String openid, String mobile, String vCode) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("code", openid);
+        params.put("mobile", mobile);
+        params.put("userType", TYPE_USER_CAR_OWER);
+        params.put("vCode", vCode);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().bindMobile(params).retryWhen(new RetryWhen()));
     }
 
 

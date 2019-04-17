@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.allen.library.CircleImageView;
 import com.allen.library.SuperTextView;
@@ -16,8 +15,8 @@ import com.tourcoo.carnet.core.frame.base.fragment.BaseTitleFragment;
 import com.tourcoo.carnet.core.frame.manager.GlideManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.frame.util.HelpFeedBackActivity;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
@@ -33,7 +32,6 @@ import com.tourcoo.carnet.ui.account.PersonalDataActivity;
 import com.tourcoo.carnet.ui.car.CarsManagementActivity;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
 import com.tourcoo.carnet.ui.setting.BaseSettingActivity;
-import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -44,6 +42,8 @@ import org.simple.eventbus.ThreadMode;
 import static com.tourcoo.carnet.core.common.EventConstant.EVENT_REQUEST_MSG_COUNT;
 import static com.tourcoo.carnet.core.common.RequestConfig.BASE;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_REPAIR;
 
 /**
  * @author :zhoujian
@@ -113,23 +113,26 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 startActivityForResult(userInfoIntent, CODE_REQUEST_USER_INFO);
                 break;
             case R.id.stvVehicleManagement:
-                TourcooUtil.startActivity(mContext, CarsManagementActivity.class);
+                TourCooUtil.startActivity(mContext, CarsManagementActivity.class);
                 break;
             case R.id.stvBasicSetting:
-                TourcooUtil.startActivity(mContext, BaseSettingActivity.class);
+                TourCooUtil.startActivity(mContext, BaseSettingActivity.class);
                 break;
             case R.id.stvHistoryOder:
-                TourcooUtil.startActivity(mContext, OrderHistoryActivity.class);
+                Intent intentRepair = new Intent();
+                intentRepair.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                intentRepair.setClass(mContext, OrderHistoryActivity.class);
+                startActivity(intentRepair);
                 break;
             case R.id.stvHelpFeedBack:
-                TourcooUtil.startActivity(mContext, HelpFeedBackActivity.class);
+                TourCooUtil.startActivity(mContext, HelpFeedBackActivity.class);
                 break;
             case R.id.stvTripReport:
                 //行程报告
                 break;
             case R.id.stvReportWarning:
                 //报警记录
-                TourcooUtil.startActivity(mContext, DoorToDoorServiceDetailActivity.class);
+                TourCooUtil.startActivity(mContext, DoorToDoorServiceDetailActivity.class);
                 break;
             case R.id.stvSystemMessage:
                 //系统消息
@@ -185,7 +188,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 requestNoReadCount();
                 break;
             case CODE_REQUEST_USER_INFO:
-                TourcooLogUtil.i(TAG, "收到回调");
+                TourCooLogUtil.i(TAG, "收到回调");
                 showUserInfo(AccountInfoHelper.getInstance().getUserInfoEntity());
                 break;
             default:
@@ -200,7 +203,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         if (baseEvent != null) {
             switch (baseEvent.id) {
                 case EVENT_REQUEST_MSG_COUNT:
-                    TourcooLogUtil.i(TAG, "收到消息");
+                    TourCooLogUtil.i(TAG, "收到消息");
                     requestNoReadCount();
                     break;
                 default:
@@ -224,7 +227,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
             } else {
                 tvNickName.setText(userInfoEntity.getUserInfo().getNickname());
             }
-            GlideManager.loadImg(BASE + userInfoEntity.getUserInfo().getAvatar(), civAvatar, TourcooUtil.getDrawable(R.mipmap.img_default_minerva));
+            GlideManager.loadImg(BASE + userInfoEntity.getUserInfo().getAvatar(), civAvatar, TourCooUtil.getDrawable(R.mipmap.img_default_minerva));
         }
     }
 
@@ -236,7 +239,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
     @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN)
     public void refreshUserInfo(UserInfoRefreshEvent event) {
         if (event != null) {
-            TourcooLogUtil.i(TAG, "接收到消息");
+            TourCooLogUtil.i(TAG, "接收到消息");
             sycUserInfo();
         }
     }
@@ -246,7 +249,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
      * 同步个人信息
      */
     private void sycUserInfo() {
-        TourcooLogUtil.i(TAG, "syc服务器用户信息");
+        TourCooLogUtil.i(TAG, "syc服务器用户信息");
         ApiRepository.getInstance().getUserInfo().compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity<UserInfoEntity>>() {
                     @Override
@@ -273,12 +276,12 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
      */
     private void updateUserInfo(UserInfo userInfo) {
         if (userInfo == null) {
-            TourcooLogUtil.e(TAG, "userInfo== null 无法更新");
+            TourCooLogUtil.e(TAG, "userInfo== null 无法更新");
             return;
         }
         int userId = AccountInfoHelper.getInstance().getUserInfoEntity().getUserInfo().getUserId();
         userInfo.setUserId(userId);
-        TourcooLogUtil.i("更新syc", userInfo);
+        TourCooLogUtil.i("更新syc", userInfo);
         AccountInfoHelper.getInstance().updateAndSaveUserInfo(userInfo);
     }
 }

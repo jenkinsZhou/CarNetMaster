@@ -1,5 +1,7 @@
 package com.tourcoo.carnet.entity.garage;
 
+import java.io.Serializable;
+
 /**
  * @author :JenkinsZhou
  * @description :
@@ -7,7 +9,7 @@ package com.tourcoo.carnet.entity.garage;
  * @date 2019年04月13日15:11
  * @Email: 971613168@qq.com
  */
-public class CommentInfo {
+public class CommentInfo implements Serializable {
 
 
     /**

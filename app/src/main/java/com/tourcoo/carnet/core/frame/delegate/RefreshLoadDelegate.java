@@ -9,7 +9,7 @@ import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.interfaces.IRefreshLoadView;
 import com.tourcoo.carnet.core.frame.widget.NaViLoadMoreView;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.widget.core.util.FindViewUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
@@ -204,7 +204,7 @@ public class RefreshLoadDelegate<T> {
         mManager = null;
         mRootView = null;
         mTargetClass = null;
-        TourcooLogUtil.i("RefreshLoadDelegate", "onDestroy");
+        TourCooLogUtil.i("RefreshLoadDelegate", "onDestroy");
     }
 
 }

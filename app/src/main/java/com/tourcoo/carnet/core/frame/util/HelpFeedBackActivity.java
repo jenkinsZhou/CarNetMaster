@@ -23,13 +23,12 @@ import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.UploadProgressBody;
 import com.tourcoo.carnet.core.frame.retrofit.UploadRequestListener;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
-import com.tourcoo.carnet.entity.car.CarInfoEntity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.tourcoo.carnet.ui.repair.RepairFaultFragment;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -39,7 +38,9 @@ import org.apache.commons.lang.StringUtils;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,7 +95,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
     public void setTitleBar(TitleBarView titleBar) {
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("帮助反馈");
-        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
     }
 
 
@@ -210,7 +211,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
                 .openGallery(PictureMimeType.ofImage())
                 .theme(R.style.PicturePickerStyle)
                 // 最大图片选择数量
-                .maxSelectNum(8)
+                .maxSelectNum(4)
                 // 最小选择数量
                 .minSelectNum(1)
                 // 每行显示个数
@@ -261,19 +262,21 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
     /**
      * 上传故障报修
      */
-    private void uploadReportFault(CarInfoEntity carInfoEntity) {
+    private void uploadFeedBack(Map<String, Object> map) {
         if (TextUtils.isEmpty(getDetail())) {
-            ToastUtil.show("请输入故障描述");
+            ToastUtil.show("请输入反馈内容");
             return;
         }
-        ApiRepository.getInstance().reportFault(carInfoEntity, mImages, getDetail(), "", "").compose(bindUntilEvent(ActivityEvent.DESTROY)).
+        ApiRepository.getInstance().feedback(map).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
                     @Override
                     public void onRequestNext(BaseEntity entity) {
                         closeLoadingDialog();
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
+                                ToastUtil.show("反馈成功");
                                 clearUploadData();
+                                finish();
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }
@@ -324,9 +327,11 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
      */
     private void doUpload() {
         if (selectList.isEmpty()) {
-            uploadReportFault(AccountInfoHelper.getInstance().getCurrentCar());
+              TourCooLogUtil.d(TAG, "不带图片");
+            uploadFeedBack(getMap());
         } else {
             uploadImage(imageList);
+            TourCooLogUtil.i(TAG, "带图片");
         }
     }
 
@@ -370,7 +375,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
 
             @Override
             public void onFail(Throwable e) {
-                TourcooLogUtil.e("异常：" + e.toString());
+                TourCooLogUtil.e("异常：" + e.toString());
                 closeHudProgressDialog();
             }
         });
@@ -387,7 +392,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
                             imageUrl.add(image.getUrl());
                         }
                         mImages = StringUtils.join(imageUrl, ",");
-                        uploadReportFault(AccountInfoHelper.getInstance().getCurrentCar());
+                        uploadFeedBack(getMap());
                     } else {
                         ToastUtil.showFailed(resp.message);
                     }
@@ -422,7 +427,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
     }
 
     private void updateProgress(int progress) {
-        TourcooLogUtil.i("进度：" + progress);
+        TourCooLogUtil.i("进度：" + progress);
         if (hud != null) {
             hud.setProgress(progress);
         }
@@ -465,4 +470,21 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
         selectList.clear();
         uploadImageAdapter.notifyDataSetChanged();
     }
+
+
+    private Map<String, Object> getMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("content", getDetail());
+        if (!TextUtils.isEmpty(mImages)) {
+            map.put("imgUrls", mImages);
+        }
+        String mobile = AccountInfoHelper.getInstance().getUserInfoEntity().getUserInfo().getMobile();
+        if (!TextUtils.isEmpty(mobile)) {
+            map.put("phone", mobile);
+        }
+        return map;
+    }
+
+
+
 }

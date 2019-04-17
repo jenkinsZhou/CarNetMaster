@@ -12,7 +12,7 @@ import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.manager.RxJavaManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.account.UserInfo;
@@ -200,7 +200,7 @@ public class EditPasswordActivity extends BaseTourCooTitleActivity implements Vi
                                 if (AccountInfoHelper.getInstance().isRemindPassword()) {
                                     AccountInfoHelper.getInstance().changePassWord(getNewPass());
                                 }
-                                TourcooUtil.startActivity(mContext, EditSuccessActivity.class);
+                                TourCooUtil.startActivity(mContext, EditSuccessActivity.class);
                                 finish();
                             } else {
                                 ToastUtil.showFailed(entity.message);

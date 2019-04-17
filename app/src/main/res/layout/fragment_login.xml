@@ -215,6 +215,7 @@
             android:src="@mipmap/ic_wechat" />
 
         <ImageView
+            android:id="@+id/ivLoginWeChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"

@@ -14,7 +14,7 @@ import com.tourcoo.carnet.core.log.widget.logfile.LogFileConfigImpl;
  * @Email: 971613168@qq.com
  */
 
-public final class TourcooLogUtil {
+public final class TourCooLogUtil {
     private static Logger printer = new Logger();
     private static LogConfigImpl logConfig = LogConfigImpl.getInstance();
     private static LogFileConfigImpl logFileConfig = LogFileConfigImpl.getInstance();

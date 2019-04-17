@@ -11,7 +11,7 @@ import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.base.activity.BaseRefreshLoadActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
@@ -55,7 +55,7 @@ public class MsgSystemActivity extends BaseRefreshLoadActivity<MessageInfo> {
 
     @Override
     public void loadData(int page) {
-        TourcooLogUtil.d("loadData:" + page);
+        TourCooLogUtil.d("loadData:" + page);
         if (page == 0) {
             page = 1;
         }
@@ -72,7 +72,7 @@ public class MsgSystemActivity extends BaseRefreshLoadActivity<MessageInfo> {
     @Override
     public void onLoadMoreRequested() {
         super.onLoadMoreRequested();
-        TourcooLogUtil.d("onLoadMoreRequested:");
+        TourCooLogUtil.d("onLoadMoreRequested:");
     }
 
     @Override

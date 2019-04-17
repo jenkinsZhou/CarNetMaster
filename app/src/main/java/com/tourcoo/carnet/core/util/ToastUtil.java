@@ -194,7 +194,7 @@ public class ToastUtil {
         if (control != null) {
             control.setToast(sSystemToast, sTextView);
         }
-        boolean showEnable = !isShowRunningForeground || (TourcooUtil.isRunningForeground(sContext));
+        boolean showEnable = !isShowRunningForeground || (TourCooUtil.isRunningForeground(sContext));
         if (showEnable) {
             sSystemToast.show();
         }

@@ -6,7 +6,7 @@
 
     <include layout="@layout/layout_title_bar" />
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/common_background_color_gray"
@@ -63,7 +63,8 @@
                 <EditText
                     android:id="@+id/etRepairContent"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_100"
+                    android:minHeight="@dimen/dp_100"
+                    android:layout_height="wrap_content"
                     android:gravity="top|left"
                     android:layout_marginLeft="@dimen/dp_11"
                     android:layout_marginRight="@dimen/dp_11"
@@ -153,5 +154,5 @@
         </LinearLayout>
 
 
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 </LinearLayout>

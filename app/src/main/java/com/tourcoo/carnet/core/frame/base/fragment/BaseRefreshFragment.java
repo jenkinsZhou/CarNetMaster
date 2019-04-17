@@ -144,7 +144,7 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment implements IRe
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        mDefaultPage = 0;
+        mDefaultPage = 1;
         mRefreshLoadDelegate.setLoadMore(isLoadMoreEnable());
         loadData(mDefaultPage);
     }

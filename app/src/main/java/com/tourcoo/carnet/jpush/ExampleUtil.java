@@ -13,7 +13,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -110,7 +110,7 @@ public class ExampleUtil {
 			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             ret = telephonyManager.getDeviceId();
 		} catch (Exception e) {
-			TourcooLogUtil.e(ExampleUtil.class.getSimpleName(), e.getMessage());
+			TourCooLogUtil.e(ExampleUtil.class.getSimpleName(), e.getMessage());
 		}
 		if (isReadableASCII(ret)){
             return ret;

@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.tourcoo.carnet.AccountInfoHelper;
 import com.tourcoo.carnet.core.frame.util.SslUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,7 +82,7 @@ public class TourCoolRetrofit {
         public Response intercept(Chain chain) throws IOException {
             Request.Builder request = chain.request().newBuilder();
             //避免某些服务器配置攻击,请求返回403 forbidden 问题
-            TourcooLogUtil.i("token：" + AccountInfoHelper.getInstance().getToken());
+            TourCooLogUtil.i("token：" + AccountInfoHelper.getInstance().getToken());
             addHeader("token", AccountInfoHelper.getInstance().getToken());
             addHeader("User-Agent", "Mozilla/5.0 (Android)");
             if (mHeaderMap.size() > 0) {
@@ -170,7 +170,7 @@ public class TourCoolRetrofit {
     public <T> T createService(Class<T> apiService, boolean useCacheEnable) {
         if (useCacheEnable && apiService != null) {
             if (mServiceMap.containsKey(apiService.getName())) {
-                TourcooLogUtil.i("className:" + apiService.getName() + ";service取自缓存");
+                TourCooLogUtil.i("className:" + apiService.getName() + ";service取自缓存");
                 return (T) mServiceMap.get(apiService.getName());
             }
             T tClass = getRetrofit().create(apiService);
@@ -425,7 +425,7 @@ public class TourCoolRetrofit {
                         boolean isJson = message.startsWith("[") || message.startsWith("{");
                         isJson = isJson && mLogJsonEnable;
                         if (isJson) {
-                            TourcooLogUtil.json(finalTag, message);
+                            TourCooLogUtil.json(finalTag, message);
                             return;
                         }
                         Log.d(finalTag, message);

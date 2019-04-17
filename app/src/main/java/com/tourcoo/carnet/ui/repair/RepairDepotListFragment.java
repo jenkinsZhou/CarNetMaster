@@ -1,34 +1,26 @@
 package com.tourcoo.carnet.ui.repair;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.model.LatLng;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.RepairDepotDescriptionAdapter;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
-import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseRefreshFragment;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.helper.LocateHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.module.HomeFragment;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.widget.confirm.AlertDialog;
-import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.garage.GarageEntity;
 import com.tourcoo.carnet.entity.garage.GarageInfo;
@@ -136,7 +128,7 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
      * 获取附近修理厂列表
      */
     private void searchGarages(String pageIndex, String pageSize) {
-        TourcooLogUtil.i("当前请求的页码：", pageIndex + "关键字:" + keyWord);
+        TourCooLogUtil.i("当前请求的页码：", pageIndex + "关键字:" + keyWord);
         ApiRepository.getInstance().searchGarages(currentPosition, keyWord, pageIndex, pageSize).compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity<GarageEntity>>(getIHttpRequestControl()) {
                     @Override

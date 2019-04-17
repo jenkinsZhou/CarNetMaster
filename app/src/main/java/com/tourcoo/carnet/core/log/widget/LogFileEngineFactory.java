@@ -2,7 +2,7 @@ package com.tourcoo.carnet.core.log.widget;
 
 import android.content.Context;
 
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.log.widget.config.LogLevel;
 import com.tourcoo.carnet.core.log.widget.logfile.LogFileEngine;
 import com.tourcoo.carnet.core.log.widget.logfile.LogFileParam;
@@ -47,7 +47,7 @@ public class LogFileEngineFactory implements LogFileEngine {
                     File bufferFile = new File(context.getFilesDir(), ".log4aCache");
                     buffer = new LogBuffer(bufferFile.getAbsolutePath(), 4096,
                             logFile.getAbsolutePath(), false);
-                    TourcooLogUtil.i("文件绝对路径：" + bufferFile.getAbsolutePath());
+                    TourCooLogUtil.i("文件绝对路径：" + bufferFile.getAbsolutePath());
                 }
             }
         }
@@ -66,7 +66,7 @@ public class LogFileEngineFactory implements LogFileEngine {
         String time = dateFormat.format(new Date(params.getTime()));
         String outputString = String.format(FORMAT, time, getLogLevelString(params.getLogLevel()),
                 params.getThreadName(), params.getTagName(), logContent);
-        TourcooLogUtil.d("生成的内容：" + outputString);
+        TourCooLogUtil.d("生成的内容：" + outputString);
         return outputString;
     }
 

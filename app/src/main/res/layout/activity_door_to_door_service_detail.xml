@@ -17,14 +17,25 @@
             android:orientation="vertical">
             <!--订单状态布局-->
             <TextView
-                android:id="@+id/tvOrderStatus"
+                android:id="@+id/tvOrderNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_22"
                 android:layout_marginTop="@dimen/dp_15"
+                android:text="订单编号:"
+                android:textColor="@color/blueCommon"
+                android:textSize="@dimen/sp_12" />
+
+            <!--订单状态布局-->
+            <TextView
+                android:id="@+id/tvOrderStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_22"
+                android:layout_marginTop="@dimen/dp_5"
                 android:text="订单状态：维修中"
                 android:textColor="@color/blueCommon"
-                android:textSize="@dimen/sp_15" />
+                android:textSize="@dimen/sp_12" />
             <!--第二部分布局(白色圆角区域)-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,6 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_12"
+                    android:textSize="@dimen/sp_11"
                     android:text="内容描述内容描述内容描述内容描述内容描述内容描述内
 容描述内容描述内容描述内容描述内容描述内容描述内容
 描述内容描述内容描述内容描述内容描述内容描述内容描
@@ -105,9 +117,9 @@
                         android:textColor="@color/blueCommon" />
 
                     <TextView
+                        android:id="@+id/tvAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@mipmap/ic_positioning"
                         android:text="安徽省合肥市蜀山区高速翡翠湖畔" />
 
                 </LinearLayout>
@@ -138,11 +150,12 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 android:text="附近修理厂"
+                android:id="@+id/tvFirstFunction"
                 android:textColor="@color/white"
                 android:visibility="visible" />
 
             <TextView
-                android:id="@+id/tvCancelService"
+                android:id="@+id/tvSecondFunction"
                 style="@style/TextViewButtonBlueBgMatchParentStyleBaseHollow"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="@dimen/dp_10"

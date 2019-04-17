@@ -21,15 +21,13 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.tourcoo.carnet.MainActivity;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.util.KeyboardUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.log.widget.utils.DateUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
@@ -755,7 +753,7 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
             hashMap.put(entry.getKey(), entry.getValue());
         }
         for (Map.Entry<String, Object> entry : hashMap.entrySet()) {
-            TourcooLogUtil.i(TAG, entry.getKey() + "：" + entry.getValue());
+            TourCooLogUtil.i(TAG, entry.getKey() + "：" + entry.getValue());
         }
         ApiRepository.getInstance().addCar(hashMap).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
@@ -819,7 +817,7 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
                 int number = Integer.parseInt(getObdNumber());
                 hashMap.put("obdSn", number);
             } catch (Exception e) {
-                TourcooLogUtil.e(TAG, e.toString());
+                TourCooLogUtil.e(TAG, e.toString());
             }
         }
 
@@ -869,7 +867,7 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 if (entity.data != null) {
                                     mCarFaultRemindList.clear();
-                                    TourcooLogUtil.i("数据长度：" + entity.data.size());
+                                    TourCooLogUtil.i("数据长度：" + entity.data.size());
                                     mCarFaultRemindList.addAll(entity.data);
                                     opvFaultRemind.show();
                                 }

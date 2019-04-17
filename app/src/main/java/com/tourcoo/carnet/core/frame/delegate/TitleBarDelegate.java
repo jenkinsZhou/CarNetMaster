@@ -8,8 +8,8 @@ import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.interfaces.ITitleView;
 import com.tourcoo.carnet.core.frame.interfaces.TitleBarViewControl;
 import com.tourcoo.carnet.core.frame.util.StackUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.util.FindViewUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 
@@ -32,7 +32,7 @@ public class TitleBarDelegate {
         if (mTitleBar == null) {
             return;
         }
-        TourcooLogUtil.i("class:" + cls.getSimpleName());
+        TourCooLogUtil.i("class:" + cls.getSimpleName());
         //默认的MD风格返回箭头icon如使用该风格可以不用设置
         final Activity activity = StackUtil.getInstance().getActivity(cls);
         //设置TitleBarView 所有TextView颜色
@@ -69,7 +69,7 @@ public class TitleBarDelegate {
      */
     private CharSequence getTitle(Activity activity) {
         if (activity != null) {
-            CharSequence appName = TourcooUtil.getAppName(activity);
+            CharSequence appName = TourCooUtil.getAppName(activity);
             CharSequence label = activity.getTitle();
             if (label != null && !label.equals(appName)) {
                 return label;

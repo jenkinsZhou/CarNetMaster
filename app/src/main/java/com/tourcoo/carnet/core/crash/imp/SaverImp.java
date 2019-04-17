@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.tourcoo.carnet.core.crash.encryption.IEncryption;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.threadpool.ThreadPoolManager;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public abstract class SaverImp implements ISave {
                 .append(tag)
                 .append(" > ")
                 .append(tips);
-        TourcooLogUtil.d("添加的内容是:\n" + sb.toString());
+        TourCooLogUtil.d("添加的内容是:\n" + sb.toString());
         return sb.toString();
     }
 
@@ -114,10 +114,10 @@ public abstract class SaverImp implements ISave {
         sb.append("DEVICE: ").append(Build.DEVICE).append('\n');
         sb.append("HARDWARE: ").append(Build.HARDWARE).append('\n').append('\n');
 */
-        TourcooLogUtil.d("创建的设备信息（加密前） = \n" + sb.toString());
+        TourCooLogUtil.d("创建的设备信息（加密前） = \n" + sb.toString());
         //加密信息
         sb = new StringBuilder(encodeString(sb.toString()));
-        TourcooLogUtil.d("创建的设备信息（加密后） = \n" + sb.toString());
+        TourCooLogUtil.d("创建的设备信息（加密后） = \n" + sb.toString());
         try {
             if (!file.exists()) {
                 boolean successCreate = file.createNewFile();
@@ -220,7 +220,7 @@ public abstract class SaverImp implements ISave {
             String encoderesult = encodeString(content);
             //long endTime = System.nanoTime();
             //Log.d("wenming", "加密耗时为 = ： " + String.valueOf((double) (endTime - startTime) / 1000000) + "ms");
-            TourcooLogUtil.d("最终写到文本的Log：\n" + content);
+            TourCooLogUtil.d("最终写到文本的Log：\n" + content);
             outputStream = new FileOutputStream(logFile);
             outputStream.write(encoderesult.getBytes());
         } catch (Exception e) {

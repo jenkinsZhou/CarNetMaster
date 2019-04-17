@@ -7,7 +7,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.InsuranceCompanyDescriptionAdapter;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseRefreshFragment;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.entity.InsuranceCompanyEntity;
 
 import java.util.ArrayList;
@@ -45,12 +45,12 @@ public class InsuranceCompanyFragment extends BaseRefreshFragment<InsuranceCompa
 
     @Override
     public void loadData(int page) {
-        TourcooLogUtil.d(TAG, "page = " + page);
+        TourCooLogUtil.d(TAG, "page = " + page);
     }
 
     @Override
     public void onLoadMoreRequested() {
-        TourcooLogUtil.d(TAG, "已执行");
+        TourCooLogUtil.d(TAG, "已执行");
         new Handler() {
         }.postDelayed(new Runnable() {
             @Override

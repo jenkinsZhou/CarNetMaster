@@ -7,19 +7,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.core.PoiItem;
-import com.amap.api.services.poisearch.PoiResult;
-import com.amap.api.services.poisearch.PoiSearch;
 import com.google.android.material.tabs.TabLayout;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.helper.LocateHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
-import com.tourcoo.carnet.core.permission.PermissionManager;
-import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.navigation.KeyboardHelper;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.core.widget.custom.WrapContentHeightViewPager;
@@ -31,12 +23,10 @@ import org.simple.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * @author :JenkinsZhou
@@ -85,12 +75,12 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
     public void setTitleBar(TitleBarView titleBar) {
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("快速检索");
-        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
         titleBar.setRightText("附近修理厂");
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TourcooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
+                TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
             }
         });
     }

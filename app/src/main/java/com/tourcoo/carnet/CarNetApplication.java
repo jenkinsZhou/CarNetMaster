@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 
+import com.tourcoo.carnet.core.common.CommonConfig;
 import com.tourcoo.carnet.core.crash.CrashManager;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.impl.ActivityControlImpl;
@@ -13,7 +14,7 @@ import com.tourcoo.carnet.core.frame.impl.SwipeBackControlImpl;
 import com.tourcoo.carnet.core.frame.impl.UiConfigImpl;
 import com.tourcoo.carnet.core.frame.retrofit.TourCoolRetrofit;
 import com.tourcoo.carnet.core.frame.util.SizeUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.log.widget.LogFileEngineFactory;
 import com.tourcoo.carnet.core.log.widget.config.LogLevel;
 import com.tourcoo.carnet.core.util.ToastUtil;
@@ -103,13 +104,14 @@ public class CarNetApplication extends LitePalApplication {
         //注意设置baseUrl要以/ 结尾 service 里的方法不要以/打头不然拦截到的url会有问题
         //以下为配置多BaseUrl--默认方式一优先级高 可通过FastRetrofit.getInstance().setHeaderPriorityEnable(true);设置方式二优先级
         //方式一 通过Service 里的method-(如:) 设置 推荐 使用该方式不需设置如方式二的额外Header
-
-
         //内存泄漏检测工具
-        if (LeakCanary.isInAnalyzerProcess(mContext)) {
-            return;
+        if(CommonConfig.DEBUG_MODE){
+            if (LeakCanary.isInAnalyzerProcess(mContext)) {
+                return;
+            }
+            LeakCanary.install(mContext);
         }
-        LeakCanary.install(mContext);
+
     }
 
     public static Application getInstance() {
@@ -128,14 +130,14 @@ public class CarNetApplication extends LitePalApplication {
      * 初始化日志配置
      */
     private void initLog() {
-        TourcooLogUtil.getLogConfig()
+        TourCooLogUtil.getLogConfig()
                 .configAllowLog(DEBUG_MODE)
                 .configTagPrefix(TAG_PRE_SUFFIX)
                 .configShowBorders(false).
                 configLevel(LogLevel.TYPE_VERBOSE);
         // 支持输入日志到文件
         String filePath = Environment.getExternalStorageDirectory() + "/CarNetMaster/logs/";
-        TourcooLogUtil.getLogFileConfig().configLogFileEnable(DEBUG_MODE)
+        TourCooLogUtil.getLogFileConfig().configLogFileEnable(DEBUG_MODE)
                 .configLogFilePath(filePath)
                 .configLogFileLevel(LogLevel.TYPE_VERBOSE)
                 .configLogFileEngine(new LogFileEngineFactory(this));
@@ -147,7 +149,7 @@ public class CarNetApplication extends LitePalApplication {
      * @return
      */
     public static boolean isControlNavigation() {
-        TourcooLogUtil.i("CarNetApplication", "mode:" + Build.MODEL);
+        TourCooLogUtil.i("CarNetApplication", "mode:" + Build.MODEL);
         return true;
     }
 

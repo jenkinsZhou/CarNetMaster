@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -29,11 +30,14 @@ import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.frame.retrofit.UploadProgressBody;
 import com.tourcoo.carnet.core.frame.retrofit.UploadRequestListener;
-import com.tourcoo.carnet.core.frame.util.HelpFeedBackActivity;
 import com.tourcoo.carnet.core.frame.util.SizeUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
+import com.tourcoo.carnet.core.widget.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
+import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.tourcoo.carnet.core.widget.bigkoo.pickerview.view.OptionsPickerView;
 import com.tourcoo.carnet.core.widget.core.view.radius.RadiusEditText;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.core.widget.dialog.alert.EmiAlertDialog;
@@ -41,11 +45,13 @@ import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
 import com.tourcoo.carnet.entity.account.UserInfo;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
+import com.tourcoo.carnet.entity.event.UserInfoRefreshEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
-import com.trello.rxlifecycle3.android.FragmentEvent;
 
 import org.apache.commons.lang.StringUtils;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -72,6 +78,7 @@ import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
  * @Email: 971613168@qq.com
  */
 public class PersonalDataActivity extends BaseTourCooTitleActivity implements View.OnClickListener {
+    private OptionsPickerView opvDriveAge;
     private UserInfoEntity mUserInfoEntity;
     private TextView tvNickName;
     private TextView tvMobile;
@@ -93,6 +100,9 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
     private static final int EDIT_DRIVER_AGE = 2;
     private static final int EDIT_LICENSE = 3;
     private static final int EDIT_AVATAR = 4;
+    private List<String> driveAgeStringList = new ArrayList<>();
+
+    private List<Integer> driveAgeList = new ArrayList<>();
 
     @Override
     public int getContentLayout() {
@@ -101,19 +111,23 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         mUserInfoEntity = AccountInfoHelper.getInstance().getUserInfoEntity();
         tvNickName = findViewById(R.id.tvNickName);
         tvNickName.setOnClickListener(this);
         tvMobile = findViewById(R.id.tvMobile);
         tvMobile.setOnClickListener(this);
         tvDrivingAge = findViewById(R.id.tvDrivingAge);
-        tvDrivingAge.setOnClickListener(this);
+//        tvDrivingAge.setOnClickListener(this);
         tvDriverLicenseNumber = findViewById(R.id.tvDriverLicenseNumber);
         cvAvatar = findViewById(R.id.cvAvatar);
         tvDriverLicenseNumber.setOnClickListener(this);
         cvAvatar.setOnClickListener(this);
         findViewById(R.id.tvEditPassword).setOnClickListener(this);
+        findViewById(R.id.relayDrivingAge).setOnClickListener(this);
         showCurrentInfo(mUserInfoEntity);
+        initAgeList();
+        initDriveAgePicker();
     }
 
     @Override
@@ -128,13 +142,13 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
     private void showCurrentInfo(UserInfoEntity userInfoEntity) {
         UserInfo userInfo;
         if (userInfoEntity == null || userInfoEntity.getUserInfo() == null) {
-            TourcooLogUtil.e(TAG, "用户信息为null");
+            TourCooLogUtil.e(TAG, "用户信息为null");
             userInfoEntity = new UserInfoEntity();
             userInfo = new UserInfo();
             userInfoEntity.setUserInfo(userInfo);
         }
         userInfo = userInfoEntity.getUserInfo();
-        if (TextUtils.isEmpty(userInfo.getDriverAge())) {
+        if (TextUtils.isEmpty(userInfo.getNickname())) {
             tvNickName.setText("未填写");
         } else {
             tvNickName.setText(userInfo.getNickname());
@@ -143,7 +157,7 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
             tvMobile.setText("未填写");
         } else {
             String maskNumber = userInfo.getMobile();
-            if (TourcooUtil.isMobileNumber(userInfo.getMobile())) {
+            if (TourCooUtil.isMobileNumber(userInfo.getMobile())) {
                 maskNumber = userInfo.getMobile().substring(0, 3) + "****" + maskNumber.substring(7, userInfo.getMobile().length());
             }
             tvMobile.setText(maskNumber);
@@ -171,21 +185,25 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
                 break;
             case R.id.tvNickName:
                 editFlag = EDIT_NICK_NAME;
-                showEditText();
+                showEditText(InputType.TYPE_CLASS_TEXT);
                 break;
             case R.id.tvDrivingAge:
-                editFlag = EDIT_DRIVER_AGE;
-                showEditText();
+          /*      editFlag = EDIT_DRIVER_AGE;
+                showEditText(InputType.TYPE_CLASS_NUMBER);*/
+                opvDriveAge.show();
                 break;
             case R.id.tvDriverLicenseNumber:
                 editFlag = EDIT_LICENSE;
-                showEditText();
+                showEditText(InputType.TYPE_CLASS_TEXT);
                 break;
             case R.id.tvEditPassword:
-                TourcooUtil.startActivity(mContext, EditPasswordActivity.class);
+                TourCooUtil.startActivity(mContext, EditPasswordActivity.class);
                 break;
             case R.id.tvMobile:
-                TourcooUtil.startActivity(mContext, ChangePhoneNumberActivity.class);
+                TourCooUtil.startActivity(mContext, ChangePhoneNumberActivity.class);
+                break;
+            case R.id.relayDrivingAge:
+                opvDriveAge.show();
                 break;
             default:
                 break;
@@ -258,7 +276,7 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
                     }
                     //todo
                     for (String s : imageList) {
-                        TourcooLogUtil.i(TAG, "图片:" + s);
+                        TourCooLogUtil.i(TAG, "图片:" + s);
                     }
                     uploadImage(imageList);
                     break;
@@ -300,7 +318,7 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
 
             @Override
             public void onFail(Throwable e) {
-                TourcooLogUtil.e("异常：" + e.toString());
+                TourCooLogUtil.e("异常：" + e.toString());
                 closeHudProgressDialog();
             }
         });
@@ -377,7 +395,7 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
     }
 
     private void updateProgress(int progress) {
-        TourcooLogUtil.i("进度：" + progress);
+        TourCooLogUtil.i("进度：" + progress);
         if (hud != null) {
             hud.setProgress(progress);
         }
@@ -488,13 +506,13 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
         tvDriverLicenseNumber.setText(value);
     }
 
-    private void showEditText() {
+    private void showEditText(int inputType) {
         final RadiusEditText editText = new RadiusEditText(mContext);
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         editText.getDelegate()
                 .setTextColor(Color.GRAY)
                 .setRadius(6f)
-                .setBackgroundColor(TourcooUtil.getColor(R.color.colorWhite))
+                .setBackgroundColor(TourCooUtil.getColor(R.color.colorWhite))
                 .setStrokeColor(Color.GRAY)
                 .setStrokeWidth(SizeUtil.dp2px(0.5f));
         editText.setMinHeight(SizeUtil.dp2px(40));
@@ -503,6 +521,7 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
         editText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         editText.setHint("请输入内容");
         editText.setLayoutParams(params);
+        editText.setInputType(inputType);
         new EmiAlertDialog.DividerIosBuilder(this)
                 .setTitle("输入信息")
                 .setTitleTextColorResource(R.color.colorAlertTitle)
@@ -520,7 +539,6 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
                                 editNickName();
                                 break;
                             case EDIT_DRIVER_AGE:
-                                editDriverAge();
                                 break;
                             case EDIT_LICENSE:
                                 editLicenseNo();
@@ -548,7 +566,7 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
     private void editNickName() {
         Map<String, Object> map = new HashMap<>(2);
         map.put("ownerId", mUserInfoEntity.getUserInfo().getUserId());
-        TourcooLogUtil.i(TAG, "车主id：" + mUserInfoEntity.getUserInfo().getUserId());
+        TourCooLogUtil.i(TAG, "车主id：" + mUserInfoEntity.getUserInfo().getUserId());
         if (TextUtils.isEmpty(getInputString())) {
             ToastUtil.show("请输入内容");
             return;
@@ -558,20 +576,9 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
     }
 
 
-    private void editDriverAge() {
+    private void editDriverAge(int age) {
         Map<String, Object> map = new HashMap<>(2);
         map.put("ownerId", mUserInfoEntity.getUserInfo().getUserId());
-        int age;
-        try {
-            age = Integer.parseInt(getInputString());
-        } catch (NumberFormatException e) {
-            ToastUtil.show("请输入数字");
-            return;
-        }
-        if (TextUtils.isEmpty(getInputString())) {
-            ToastUtil.show("请输入内容");
-            return;
-        }
         map.put("driverAge", age);
         editOwnerInfo(map);
     }
@@ -596,19 +603,20 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
      */
     private void updateUserInfo(UserInfo userInfo) {
         if (userInfo == null) {
-            TourcooLogUtil.e(TAG, "userInfo== null 无法更新");
+            TourCooLogUtil.e(TAG, "userInfo== null 无法更新");
             return;
         }
         int userId = AccountInfoHelper.getInstance().getUserInfoEntity().getUserInfo().getUserId();
         userInfo.setUserId(userId);
-        TourcooLogUtil.i("更新syc", userInfo);
+        TourCooLogUtil.i("更新syc", userInfo);
         AccountInfoHelper.getInstance().updateAndSaveUserInfo(userInfo);
+        showCurrentInfo(AccountInfoHelper.getInstance().getUserInfoEntity());
     }
 
 
     private void showAvatar(String url) {
-        TourcooLogUtil.i(TAG, "图片URL：" + url);
-        GlideManager.loadImg(url, cvAvatar);
+        TourCooLogUtil.i(TAG, "图片URL：" + url);
+        GlideManager.loadImg(url, cvAvatar, TourCooUtil.getDrawable(R.mipmap.img_default_minerva));
     }
 
     @Override
@@ -638,6 +646,53 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
                     }
                 });
     }
+
+    /**
+     * 刷新个人信息事件
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN)
+    public void refreshUserInfo(UserInfoRefreshEvent event) {
+        if (event != null) {
+            TourCooLogUtil.i(TAG, "接收到消息");
+            sycUserInfo();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 初始化驾龄选择器
+     */
+    @SuppressWarnings("uncheked")
+    private void initDriveAgePicker() {
+        // 不联动
+        opvDriveAge = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+             editDriverAge(driveAgeList.get(options1));
+            }
+        }).build();
+        opvDriveAge.setNPicker(driveAgeStringList, null, null);
+        opvDriveAge.setSelectOptions(0, 1, 1);
+    }
+
+    private void initAgeList() {
+        driveAgeList.clear();
+        driveAgeStringList.clear();
+        int maxSize = 60;
+        for (int i = 1; i <= maxSize; i++) {
+            driveAgeStringList.add(i + "年");
+            driveAgeList.add(i);
+        }
+    }
+
+
 
 
 }

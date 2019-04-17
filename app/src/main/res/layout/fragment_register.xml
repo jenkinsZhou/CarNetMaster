@@ -106,6 +106,7 @@
 
 
         <CheckBox
+            android:id="@+id/cBoxAgree"
             style="@style/CustomCheckBoxTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

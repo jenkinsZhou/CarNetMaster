@@ -24,10 +24,10 @@ import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.util.KeyboardUtil;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.log.widget.utils.DateUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
@@ -733,7 +733,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         Map<String, Object> hashMap = new HashMap<>(15);
         //车辆类型
         hashMap.put("id", currentCarInfo.getId());
-        TourcooLogUtil.i(TAG, "车辆ID：" + currentCarInfo.getId());
+        TourCooLogUtil.i(TAG, "车辆ID：" + currentCarInfo.getId());
         hashMap.put("modelId", mCurrentCarModel.getId());
         //发动机编号(必填)
         hashMap.put("engine", getCarEngineNumber());
@@ -751,7 +751,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
             hashMap.put(entry.getKey(), entry.getValue());
         }
         for (Map.Entry<String, Object> entry : hashMap.entrySet()) {
-            TourcooLogUtil.i(TAG, entry.getKey() + "：" + entry.getValue());
+            TourCooLogUtil.i(TAG, entry.getKey() + "：" + entry.getValue());
         }
         ApiRepository.getInstance().editCar(hashMap).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
@@ -839,7 +839,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
                 int number = Integer.parseInt(getObdNumber());
                 hashMap.put("obdSn", number);
             } catch (Exception e) {
-                TourcooLogUtil.e(TAG, e.toString());
+                TourCooLogUtil.e(TAG, e.toString());
             }
         }
 
@@ -889,7 +889,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 if (entity.data != null) {
                                     mCarFaultRemindList.clear();
-                                    TourcooLogUtil.i("数据长度：" + entity.data.size());
+                                    TourCooLogUtil.i("数据长度：" + entity.data.size());
                                     mCarFaultRemindList.addAll(entity.data);
                                     opvFaultRemind.show();
                                 }
@@ -1022,7 +1022,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setPlateNumber(String value) {
-        etPlateNumber.setText(TourcooUtil.getNotNullValue(value));
+        etPlateNumber.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1031,7 +1031,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setCarCategory(String value) {
-        tvCarCategory.setText(TourcooUtil.getNotNullValue(value));
+        tvCarCategory.setText(TourCooUtil.getNotNullValue(value));
     }
 
     private String getCarCategory() {
@@ -1048,7 +1048,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setCarModel(String value) {
-        tvCarModel.setText(TourcooUtil.getNotNullValue(value));
+        tvCarModel.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1057,7 +1057,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setEngineNumber(String value) {
-        etEngineNumber.setText(TourcooUtil.getNotNullValue(value));
+        etEngineNumber.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1066,7 +1066,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setDisplacement(String value) {
-        etDisplacement.setText(TourcooUtil.getNotNullValue(value));
+        etDisplacement.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1075,7 +1075,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setCarInsuranceInfo(String value) {
-        etCarInsuranceInfo.setText(TourcooUtil.getNotNullValue(value));
+        etCarInsuranceInfo.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1084,7 +1084,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setCarYearlyInspection(String value) {
-        etCarYearlyInspection.setText(TourcooUtil.getNotNullValue(value));
+        etCarYearlyInspection.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1093,7 +1093,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setMaintainInfo(String value) {
-        etCarMaintainInfo.setText(TourcooUtil.getNotNullValue(value));
+        etCarMaintainInfo.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1120,7 +1120,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setLastInsuranceTime(String value) {
-        tvLastInsuranceTime.setText(TourcooUtil.getNotNullValue(value));
+        tvLastInsuranceTime.setText(TourCooUtil.getNotNullValue(value));
     }
 
 
@@ -1130,7 +1130,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setLastYearlyInspectionTime(String value) {
-        tvLastYearlyInspectionTime.setText(TourcooUtil.getNotNullValue(value));
+        tvLastYearlyInspectionTime.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1148,7 +1148,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setFaultRemindType(String value) {
-        tvFaultRemindType.setText(TourcooUtil.getNotNullValue(value));
+        tvFaultRemindType.setText(TourCooUtil.getNotNullValue(value));
     }
 
     /**
@@ -1157,15 +1157,15 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
      * @param value
      */
     private void setObdNumber(String value) {
-        etObdNumber.setText(TourcooUtil.getNotNullValue(value));
+        etObdNumber.setText(TourCooUtil.getNotNullValue(value));
     }
 
     private void setMaintainRuleType(String value) {
-        tvMaintainRule.setText(TourcooUtil.getNotNullValue(value));
+        tvMaintainRule.setText(TourCooUtil.getNotNullValue(value));
     }
 
     private void setObdReceiveMode(String value) {
-        tvObdReceiveMode.setText(TourcooUtil.getNotNullValue(value));
+        tvObdReceiveMode.setText(TourCooUtil.getNotNullValue(value));
     }
 
     private void initCarInfo(CarInfoEntity carInfoEntity) {

@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseTitleFragment;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.ui.car.CarCuringActivity;
 import com.tourcoo.carnet.ui.car.CarRepairActivity;
@@ -51,13 +51,13 @@ public class DoorToDoorServiceFragment extends BaseTitleFragment implements View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rlCarWash:
-                TourcooUtil.startActivity(mContext, CarWashActivity.class);
+                TourCooUtil.startActivity(mContext, CarWashActivity.class);
                 break;
             case R.id.rlCarCuring:
-                TourcooUtil.startActivity(mContext, CarCuringActivity.class);
+                TourCooUtil.startActivity(mContext, CarCuringActivity.class);
                 break;
             case R.id.rlCarRepair:
-                TourcooUtil.startActivity(mContext, CarRepairActivity.class);
+                TourCooUtil.startActivity(mContext, CarRepairActivity.class);
                 break;
             default:
                 break;

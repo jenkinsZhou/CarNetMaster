@@ -16,7 +16,7 @@ import android.webkit.WebView;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.interfaces.TitleBarViewControl;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.action.ActionSheetDialog;
 import com.tourcoo.carnet.core.widget.core.action.BaseDialog;
@@ -47,7 +47,7 @@ public abstract class BaseWebActivity extends BaseTourCooTitleActivity {
     protected static void start(Activity mActivity, Class<? extends BaseWebActivity> activity, String url) {
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
-        TourcooUtil.startActivity(mActivity, activity, bundle);
+        TourCooUtil.startActivity(mActivity, activity, bundle);
     }
 
 
@@ -106,7 +106,7 @@ public abstract class BaseWebActivity extends BaseTourCooTitleActivity {
                 onBackPressed();
             }
         })
-                .setRightTextDrawable(TourcooUtil.getTintDrawable(
+                .setRightTextDrawable(TourCooUtil.getTintDrawable(
                         ContextCompat.getDrawable(mContext, R.drawable.ic_more),
                         ContextCompat.getColor(mContext, R.color.colorTitleText)))
                 .setOnRightTextClickListener(new View.OnClickListener() {
@@ -116,7 +116,7 @@ public abstract class BaseWebActivity extends BaseTourCooTitleActivity {
                     }
                 })
                 .addLeftAction(titleBar.new ImageAction(
-                        TourcooUtil.getTintDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_close),
+                        TourCooUtil.getTintDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_close),
                                 ContextCompat.getColor(mContext, R.color.colorTitleText)), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -187,7 +187,7 @@ public abstract class BaseWebActivity extends BaseTourCooTitleActivity {
     protected void showActionSheet() {
         if (mActionSheetView == null) {
             mActionSheetView = new ActionSheetDialog.ListSheetBuilder(mContext)
-                    .addItems(R.array.arrays_web_more)
+                    .addItems(R.array.arrays_banner_all)
                     .setOnItemClickListener(new ActionSheetDialog.OnItemClickListener() {
                         @Override
                         public void onClick(BaseDialog dialog, View itemView, int i) {
@@ -196,11 +196,11 @@ public abstract class BaseWebActivity extends BaseTourCooTitleActivity {
                                     mAgentWeb.getUrlLoader().reload();
                                     break;
                                 case 1:
-                                    TourcooUtil.copyToClipboard(mContext, mCurrentUrl);
+                                    TourCooUtil.copyToClipboard(mContext, mCurrentUrl);
                                     ToastUtil.show("复制成功");
                                     break;
                                 case 2:
-                                    TourcooUtil.startShareText(mContext, mCurrentUrl);
+                                    TourCooUtil.startShareText(mContext, mCurrentUrl);
                                     break;
                                 default:
                                     break;

@@ -105,6 +105,7 @@
                     android:paddingRight="@dimen/dp_16"
                     app:sBottomDividerLineMarginLeft="@dimen/dp_16"
                     app:sLeftIconMarginLeft="@dimen/dp_16"
+                    android:visibility="gone"
                     app:sLeftIconRes="@mipmap/ic_alarm_reporting"
                     app:sLeftTextString="报警记录" />
 

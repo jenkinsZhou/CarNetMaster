@@ -12,7 +12,7 @@ import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.manager.RxJavaManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.util.ToastUtil;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
@@ -106,7 +106,7 @@ public class ChangePhoneNumberActivity extends BaseTourCooTitleActivity implemen
             ToastUtil.show("请输入手机号");
             return;
         }
-        if (!TourcooUtil.isMobileNumber(phone)) {
+        if (!TourCooUtil.isMobileNumber(phone)) {
             ToastUtil.show("请输入正确的手机号");
             return;
         }
@@ -198,7 +198,7 @@ public class ChangePhoneNumberActivity extends BaseTourCooTitleActivity implemen
      * @param vCode
      */
     private void doChangeMobile(String mobile, String vCode) {
-        if (!TourcooUtil.isMobileNumber(mobile)) {
+        if (!TourCooUtil.isMobileNumber(mobile)) {
             ToastUtil.show("请输入正确的手机号");
             return;
         }
@@ -215,7 +215,7 @@ public class ChangePhoneNumberActivity extends BaseTourCooTitleActivity implemen
                                 if (AccountInfoHelper.getInstance().isRemindPassword()) {
                                     AccountInfoHelper.getInstance().changeMobile(getMobile());
                                 }
-                                TourcooUtil.startActivity(mContext, EditSuccessActivity.class);
+                                TourCooUtil.startActivity(mContext, EditSuccessActivity.class);
                                 finish();
                             } else {
                                 ToastUtil.showFailed(entity.message);

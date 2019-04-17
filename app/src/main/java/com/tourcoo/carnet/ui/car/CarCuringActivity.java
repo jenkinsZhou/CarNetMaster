@@ -17,17 +17,16 @@ import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.helper.LocateHelper;
-import com.tourcoo.carnet.core.log.TourcooLogUtil;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
-import com.tourcoo.carnet.core.util.TourcooUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
 import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
-import com.tourcoo.carnet.ui.factory.NearbyRepairFactoryActivity;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
@@ -40,7 +39,6 @@ import androidx.core.content.ContextCompat;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_CURING;
-import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_WASH;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
 /**
@@ -56,6 +54,7 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
     private TextView btnLocate;
     private String currentPosition;
     private EditText etRepairContent;
+    private String mAddress;
 
     @Override
     public int getContentLayout() {
@@ -77,13 +76,13 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
     public void setTitleBar(TitleBarView titleBar) {
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("上门保养");
-        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
         titleBar.setRightText("历史保养");
-        titleBar.setRightTextColor(TourcooUtil.getColor(R.color.blueCommon));
+        titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TourcooUtil.startActivity(mContext, OrderHistoryActivity.class);
+                TourCooUtil.startActivity(mContext, OrderHistoryActivity.class);
                 EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_CURING));
             }
         });
@@ -221,10 +220,11 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 String result = showResult(aMapLocation);
-                TourcooLogUtil.d(TAG, "回调结果:" + result);
+                TourCooLogUtil.d(TAG, "回调结果:" + result);
                 if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
                     showLocateSuccess(aMapLocation.getAddress());
                     currentPosition = getPosition(aMapLocation);
+                    mAddress = getAddress(aMapLocation);
                 } else {
                     showLocateFailed();
                 }
@@ -233,6 +233,7 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
             }
         });
     }
+
 
     /**
      * 检查定位权限
@@ -279,7 +280,7 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
             ToastUtil.show("未获取位置信息");
             return;
         }
-        ApiRepository.getInstance().doorToDoorService(carInfoEntity, "", getDetail(), currentPosition, TYPE_CAR_CURING).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+        ApiRepository.getInstance().doorToDoorService(carInfoEntity, "", getDetail(), currentPosition, TYPE_CAR_CURING, mAddress).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
                     @Override
                     public void onRequestNext(BaseEntity entity) {
@@ -329,5 +330,14 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
         position += mapLocation.getLatitude();
         return position;
     }
+
+    private String getAddress(AMapLocation mapLocation) {
+        String address = "";
+        if (mapLocation == null) {
+            return address;
+        }
+        return mapLocation.getAddress();
+    }
+
 
 }
