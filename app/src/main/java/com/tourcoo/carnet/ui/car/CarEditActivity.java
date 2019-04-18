@@ -75,6 +75,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
     private OptionsPickerView opvCarModel;
     private OptionsPickerView opvCarMaintainRule;
     private OptionsPickerView opvObdReceiveMode;
+    private static final int LENGTH_DATE_MIN = 10;
     /**
      * 故障提醒模式
      */
@@ -131,6 +132,11 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
     private TextView tvLastYearlyInspectionTime;
 
     /**
+     * 上次年检时间
+     */
+    private TextView tvLastMaintainTime;
+
+    /**
      * 保养提醒开关
      */
     private Switch switchRemindMaintain;
@@ -164,6 +170,8 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
     private static final int TYPE_INSURANCE = 0;
 
     private static final int TYPE_YEARLY_INSPECTION = 1;
+
+    private static final int TYPE_MAINTAIN = 2;
     private CarInfoEntity currentCarInfo;
 
     @Override
@@ -180,6 +188,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         initCarMaintainRulePicker();
         initOpvObdReceiveModePicker();
         initFaultRepairTypePicker();
+        findViewById(R.id.llLastMaintainDate).setOnClickListener(this);
         tvCarCategory = findViewById(R.id.tvCarCategory);
         tvCarModel = findViewById(R.id.tvCarModel);
         tvMaintainRule = findViewById(R.id.tvMaintainRule);
@@ -188,6 +197,7 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         tvObdReceiveMode = findViewById(R.id.tvObdReceiveMode);
         etEngineNumber = findViewById(R.id.etEngineNumber);
         etDisplacement = findViewById(R.id.etDisplacement);
+        tvLastMaintainTime = findViewById(R.id.tvLastMaintainTime);
         etCarMaintainInfo = findViewById(R.id.etCarMaintainInfo);
         etCarInsuranceInfo = findViewById(R.id.etCarInsuranceInfo);
         etCarYearlyInspection = findViewById(R.id.etCarYearlyInspection);
@@ -210,6 +220,14 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         initKeyBoard();
         initCarInfo(currentCarInfo);
         showCurrentSetting(currentCarInfo);
+
+        etEngineNumber.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                keyboardUtil.hideKeyboard();
+                return false;
+            }
+        });
     }
 
     private String getTime(Date date) {
@@ -233,6 +251,9 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
                         break;
                     case TYPE_YEARLY_INSPECTION:
                         setLastYearlyInspectionTime(selectedTime);
+                        break;
+                    case TYPE_MAINTAIN:
+                        setLastMaintainTime(selectedTime);
                         break;
                     default:
                         break;
@@ -279,6 +300,11 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.llLastMaintainDate:
+                keyboardUtil.hideKeyboard();
+                mTimeSelectType = TYPE_MAINTAIN;
+                timePicker.show();
+                break;
             //车辆品类选择
             case R.id.llCarCategory:
                 keyboardUtil.hideKeyboard();
@@ -668,6 +694,13 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         return tvLastYearlyInspectionTime.getText().toString();
     }
 
+    /**
+     * 获取上次保养时间
+     */
+    private String getLastMaintainTime() {
+        return tvLastMaintainTime.getText().toString();
+    }
+
 
     /**
      * 是否开启保养提醒
@@ -744,6 +777,15 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         hashMap.put("obdReceive", getObdReceiveMode());
         //TODO：车牌号
         hashMap.put("plateNum", getPlatNumber());
+        //上次保险时间
+        hashMap.put("insurerDate", getLastInsuranceTime());
+        //上次年检时间
+        hashMap.put("yearlyDate", getLastYearlyInspectionTime());
+        //上次保养时间
+        hashMap.put("maintainDate", getLastMaintainTime());
+        TourCooLogUtil.i(TAG, "getLastYearlyInspectionTime时间:" + getLastYearlyInspectionTime());
+        TourCooLogUtil.i(TAG, "getLastInsuranceTime时间:" + getLastInsuranceTime());
+        TourCooLogUtil.i(TAG, "getLastMaintainTime时间:" + getLastMaintainTime());
 
         //非必须参数
         HashMap<String, Object> nonEssentialParams = getNonEssentialParams();
@@ -1007,13 +1049,27 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         setSwitchRemindCarInsurance(carInfoEntity.isInsurer_remind());
         setSwitchRemindYearlyInspection(carInfoEntity.isYearly_remind());
         //TODO 时间设置
-//        setLastInsuranceTime(carInfoEntity.la);
+        setLastYearlyInspectionTime(formateDate(carInfoEntity.yearly_date));
+        setLastInsuranceTime(formateDate(carInfoEntity.insurer_date));
+        setLastMaintainTime(formateDate(carInfoEntity.maintain_date));
         setSwitchRemindMaintain(carInfoEntity.isMaintain_remind());
         setMaintainRuleType(carInfoEntity.getMaintain_rule());
         setFaultRemindType(carInfoEntity.getFault_remind());
         setObdNumber(carInfoEntity.getObd_sn());
         setObdReceiveMode(carInfoEntity.getObd_receive());
 
+    }
+
+
+    private String formateDate(String date) {
+        if (date == null) {
+            return "";
+        }
+        if (date.length() < LENGTH_DATE_MIN) {
+            return "";
+        }
+        TourCooLogUtil.i(TAG, "截取的值:" + date.substring(0, LENGTH_DATE_MIN));
+        return date.substring(0, LENGTH_DATE_MIN);
     }
 
     /**
@@ -1123,6 +1179,15 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         tvLastInsuranceTime.setText(TourCooUtil.getNotNullValue(value));
     }
 
+
+    /**
+     * 设置上次保养时间
+     *
+     * @param value
+     */
+    private void setLastMaintainTime(String value) {
+        tvLastMaintainTime.setText(TourCooUtil.getNotNullValue(value));
+    }
 
     /**
      * 设置上次年检时间

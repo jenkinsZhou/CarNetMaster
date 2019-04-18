@@ -98,7 +98,6 @@ public class RefreshLoadDelegate<T> {
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         mIRefreshLoadView.onItemClicked(adapter, view, position);
                     }
-
                 });
             }
         }
@@ -206,5 +205,6 @@ public class RefreshLoadDelegate<T> {
         mTargetClass = null;
         TourCooLogUtil.i("RefreshLoadDelegate", "onDestroy");
     }
+
 
 }

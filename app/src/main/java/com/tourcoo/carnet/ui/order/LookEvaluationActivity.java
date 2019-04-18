@@ -1,13 +1,19 @@
 package com.tourcoo.carnet.ui.order;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.GridImageAdapter;
 import com.tourcoo.carnet.core.common.RequestConfig;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
+import com.tourcoo.carnet.core.frame.manager.GlideManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
@@ -23,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
@@ -41,6 +49,7 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
     private RatingStarView rsvRating;
     private GridImageAdapter gridImageAdapter;
     private TextView tvCommentTime;
+    private TextView tvLevel;
 
     private String orderId;
     public static final String EXTRA_ORDER_ID = "EXTRA_ORDER_ID";
@@ -59,6 +68,15 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
         tvCommentTime = findViewById(R.id.tvCommentTime);
         gridImageAdapter = new GridImageAdapter(imageUrList);
         gridImageAdapter.bindToRecyclerView(rvImageComment);
+        rvImageComment.setLayoutManager(new GridLayoutManager(mContext, 4));
+        tvLevel = findViewById(R.id.tvLevel);
+        gridImageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                onThumbnailClick(view, gridImageAdapter.getData().get(position));
+            }
+        });
+
     }
 
     @Override
@@ -104,7 +122,7 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
 
     private CommentDetail getDetail(List<CommentDetail> commentDetailList) {
         if (commentDetailList == null || commentDetailList.isEmpty()) {
-              TourCooLogUtil.e(TAG, "参数为null");
+            TourCooLogUtil.e(TAG, "参数为null");
             return null;
         }
         return commentDetailList.get(0);
@@ -118,6 +136,7 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
         tvCommentDetail.setText(getNotNullValue(commentDetail.getDetail()));
         rsvRating.setRating(commentDetail.getLevel());
         rsvRating.setEnabled(false);
+        tvLevel.setText(commentDetail.getLevel() + "分");
         tvCommentTime.setText(getNotNullValue(commentDetail.getCreateTime()));
         String images = getNotNullValue(commentDetail.getImages());
         List<String> imageList = Arrays.asList(images.split(","));
@@ -132,6 +151,31 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
         return TourCooUtil.getNotNullValue(value);
     }
 
+
+    private ImageView getView() {
+        ImageView imgView = new ImageView(this);
+        imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imgView.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
+        return imgView;
+    }
+
+
+    public void onThumbnailClick(View v, String imageUrl) {
+// 全屏显示的方法
+        /* android.R.style.Theme_Black_NoTitleBar_Fullscreen*/
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        ImageView imgView = getView();
+        dialog.setContentView(imgView);
+        dialog.show();
+        GlideManager.loadImg(imageUrl, imgView);
+// 点击图片消失
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
 
 
 }

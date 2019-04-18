@@ -36,7 +36,7 @@
 
             <com.tourcoo.carnet.core.widget.ratingstar.RatingStarView
                 android:id="@+id/rsvRating"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dp_80"
                 android:layout_height="@dimen/dp_15"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/dp_10"

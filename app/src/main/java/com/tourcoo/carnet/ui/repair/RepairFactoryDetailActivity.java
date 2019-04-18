@@ -475,4 +475,5 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         startActivity(intent);
     }
 
+
 }

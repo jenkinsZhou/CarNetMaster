@@ -112,6 +112,6 @@ public class MainTabActivity extends BaseMainActivity {
             ToastUtil.show("未获取到用户信息");
             return;
         }
-        uploadClientId(clientRegId, userInfoEntity.getUserInfo().getId() + "");
+        uploadClientId(clientRegId, userInfoEntity.getUserInfo().getUserId() + "");
     }
 }

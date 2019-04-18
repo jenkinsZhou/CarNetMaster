@@ -39,7 +39,7 @@ public class ChangePhoneNumberActivity extends BaseTourCooTitleActivity implemen
     private TextView tvSendVerificationCode;
     private List<Disposable> disposableList = new ArrayList<>();
     private static final long SECOND = 1000;
-    private static final int COUNT = 30;
+    private static final int COUNT = 60;
     private int count = COUNT;
 
     @Override

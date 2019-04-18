@@ -150,7 +150,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         if (mUserInfoEntity == null || mUserInfoEntity.getUserInfo() == null) {
             return;
         }
-        ApiRepository.getInstance().getNoReadCount(mUserInfoEntity.getUserInfo().getId() + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).
+        ApiRepository.getInstance().getNoReadCount(mUserInfoEntity.getUserInfo().getUserId() + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity<MessageInfo.MessageBean>>() {
                     @Override
                     public void onRequestNext(BaseEntity<MessageInfo.MessageBean> entity) {
@@ -203,7 +203,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         if (baseEvent != null) {
             switch (baseEvent.id) {
                 case EVENT_REQUEST_MSG_COUNT:
-                    TourCooLogUtil.i(TAG, "收到消息");
+                    TourCooLogUtil.i(TAG, "刷新消息列表");
                     requestNoReadCount();
                     break;
                 default:

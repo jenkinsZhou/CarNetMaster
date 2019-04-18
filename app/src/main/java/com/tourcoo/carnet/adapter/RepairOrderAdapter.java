@@ -48,7 +48,7 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
         TextView tvRightButton = helper.getView(R.id.tvRightButton);
         helper.addOnClickListener(R.id.tvLeftButton);
         helper.addOnClickListener(R.id.tvRightButton);
-        TextView tvOrderType =  helper.getView(R.id.tvOrderType);
+        TextView tvOrderType = helper.getView(R.id.tvOrderType);
         switch (item.getOrderType()) {
             case TYPE_CAR_REPAIR:
                 tvOrderType.setText("维修简述:");
@@ -63,6 +63,7 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
                 break;
         }
         switch (item.getStatus()) {
+            //待支付
             case TYPE_STATUS_ORDER_WAIT_ORDER:
                 String captcha = "待接单(验证码:" + item.getCaptcha() + ")";
                 tvRepairStatus.setText(captcha);
@@ -91,7 +92,7 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
                 setSolidText(tvRightButton, "填写评价");
                 break;
             case TYPE_STATUS_ORDER_FINISH:
-                helper.setText(R.id.tvRepairStatus, "已完成");
+                helper.setText(R.id.tvRepairStatus, "服务完成");
                 setVisibility(tvLeftButton, false);
                 setVisibility(tvRightButton, true);
                 setHollowText(tvRightButton, "查看服务");
@@ -99,15 +100,16 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
             case TYPE_STATUS_ORDER_CANCELED:
                 helper.setText(R.id.tvRepairStatus, "已取消");
                 setVisibility(tvLeftButton, false);
-                setVisibility(tvRightButton, false);
                 setHollowText(tvRightButton, "已取消");
+                setVisibility(tvRightButton, false);
                 break;
             case TYPE_STATUS_ORDER_CLOSE:
                 helper.setText(R.id.tvRepairStatus, "已关闭");
-                setVisibility(tvLeftButton, false);
-                setVisibility(tvRightButton, true);
                 setHollowText(tvRightButton, "已关闭");
                 setHollowText(tvRightButton, "查看评价");
+                setSolidText(tvLeftButton, "查看服务");
+                setVisibility(tvLeftButton, true);
+                setVisibility(tvRightButton, true);
                 break;
             default:
                 break;
@@ -146,7 +148,6 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
             textView.setVisibility(View.INVISIBLE);
         }
     }
-
 
 
 }

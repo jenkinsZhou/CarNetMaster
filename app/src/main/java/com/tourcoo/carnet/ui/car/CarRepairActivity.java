@@ -69,6 +69,7 @@ import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.EXTRA_ORDER_TYPE;
 import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_REPAIR;
+import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_SERVICE;
 
 
 /**
@@ -136,7 +137,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_SERVICE);
                 intent.setClass(mContext, OrderHistoryActivity.class);
                 startActivity(intent);
                 EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_REPAIR));

@@ -48,7 +48,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     private TextView tvSendVerificationCode;
     private List<Disposable> disposableList = new ArrayList<>();
     private static final long SECOND = 1000;
-    private static final int COUNT = 30;
+    private static final int COUNT = 60;
     private int count = COUNT;
     private EditText etPhoneNumber;
     private EditText etVcode;

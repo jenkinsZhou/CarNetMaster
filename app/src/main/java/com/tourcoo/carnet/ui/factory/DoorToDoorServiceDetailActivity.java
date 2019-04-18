@@ -146,7 +146,7 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
         gridImageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                onThumbnailClick(view,gridImageAdapter.getData().get(position));
+                onThumbnailClick(view, gridImageAdapter.getData().get(position));
             }
         });
         if (mFaultRepairInfo != null) {
@@ -220,7 +220,7 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
                 setVisibility(tvSecondFunction, true);
                 break;
             case TYPE_STATUS_ORDER_IN_SERVICE:
-                tvOrderStatus.setText("维修中");
+                tvOrderStatus.setText("服务中");
                 setVisibility(tvFirstFunction, false);
                 setVisibility(tvSecondFunction, false);
                 break;
@@ -237,8 +237,9 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
                 setSolidText(tvSecondFunction, "去评价");
                 break;
             case TYPE_STATUS_ORDER_FINISH:
-                tvOrderStatus.setText("已完成");
-                setVisibility(tvFirstFunction, false);
+                tvOrderStatus.setText("服务完成");
+                setVisibility(tvFirstFunction, true);
+                setSolidText(tvFirstFunction, "查看服务");
                 setVisibility(tvSecondFunction, false);
                 break;
             case TYPE_STATUS_ORDER_CANCELED:
@@ -250,7 +251,7 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
                 tvOrderStatus.setText("已关闭");
                 setVisibility(tvFirstFunction, false);
                 setVisibility(tvSecondFunction, true);
-                setHollowText(tvSecondFunction,"查看评价");
+                setHollowText(tvSecondFunction, "查看评价");
                 break;
             default:
                 tvOrderStatus.setText("未知");
@@ -350,6 +351,7 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
                     case TYPE_STATUS_ORDER_WAIT_ORDER:
                         //取消订单
                         showCancelDialog(orderInfo);
+                        break;
                     case TYPE_STATUS_ORDER_WAIT_EVALUATE:
                         //去评价
                         Intent intent1 = new Intent();
@@ -617,14 +619,14 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
     }
 
 
-    public void onThumbnailClick(View v,String imageUrl) {
+    public void onThumbnailClick(View v, String imageUrl) {
 // 全屏显示的方法
-       /* android.R.style.Theme_Black_NoTitleBar_Fullscreen*/
+        /* android.R.style.Theme_Black_NoTitleBar_Fullscreen*/
         final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         ImageView imgView = getView();
         dialog.setContentView(imgView);
         dialog.show();
-        GlideManager.loadImg(imageUrl,imgView);
+        GlideManager.loadImg(imageUrl, imgView);
 // 点击图片消失
         imgView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -656,7 +658,7 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void  onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case CODE_REQUEST_FILL:

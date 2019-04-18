@@ -150,6 +150,12 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
     private TextView tvLastYearlyInspectionTime;
 
     /**
+     * 上次保养时间
+     */
+    private TextView tvLastMaintainTime;
+
+
+    /**
      * 保养提醒开关
      */
     private Switch switchRemindMaintain;
@@ -184,6 +190,8 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
 
     private static final int TYPE_YEARLY_INSPECTION = 1;
 
+    private static final int TYPE_MAINTAIN = 2;
+
     @Override
     public int getContentLayout() {
         return R.layout.activity_add_car;
@@ -212,6 +220,7 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
         switchRemindYearlyInspection = findViewById(R.id.switchRemindYearlyInspection);
         tvLastInsuranceTime = findViewById(R.id.tvLastInsuranceTime);
         tvLastYearlyInspectionTime = findViewById(R.id.tvLastYearlyInspectionTime);
+        tvLastMaintainTime = findViewById(R.id.tvLastMaintainTime);
         switchRemindMaintain = findViewById(R.id.switchRemindMaintain);
         llFaultRemindType = findViewById(R.id.llFaultRemindType);
         etObdNumber = findViewById(R.id.etObdNumber);
@@ -223,8 +232,15 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
         findViewById(R.id.llMaintainRule).setOnClickListener(this);
         findViewById(R.id.tvSaveCarInfo).setOnClickListener(this);
         findViewById(R.id.llObdReceiveMode).setOnClickListener(this);
+        findViewById(R.id.llLastMaintainDate).setOnClickListener(this);
         initKeyBoard();
-
+        etEngineNumber.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                keyboardUtil.hideKeyboard();
+                return false;
+            }
+        });
     }
 
     private String getTime(Date date) {
@@ -248,6 +264,9 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
                         break;
                     case TYPE_YEARLY_INSPECTION:
                         setLastYearlyInspectionTime(selectedTime);
+                        break;
+                    case TYPE_MAINTAIN:
+                        setLastMaintainTime(selectedTime);
                         break;
                     default:
                         break;
@@ -333,6 +352,12 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
             case R.id.llFaultRemindType:
                 keyboardUtil.hideKeyboard();
                 findFaultRemindList();
+                break;
+            //上次保养时间
+            case R.id.llLastMaintainDate:
+                keyboardUtil.hideKeyboard();
+                mTimeSelectType = TYPE_MAINTAIN;
+                timePicker.show();
                 break;
             default:
                 break;
@@ -525,7 +550,16 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
     private List<CarModel> getCarModelList(Object object) {
         List<CarModel> carCategoryList = new ArrayList<>();
         try {
-            return JSONObject.parseArray(JSON.toJSONString(object), CarModel.class);
+            List<CarModel> carModelList = JSONObject.parseArray(JSON.toJSONString(object), CarModel.class);
+            if (carModelList != null) {
+                for (int i = carModelList.size() - 1; i >= 0; i--) {
+                    if (carModelList.get(i) == null || TextUtils.isEmpty(carModelList.get(i).getName())) {
+                        carModelList.remove(i);
+                        TourCooLogUtil.i(TAG, "移除了一个空数据");
+                    }
+                }
+            }
+            return carModelList;
         } catch (Exception e) {
             return carCategoryList;
         }
@@ -565,6 +599,7 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 mCarModelList.clear();
                                 mCarModelList.addAll(getCarModelList(entity.data));
+                                initCarModelPicker();
                                 opvCarModel.show();
                             } else {
                                 ToastUtil.showFailed(entity.message);
@@ -672,6 +707,13 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
 
 
     /**
+     * 获取上次保养时间
+     */
+    private String getLastMaintainTime() {
+        return tvLastMaintainTime.getText().toString();
+    }
+
+    /**
      * 是否开启保养提醒
      *
      * @return
@@ -686,6 +728,7 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
     private void resetCarModel() {
         tvCarModel.setText(EMPTY);
     }
+
     /**
      * 添加车辆
      */
@@ -718,6 +761,10 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
             ToastUtil.show("请选择上次年检时间");
             return;
         }
+        if (TextUtils.isEmpty(getLastMaintainTime()) || EMPTY.equals(getLastMaintainTime())) {
+            ToastUtil.show("请选择上次保养时间");
+            return;
+        }
         if (mCurrentCarMaintainRule == null || TextUtils.isEmpty(getMaintainRule()) || EMPTY.equals(getMaintainRule())) {
             ToastUtil.show("请选择保养规则");
             return;
@@ -746,7 +793,15 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
         hashMap.put("obdReceive", mCurrentObdReceiveMode.getName());
         //TODO：车牌号
         hashMap.put("plateNum", getPlatNumber());
-
+        //上次保险时间
+        hashMap.put("insurerDate", getLastInsuranceTime());
+        //上次年检时间
+        hashMap.put("yearlyDate", getLastYearlyInspectionTime());
+        //上次保养时间
+        hashMap.put("maintainDate", getLastMaintainTime());
+        TourCooLogUtil.i(TAG, "getLastYearlyInspectionTime时间:" + getLastYearlyInspectionTime());
+        TourCooLogUtil.i(TAG, "getLastInsuranceTime时间:" + getLastInsuranceTime());
+        TourCooLogUtil.i(TAG, "getLastMaintainTime时间:" + getLastMaintainTime());
         //非必须参数
         HashMap<String, Object> nonEssentialParams = getNonEssentialParams();
         for (Map.Entry<String, Object> entry : nonEssentialParams.entrySet()) {
@@ -909,6 +964,9 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
         tvLastYearlyInspectionTime.setText(time);
     }
 
+    private void setLastMaintainTime(String time) {
+        tvLastMaintainTime.setText(time);
+    }
 
     private String getObdReceiveMode() {
         return tvObdReceiveMode.getText().toString();
@@ -935,11 +993,12 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
         return etPlateNumber.getText().toString();
     }
 
-    private void initKeyUtil(){
-        if(keyboardUtil == null){
+    private void initKeyUtil() {
+        if (keyboardUtil == null) {
             keyboardUtil = new KeyboardUtil(AddCarActivity.this, etPlateNumber);
         }
     }
+
     private void initKeyBoard() {
         initKeyUtil();
         etPlateNumber.setInputType(InputType.TYPE_NULL);
@@ -956,7 +1015,6 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
                 return false;
             }
         });
-
 
 
         etPlateNumber.addTextChangedListener(new TextWatcher() {

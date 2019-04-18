@@ -38,7 +38,7 @@ public class EditPasswordActivity extends BaseTourCooTitleActivity implements Vi
     private TextView tvSendVerificationCode;
     private List<Disposable> disposableList = new ArrayList<>();
     private static final long SECOND = 1000;
-    private static final int COUNT = 30;
+    private static final int COUNT = 60;
     private int count = COUNT;
     private EditText etPasswordConfirm;
     private EditText etPasswordNew;

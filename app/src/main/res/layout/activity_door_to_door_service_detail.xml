@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_22"
                 android:layout_marginTop="@dimen/dp_5"
-                android:text="订单状态：维修中"
+                android:text="订单状态：服务中"
                 android:textColor="@color/blueCommon"
                 android:textSize="@dimen/sp_12" />
             <!--第二部分布局(白色圆角区域)-->

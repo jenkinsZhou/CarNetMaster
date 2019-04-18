@@ -81,7 +81,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     private EditText etCode;
     private List<Disposable> disposableList = new ArrayList<>();
     private static final long SECOND = 1000;
-    private static final int COUNT = 30;
+    private static final int COUNT = 60;
     private int count = COUNT;
     private CheckBox cBoxRemeberPassword;
     private LinearLayout llVerifyCodeAndPassword;
@@ -320,6 +320,10 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         }
         if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
             ToastUtil.show("请输入正确的手机号");
+            return;
+        }
+        if (TextUtils.isEmpty(getVcode())) {
+            ToastUtil.show("请输入验证码");
             return;
         }
         if (TextUtils.isEmpty(getPasword())) {

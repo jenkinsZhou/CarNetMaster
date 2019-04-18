@@ -14,6 +14,34 @@ import java.io.Serializable;
 public class CarInfoEntity implements Serializable, IPickerViewData {
     public static final int REMIND_CLOSE = 0;
     public static final int REMIND_OPEN = 1;
+    public String insurer_date;
+    public String maintain_date;
+
+    public String yearly_date;
+
+    public String getInsurer_date() {
+        return insurer_date;
+    }
+
+    public void setInsurer_date(String insurer_date) {
+        this.insurer_date = insurer_date;
+    }
+
+    public String getMaintain_date() {
+        return maintain_date;
+    }
+
+    public void setMaintain_date(String maintain_date) {
+        this.maintain_date = maintain_date;
+    }
+
+    public String getYearly_date() {
+        return yearly_date;
+    }
+
+    public void setYearly_date(String yearly_date) {
+        this.yearly_date = yearly_date;
+    }
 
     public boolean isIs_default() {
         return is_default;

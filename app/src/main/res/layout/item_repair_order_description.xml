@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5551111"
-                android:maxLength="10"
+                android:maxLines="1"
                 />
         </LinearLayout>
 
@@ -76,7 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="水温异常"
-                android:maxLength="10"
+                android:maxLines="1"
+                android:ems="30"
                 android:textColor="@color/red_common" />
         </LinearLayout>
 

@@ -341,10 +341,6 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
      * @param imageList
      */
     private void uploadImage(List<String> imageList) {
-        if (AccountInfoHelper.getInstance().getCurrentCar() == null) {
-            ToastUtil.show("当前没有车辆,请先添加车辆");
-            return;
-        }
         if (getDetail().isEmpty()) {
             ToastUtil.show("请先填写故障描述");
             return;

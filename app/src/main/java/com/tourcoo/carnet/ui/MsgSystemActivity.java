@@ -16,12 +16,17 @@ import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.MessageInfo;
+import com.tourcoo.carnet.entity.account.UserInfo;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
+import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
+import org.simple.eventbus.EventBus;
+
 import java.util.ArrayList;
 
+import static com.tourcoo.carnet.core.common.EventConstant.EVENT_REQUEST_MSG_COUNT;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
 /**
@@ -84,12 +89,13 @@ public class MsgSystemActivity extends BaseRefreshLoadActivity<MessageInfo> {
      * 系统消息
      */
     private void getMsgList(boolean isShowLoading, int pageIndex, int pageSize) {
+        mUserInfoEntity = AccountInfoHelper.getInstance().getUserInfoEntity();
         if (mUserInfoEntity == null || mUserInfoEntity.getUserInfo() == null) {
             ToastUtil.show("未获取用户信息");
             return;
         }
         if (isShowLoading) {
-            ApiRepository.getInstance().getMsgList(mUserInfoEntity.getUserInfo().getId()+"", pageIndex, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+            ApiRepository.getInstance().getMsgList(mUserInfoEntity.getUserInfo().getUserId() + "", pageIndex, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                     subscribe(new BaseLoadingObserver<BaseEntity<MessageInfo>>() {
                         @Override
                         public void onRequestNext(BaseEntity<MessageInfo> entity) {
@@ -107,7 +113,7 @@ public class MsgSystemActivity extends BaseRefreshLoadActivity<MessageInfo> {
                     });
 
         } else {
-            ApiRepository.getInstance().getMsgList(mUserInfoEntity.getUserInfo().getId()+"", pageIndex, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+            ApiRepository.getInstance().getMsgList(mUserInfoEntity.getUserInfo().getUserId() + "", pageIndex, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                     subscribe(new BaseObserver<BaseEntity<MessageInfo>>() {
                         @Override
                         public void onRequestNext(BaseEntity<MessageInfo> entity) {
@@ -127,4 +133,9 @@ public class MsgSystemActivity extends BaseRefreshLoadActivity<MessageInfo> {
     }
 
 
+    @Override
+    public void finish() {
+        EventBus.getDefault().post(new BaseEvent(EVENT_REQUEST_MSG_COUNT));
+        super.finish();
+    }
 }

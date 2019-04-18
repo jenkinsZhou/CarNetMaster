@@ -13,8 +13,12 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
+import com.tourcoo.carnet.entity.event.BaseEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import static com.tourcoo.carnet.core.common.WxConfig.APP_ID;
+import static com.tourcoo.carnet.entity.event.EventConstant.EVENT_ACTION_PAY_FRESH;
 
 
 /**
@@ -75,9 +79,9 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                     Toast.makeText(this, "您已经取消支付，请重新尝试支付", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-
                     break;
             }
+            EventBus.getDefault().post(new BaseEvent(EVENT_ACTION_PAY_FRESH));
             finish();
         }
     }

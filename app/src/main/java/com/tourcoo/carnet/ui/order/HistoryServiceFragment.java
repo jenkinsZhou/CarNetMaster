@@ -163,8 +163,14 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
         if (pageIndex.equals("0")) {
             pageIndex = "1";
         }
-        TourCooLogUtil.i("当前请求类型：", orderType);
-        ApiRepository.getInstance().findMyList(pageIndex, pageSize, orderType + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).
+        String orderTypeString;
+        if (orderType == 0) {
+            orderTypeString = "3,4,5";
+        } else {
+            orderTypeString = orderType + "";
+        }
+        TourCooLogUtil.i("当前请求类型：", orderTypeString);
+        ApiRepository.getInstance().findMyList(pageIndex, pageSize, orderTypeString).compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseObserver<FaultRepairEntity>(getIHttpRequestControl()) {
                               @Override
                               public void onRequestNext(FaultRepairEntity entity) {

@@ -47,7 +47,7 @@ public class ForgetPasswordActivity extends BaseTourCooTitleActivity implements 
     private TextView tvSendVerificationCode;
     private List<Disposable> disposableList = new ArrayList<>();
     private static final long SECOND = 1000;
-    private static final int COUNT = 30;
+    private static final int COUNT = 60;
     private int count = COUNT;
     private TitleBarViewHelper mTitleBarViewHelper;
 
@@ -131,6 +131,10 @@ public class ForgetPasswordActivity extends BaseTourCooTitleActivity implements 
         }
         if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
             ToastUtil.show("请输入正确的手机号");
+            return;
+        }
+        if (TextUtils.isEmpty(getVCode())) {
+            ToastUtil.show("请输入验证码");
             return;
         }
         if (TextUtils.isEmpty(getPassword())) {

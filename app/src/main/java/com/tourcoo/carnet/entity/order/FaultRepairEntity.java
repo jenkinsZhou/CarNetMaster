@@ -23,7 +23,7 @@ public class FaultRepairEntity extends BaseEntity<FaultRepairEntity> implements 
      */
     public static final int TYPE_STATUS_ORDER_IN_SERVICE = 2;
     /**
-     * 完成
+     * 服务已经完成
      */
     public static final int TYPE_STATUS_ORDER_FINISH = 3;
 

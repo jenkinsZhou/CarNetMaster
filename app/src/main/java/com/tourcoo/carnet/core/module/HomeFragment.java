@@ -62,6 +62,7 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -88,6 +89,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
     private ImageView ivChange;
     private UserInfoEntity mUserInfo;
     private ImageView ivBindObd;
+    private List<CarInfoEntity> mCarInfoEntityList = new ArrayList<>();
     /**
      * 是否拥有车辆
      */
@@ -98,6 +100,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
     private CarInfoEntity carInfoEntity;
     private ImageView ivRedDot;
     private OptionsPickerView opvCarCategory;
+    private List<String> myCarList = new ArrayList<>();
 
     /**
      * 当前车辆品牌
@@ -327,6 +330,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 List<CarInfoEntity> parseCarInfoList = parseCarInfoList(entity.data);
+                                loadUserCarInfoList(parseCarInfoList);
                                 AccountInfoHelper.getInstance().setCarInfoEntityList(parseCarInfoList);
                                 //设置车辆有无状态位
                                 flagHasCar = hasCar(parseCarInfoList);
@@ -401,7 +405,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
         if (!NetworkUtil.isConnected(mContext) || mUserInfo == null || mUserInfo.getUserInfo() == null) {
             return;
         }
-        ApiRepository.getInstance().getNoReadCount(mUserInfo.getUserInfo().getId() + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).
+        ApiRepository.getInstance().getNoReadCount(mUserInfo.getUserInfo().getUserId() + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity<MessageInfo.MessageBean>>() {
                     @Override
                     public void onRequestNext(BaseEntity<MessageInfo.MessageBean> entity) {
@@ -460,21 +464,21 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
     }
 
 
+
+
     /**
      * 初始化车辆品类选择器
      */
     @SuppressWarnings("uncheked")
     private void initCarCategoryOptionsPicker() {
-        List<CarInfoEntity> carInfoEntityList = AccountInfoHelper.getInstance().getCarInfoEntityList();
+
         // 不联动
         opvCarCategory = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                if (carInfoEntityList != null) {
-                    carInfoEntity = carInfoEntityList.get(options1);
-                    if (carInfoEntity != null) {
-                        setDefaultCar(carInfoEntity, true);
-                    }
+                carInfoEntity = mCarInfoEntityList.get(options1);
+                if (carInfoEntity != null) {
+                    setDefaultCar(carInfoEntity, true);
                 }
             }
         })
@@ -486,7 +490,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
                 })
                 // .setSelectOptions(0, 1, 1)
                 .build();
-        opvCarCategory.setNPicker(carInfoEntityList, null, null);
+        opvCarCategory.setNPicker(myCarList, null, null);
         opvCarCategory.setSelectOptions(0, 1, 1);
     }
 
@@ -645,5 +649,19 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
         ToastUtil.showFailed("您未授予定位权限,请前往授权管理授予权限");
     }
 
+
+    private void loadUserCarInfoList( List<CarInfoEntity> carInfoEntityList){
+        if(carInfoEntityList == null){
+            return;
+        }
+        myCarList.clear();
+        mCarInfoEntityList.clear();
+        mCarInfoEntityList.addAll(carInfoEntityList);
+        String carInfo;
+        for (CarInfoEntity infoEntity : carInfoEntityList) {
+            carInfo = infoEntity.getBrandName() + "(" + TourCooUtil.getNotNullValue(infoEntity.getPlate_num()) + ")";
+            myCarList.add(carInfo);
+        }
+    }
 
 }
