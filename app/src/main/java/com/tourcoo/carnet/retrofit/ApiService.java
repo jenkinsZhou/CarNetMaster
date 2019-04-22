@@ -1,7 +1,9 @@
 package com.tourcoo.carnet.retrofit;
 
 import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.InsuranceCompany;
 import com.tourcoo.carnet.entity.garage.CommentDetail;
+import com.tourcoo.carnet.entity.garage.ServiceInfo;
 import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
@@ -24,6 +26,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**
@@ -352,6 +355,7 @@ public interface ApiService {
 
     /**
      * 获取评论详情
+     *
      * @param map
      * @return
      */
@@ -360,6 +364,7 @@ public interface ApiService {
 
     /**
      * 微信登录
+     *
      * @param map
      * @return
      */
@@ -368,11 +373,39 @@ public interface ApiService {
 
     /**
      * 绑定手机号
+     *
      * @param map
      * @return
      */
     @POST("signLogin/bindMobile")
     Observable<BaseEntity> bindMobile(@QueryMap Map<String, Object> map);
+
+
+    /**
+     * 保险公司列表
+     *
+     * @param map
+     * @return
+     */
+    @POST("insurance/queryByName")
+    Observable<BaseEntity<InsuranceCompany>> queryAllInsurance(@Body Map<String, Object> map);
+
+    /**
+     * 保险公司详情
+     *
+     * @param map
+     * @return
+     */
+    @GET("insurance/findOne")
+    Observable<BaseEntity<InsuranceCompany.CompanyInfo>> queryInsuranceDetailById(@QueryMap Map<String, Object> map);
+
+    /**
+     *查看修理厂服务内容
+     * @param map
+     * @return
+     */
+    @GET("order/check-order-service")
+    Observable<BaseEntity<ServiceInfo>> findMyService(@QueryMap Map<String, Object> map);
 
 
 }

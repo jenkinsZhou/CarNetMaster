@@ -13,7 +13,7 @@ import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.core.widget.custom.EmiViewPager;
 import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.entity.event.OrderEvent;
-import com.tourcoo.carnet.ui.repair.HistoryFaultRepairFragment;
+import com.tourcoo.carnet.ui.repair.HistoryFaultRepairListFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,8 +28,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.EXTRA_ORDER_TYPE;
-import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
 
 /**
  * @author :zhoujian
@@ -44,7 +46,8 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
     private TextView tvTabRepair;
     private TextView tvTabService;
     private MyHandler mMyHandler = new MyHandler();
-    private String type ;
+    private String type;
+    private int serviceTag;
 
     @Override
     public int getContentLayout() {
@@ -60,7 +63,9 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         tvTabService.setOnClickListener(this);
         EventBus.getDefault().register(this);
         type = getIntent().getStringExtra(EXTRA_ORDER_TYPE);
-          TourCooLogUtil.i(TAG, "测试类型:"+type);
+        serviceTag = getIntent().getIntExtra(EXTRA_ORDER_TAG_SERVICE, -1);
+        TourCooLogUtil.i(TAG, "测试类型:" + type);
+        TourCooLogUtil.i(TAG, "测试类型serviceTag:" + serviceTag);
     }
 
     @Override
@@ -74,16 +79,16 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         super.loadData();
         fragmentList = new ArrayList<>();
         //故障报修
-        fragmentList.add(HistoryFaultRepairFragment.newInstance());
+        fragmentList.add(HistoryFaultRepairListFragment.newInstance());
         //上门服务
-        fragmentList.add(HistoryServiceFragment.newInstance());
+        fragmentList.add(HistoryServiceListFragment.newInstance());
         MyPagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentList);
         orderHistoryViewPager.addOnPageChangeListener(this);
         orderHistoryViewPager.setAdapter(pagerAdapter);
         //必须在 viewPager.setAdapter()之后使用
         if (TYPE_REPAIR.equals(type)) {
             showHistoryFault();
-              TourCooLogUtil.i(TAG, "接收到");
+            TourCooLogUtil.i(TAG, "接收到");
         } else {
             showHistoryService();
             TourCooLogUtil.e(TAG, "接收到");
@@ -207,6 +212,11 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
         }
+    }
+
+
+    public boolean isAllService() {
+        return serviceTag == ORDER_TAG_SERVICE_ALL;
     }
 
 

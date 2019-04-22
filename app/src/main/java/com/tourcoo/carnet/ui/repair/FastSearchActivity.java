@@ -28,6 +28,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import static com.tourcoo.carnet.entity.event.SearchEvent.EVENT_ACTION_SEARCH_GARAGE;
+import static com.tourcoo.carnet.entity.event.SearchEvent.EVENT_ACTION_SEARCH_INSURANCE_COMPANY;
+
 /**
  * @author :JenkinsZhou
  * @description :快速检索
@@ -35,11 +38,13 @@ import androidx.viewpager.widget.ViewPager;
  * @date 2019年03月25日14:09
  * @Email: 971613168@qq.com
  */
-public class FastSearchActivity extends BaseTourCooTitleActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
+public class FastSearchActivity extends BaseTourCooTitleActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private WrapContentHeightViewPager searchViewpager;
     private TabLayout searchTabLayout;
     private EditText etSearch;
-    public static final int EVENT_CLEAR_INPUT = 1;
+
+    private int currentSelectPosition;
+
 
     private String[] titles = new String[]{"修理厂", "保险公司"};
 
@@ -61,7 +66,16 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
 
                 //按下搜索
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    EventBus.getDefault().post(new SearchEvent(getInput()));
+                    switch (currentSelectPosition) {
+                        case 0:
+                            EventBus.getDefault().post(new SearchEvent(getInput(), EVENT_ACTION_SEARCH_GARAGE));
+                            break;
+                        case 1:
+                            EventBus.getDefault().post(new SearchEvent(getInput(), EVENT_ACTION_SEARCH_INSURANCE_COMPANY));
+                            break;
+                        default:
+                            break;
+                    }
                     KeyboardHelper.closeKeyboard(mContext);
                     return true;
                 }
@@ -91,12 +105,28 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
         List<Fragment> fragmentList = new ArrayList<>();
         RepairDepotListFragment repairDepotListFragment = RepairDepotListFragment.newInstance();
         fragmentList.add(repairDepotListFragment);
-        fragmentList.add(InsuranceCompanyFragment.newInstance());
+        fragmentList.add(InsuranceCompanyListFragment.newInstance());
         MyPagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentList);
         searchViewpager.addOnPageChangeListener(this);
         searchViewpager.setAdapter(pagerAdapter);
         searchTabLayout.setupWithViewPager(searchViewpager);
         initTabTitle();
+        searchTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                currentSelectPosition = tab.getPosition();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
 
@@ -136,7 +166,7 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
 
     @Override
     public void onPageSelected(int position) {
-
+        currentSelectPosition = position;
     }
 
     @Override
@@ -150,8 +180,18 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
             case R.id.ivSearch:
                 break;
             case R.id.ivClear:
-                EventBus.getDefault().post(EVENT_CLEAR_INPUT);
                 clearInput();
+                switch (currentSelectPosition) {
+                    case 0:
+                        EventBus.getDefault().post(EVENT_ACTION_SEARCH_GARAGE);
+                        break;
+                    case 1:
+                        EventBus.getDefault().post(EVENT_ACTION_SEARCH_INSURANCE_COMPANY);
+                        break;
+                    default:
+                        break;
+                }
+
                 break;
             default:
                 break;
@@ -159,20 +199,11 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
     }
 
 
-
-
-
-
-
     @Override
     protected void onDestroy() {
         LocateHelper.getInstance().destroyLocationInstance();
         super.onDestroy();
     }
-
-
-
-
 
 
     private void clearInput() {

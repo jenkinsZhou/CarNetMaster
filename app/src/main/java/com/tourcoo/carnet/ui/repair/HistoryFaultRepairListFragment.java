@@ -1,4 +1,4 @@
-package com.tourcoo.carnet.ui.order;
+package com.tourcoo.carnet.ui.repair;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -20,6 +21,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.RepairOrderAdapter;
+import com.tourcoo.carnet.core.common.WxConfig;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseRefreshFragment;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
@@ -31,16 +33,18 @@ import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
 import com.tourcoo.carnet.core.widget.confirm.PayDialog;
 import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.WeiXinPay;
 import com.tourcoo.carnet.entity.car.PayInfo;
-import com.tourcoo.carnet.entity.event.OrderEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
-import com.tourcoo.carnet.ui.factory.DoorToDoorServiceDetailActivity;
+import com.tourcoo.carnet.ui.factory.OrderDetailActivity;
 import com.tourcoo.carnet.ui.factory.NearbyRepairFactoryActivity;
-import com.tourcoo.carnet.ui.repair.FillEvaluationActivity;
+import com.tourcoo.carnet.ui.order.LookEvaluationActivity;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -56,9 +60,10 @@ import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 import static android.app.Activity.RESULT_OK;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
-import static com.tourcoo.carnet.core.common.WxConfig.APP_ID;
 import static com.tourcoo.carnet.core.widget.confirm.PayDialog.PAY_TYPE_ALI;
 import static com.tourcoo.carnet.core.widget.confirm.PayDialog.PAY_TYPE_WE_XIN;
+import static com.tourcoo.carnet.entity.event.EventConstant.EVENT_ACTION_PAY_FRESH_FAILED;
+import static com.tourcoo.carnet.entity.event.EventConstant.EVENT_ACTION_PAY_FRESH_SUCCESS;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CANCELED;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CLOSE;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_FINISH;
@@ -66,20 +71,20 @@ import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDE
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_EVALUATE;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_ORDER;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_PAY;
+import static com.tourcoo.carnet.ui.order.HistoryServiceListFragment.CODE_REQUEST_SERVICE_DETAIL;
+import static com.tourcoo.carnet.ui.order.HistoryServiceListFragment.EXTRA_SERVICE_DETAIL;
 import static com.tourcoo.carnet.ui.order.LookEvaluationActivity.EXTRA_ORDER_ID;
 
 /**
  * @author :JenkinsZhou
- * @description :上门服务历史订单列表
+ * @description :故障报修历史订单列表
  * @company :途酷科技
  * @date 2019年03月19日11:19
  * @Email: 971613168@qq.com
  */
-public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntity.FaultRepairInfo> {
+public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRepairEntity.FaultRepairInfo> {
     private RepairOrderAdapter repairOrderAdapter;
     private List<FaultRepairEntity.FaultRepairInfo> repairEntityList = new ArrayList<>();
-    public static final int CODE_REQUEST_SERVICE_DETAIL = 1001;
-    public static final String EXTRA_SERVICE_DETAIL = "EXTRA_SERVICE_DETAIL";
     private FaultRepairEntity.FaultRepairInfo mCurrentFaultRepairInfo;
     private PaymentHandler mHandler = new PaymentHandler(this);
     private IWXAPI api;
@@ -89,8 +94,9 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
     /**
      * 填写评价请求码
      */
-    private static final int CODE_REQUEST_FILL = 10;
+    public static final int CODE_REQUEST_FILL = 10;
     private int refreshPosition;
+
     /**
      * 付款金额
      */
@@ -101,7 +107,8 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
     private static final int PERMISSIONS_REQUEST_CODE = 1002;
 
     private static final int SDK_PAY_FLAG = 1001;
-    private int orderType;
+    private List<FaultRepairEntity.FaultRepairInfo> tempRepairEntityList = new ArrayList<>();
+    private int orderType = 2;
 
 
     @Override
@@ -115,7 +122,7 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
         requestPermission();
         //在这里可以不传AppId传null就可以
         api = WXAPIFactory.createWXAPI(mContext, null);
-        org.greenrobot.eventbus.EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -130,9 +137,9 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
     }
 
 
-    public static HistoryServiceFragment newInstance() {
+    public static HistoryFaultRepairListFragment newInstance() {
         Bundle args = new Bundle();
-        HistoryServiceFragment fragment = new HistoryServiceFragment();
+        HistoryFaultRepairListFragment fragment = new HistoryFaultRepairListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -140,8 +147,7 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        super.onRefresh(refreshlayout);
-        mDefaultPage = 1;
+        refreshRequest();
     }
 
 
@@ -163,14 +169,12 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
         if (pageIndex.equals("0")) {
             pageIndex = "1";
         }
-        String orderTypeString;
-        if (orderType == 0) {
-            orderTypeString = "3,4,5";
-        } else {
-            orderTypeString = orderType + "";
+        if("1".equals(pageIndex)){
+            repairOrderAdapter.getData().clear();
+            repairOrderAdapter.notifyDataSetChanged();
         }
-        TourCooLogUtil.i("当前请求类型：", orderTypeString);
-        ApiRepository.getInstance().findMyList(pageIndex, pageSize, orderTypeString).compose(bindUntilEvent(FragmentEvent.DESTROY)).
+        TourCooLogUtil.i(TAG, "当前请求的orderType：" + orderType + "当前请求页码:" + pageIndex);
+        ApiRepository.getInstance().findMyList(pageIndex, pageSize, orderType + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseObserver<FaultRepairEntity>(getIHttpRequestControl()) {
                               @Override
                               public void onRequestNext(FaultRepairEntity entity) {
@@ -180,7 +184,6 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
                                           FaultRepairEntity repairEntity = parseRepairInfo(entity.data);
                                           if (repairEntity != null) {
                                               UiConfigManager.getInstance().getHttpRequestControl().httpRequestSuccess(getIHttpRequestControl(), repairEntity.getOrderList() == null ? new ArrayList<>() : repairEntity.getOrderList(), null);
-                                              refreshOrderType(orderType);
                                           }
                                       } else {
                                           ToastUtil.showFailed(entity.message);
@@ -188,18 +191,23 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
                                   }
                                   TourCooLogUtil.d("刷新位置:" + refreshPosition);
                                   repairOrderAdapter.refreshNotifyItemChanged(refreshPosition);
+                                  mRefreshLayout.finishRefresh();
                               }
 
                               @Override
                               public void onError(Throwable e) {
                                   super.onError(e);
                                   closeLoadingDialog();
+                                  mStatusManager.showErrorLayout();
+                                  mRefreshLayout.finishRefresh();
                               }
 
                               @Override
                               public void onRequestError(Throwable e) {
                                   super.onRequestError(e);
                                   closeLoadingDialog();
+                                  mStatusManager.showErrorLayout();
+                                  mRefreshLayout.finishRefresh();
                               }
                           }
 
@@ -225,18 +233,6 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
     }
 
     /**
-     * 刷新订单类型
-     *
-     * @param orderType
-     */
-    private void refreshOrderType(int orderType) {
-        for (FaultRepairEntity.FaultRepairInfo repairInfo : repairOrderAdapter.getData()) {
-            repairInfo.setOrderType(orderType);
-        }
-        repairOrderAdapter.notifyDataSetChanged();
-    }
-
-    /**
      * 设置item点击事件
      */
     @SuppressWarnings("unchecked")
@@ -244,10 +240,10 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
         repairOrderAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                FaultRepairEntity.FaultRepairInfo info = (FaultRepairEntity.FaultRepairInfo) adapter.getData().get(position);
                 //跳转到服务详情页面
+                FaultRepairEntity.FaultRepairInfo info = (FaultRepairEntity.FaultRepairInfo) adapter.getData().get(position);
                 Intent intent = new Intent();
-                intent.setClass(mContext, DoorToDoorServiceDetailActivity.class);
+                intent.setClass(mContext, OrderDetailActivity.class);
                 intent.putExtra(EXTRA_SERVICE_DETAIL, info);
                 startActivityForResult(intent, CODE_REQUEST_SERVICE_DETAIL);
             }
@@ -271,6 +267,13 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
                         if (view.getId() == R.id.tvRightButton) {
                             showCancelDialog();
                         } else if (view.getId() == R.id.tvLeftButton) {
+                            if (mCurrentFaultRepairInfo == null) {
+                                ToastUtil.showFailed("未获取到订单信息");
+                                return;
+                            }
+                            Bundle bundle = new Bundle();
+                            bundle.putString(EXTRA_ORDER_ID, mCurrentFaultRepairInfo.getId() + "");
+                            TourCooLogUtil.i(TAG, "orderId:" + mCurrentFaultRepairInfo.getId());
                             TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
                         }
                         break;
@@ -278,13 +281,16 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
                      * 服务中
                      */
                     case TYPE_STATUS_ORDER_IN_SERVICE:
-                        ToastUtil.show("服务中");
+                            //do nothing
                         break;
                     /**
-                     * 完成
+                     * 服务已完成 查看服务
                      */
                     case TYPE_STATUS_ORDER_FINISH:
-                        ToastUtil.show("查看评价");
+                        //查看服务
+                        if (view.getId() == R.id.tvRightButton) {
+                            skipLookServiceActivity(faultRepairInfo.getId());
+                        }
                         break;
                     /**
                      * 待支付
@@ -294,29 +300,34 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
                             //先获取订单金额
                             findAmount();
                         } else if (view.getId() == R.id.tvLeftButton) {
-                            ToastUtil.show("查看服务");
+                            skipLookServiceActivity(faultRepairInfo.getId());
                         }
                         break;
                     /**
                      * 待评价
                      */
                     case TYPE_STATUS_ORDER_WAIT_EVALUATE:
-//                        Bundle bundle = new Bundle();
-//                        bundle.putSerializable("FaultRepairInfo", faultRepairInfo);
-                        Intent intent = new Intent();
-                        intent.putExtra("FaultRepairInfo", faultRepairInfo);
-                        intent.setClass(mContext, FillEvaluationActivity.class);
-                        startActivityForResult(intent, CODE_REQUEST_FILL);
-//                        TourcooUtil.startActivity(mContext, FillEvaluationActivity.class, bundle);
+                        Intent intent1 = new Intent();
+                        intent1.putExtra("FaultRepairInfo", faultRepairInfo);
+                        intent1.setClass(mContext, FillEvaluationActivity.class);
+                        startActivityForResult(intent1, CODE_REQUEST_FILL);
                         break;
                     case TYPE_STATUS_ORDER_CANCELED:
                         //服务已经取消
                         break;
                     //服务关闭(完成)（查看评价）
                     case TYPE_STATUS_ORDER_CLOSE:
-                        Bundle bundle = new Bundle();
-                        bundle.putString(EXTRA_ORDER_ID, faultRepairInfo.getId() + "");
-                        TourCooUtil.startActivity(mContext, LookEvaluationActivity.class, bundle);
+                        if (view.getId() == R.id.tvRightButton) {
+                            //查看评价
+                            Bundle bundle = new Bundle();
+                            bundle.putString(EXTRA_ORDER_ID, faultRepairInfo.getId() + "");
+                            TourCooLogUtil.i(TAG, "评价id:" + faultRepairInfo.getId());
+                            TourCooUtil.startActivity(mContext, LookEvaluationActivity.class, bundle);
+                        } else if (view.getId() == R.id.tvLeftButton) {
+                            //查看服务
+                            skipLookServiceActivity(faultRepairInfo.getId());
+                        }
+
                         break;
                     default:
                         break;
@@ -435,16 +446,16 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
         if (api != null) {
             api.detach();
         }
-        org.greenrobot.eventbus.EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
 
     }
 
     @SuppressWarnings("unchecked")
     private static class PaymentHandler extends Handler {
-        private WeakReference<HistoryServiceFragment> softReference;
+        private WeakReference<HistoryFaultRepairListFragment> softReference;
 
-        public PaymentHandler(HistoryServiceFragment mainTabActivity) {
+        public PaymentHandler(HistoryFaultRepairListFragment mainTabActivity) {
             softReference = new WeakReference<>(mainTabActivity);
         }
 
@@ -515,7 +526,7 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
             req.sign = weiXinPay.getSign();
             TourCooLogUtil.d("请求结果", weiXinPay);
             req.prepayId = weiXinPay.getPaymentStr();
-            api.registerApp(APP_ID);
+            api.registerApp(WxConfig.APP_ID);
             api.sendReq(req);
         }
 
@@ -529,6 +540,34 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
         msg.what = SDK_PAY_FLAG;
         msg.obj = result;
         mHandler.sendMessage(msg);
+    }
+
+
+    /**
+     * 确认取消服务
+     */
+    private void showCancelDialog() {
+        ConfirmDialog.Builder builder = new ConfirmDialog.Builder(
+                getActivity());
+        builder.setPositiveButtonPosition(ConfirmDialog.RIGHT);
+        builder.setTitle("取消服务");
+        builder.setMessageGravity(Gravity.CENTER_HORIZONTAL);
+        builder.setFirstMessage("是否取消服务?").setNegativeButtonButtonBold(true);
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                cancelOrder();
+            }
+        });
+        builder.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 
     /**
@@ -561,13 +600,12 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
      */
     private void refreshRequest() {
         TourCooLogUtil.i("执行了刷新");
-        repairOrderAdapter.getData().clear();
-        repairOrderAdapter.notifyDataSetChanged();
+        mDefaultPage = 1;
         findMyOrderList("1", mDefaultPageSize + "");
     }
 
     /**
-     * 刷新列表状态
+     * 根据状态刷新列表状态
      */
     private void refreshStatus(int status) {
         TourCooLogUtil.i("执行了刷新");
@@ -589,41 +627,35 @@ public class HistoryServiceFragment extends BaseRefreshFragment<FaultRepairEntit
                 }
                 break;
             default:
+                refreshRequest();
                 break;
         }
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onOrderTypeEvent(OrderEvent orderEvent) {
-        orderType = orderEvent.type;
-        refreshRequest();
+    public void onBaseEvent(BaseEvent event) {
+        if (event == null) {
+            return;
+        }
+        switch (event.id) {
+            case EVENT_ACTION_PAY_FRESH_SUCCESS:
+                TourCooLogUtil.i(TAG, "接收到回调");
+                refreshStatus(TYPE_STATUS_ORDER_WAIT_EVALUATE);
+                break;
+            case EVENT_ACTION_PAY_FRESH_FAILED:
+                TourCooLogUtil.i(TAG, "接收到回调");
+                refreshStatus(TYPE_STATUS_ORDER_WAIT_PAY);
+                break;
+            default:
+                break;
+        }
     }
 
-
-    /**
-     * 确认取消服务
-     */
-    private void showCancelDialog() {
-        ConfirmDialog.Builder builder = new ConfirmDialog.Builder(
-                getActivity());
-        builder.setPositiveButtonPosition(ConfirmDialog.RIGHT);
-        builder.setTitle("取消服务");
-        builder.setFirstMessage("是否取消服务?").setNegativeButtonButtonBold(true);
-        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                cancelOrder();
-            }
-        });
-        builder.setNegativeButton("否",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
+    private void skipLookServiceActivity(int orderId){
+        Bundle bundle = new Bundle();
+        bundle.putInt(EXTRA_ORDER_ID, orderId);
+        TourCooUtil.startActivity(mContext, LookServiceActivity.class, bundle);
     }
 
 }

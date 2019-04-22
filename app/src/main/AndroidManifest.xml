@@ -59,7 +59,9 @@
 
         <activity android:name="com.tourcoo.carnet.MainActivity" />
         <activity android:name="com.tourcoo.carnet.core.crash.ErrorActivity" />
-        <activity android:name="com.tourcoo.carnet.core.module.MainTabActivity" />
+        <activity android:name="com.tourcoo.carnet.core.module.MainTabActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
             android:name="com.tourcoo.carnet.core.module.SplashActivity"
             android:theme="@style/Theme.MyAppTheme">
@@ -81,11 +83,9 @@
         <activity android:name=".ui.car.CarCuringActivity" />
         <activity android:name=".ui.account.LoginRegisterActivity" />
         <activity android:name=".ui.account.EditPasswordActivity" />
-        <activity android:name=".ui.repair.WarrantyCompanyDetailActivity" />
         <activity android:name=".ui.MsgSystemActivity" />
         <activity android:name=".core.frame.base.activity.WebViewActivity" />
-        <activity android:name=".ui.factory.DoorToDoorServiceDetailActivity" />
-        <activity android:name=".ui.factory.NearbyRepairFactoryActivity" />
+        <activity android:name=".ui.factory.OrderDetailActivity" />
         <activity android:name=".ui.repair.FillEvaluationActivity" />
         <activity android:name=".ui.repair.FastSearchActivity" />
         <activity android:name=".ui.repair.RepairFactoryDetailActivity" />
@@ -155,6 +155,8 @@
         <activity android:name=".ui.account.BindPhoneNumberActivity" />
         <activity android:name=".ui.account.ForgetPasswordActivity" />
         <activity android:name=".ui.repair.LookServiceActivity" />
+        <activity android:name=".ui.factory.NearbyRepairFactoryActivity" />
+        <activity android:name=".ui.repair.InsuranceCompanyDetailActivity" />
 
         <!-- Required SDK 核心功能 -->
         <!-- since 3.0.9 Required SDK 核心功能 -->

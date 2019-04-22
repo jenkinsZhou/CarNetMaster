@@ -122,9 +122,11 @@ public class RefreshLoadDelegate<T> {
         StatusLayoutManager.Builder builder = new StatusLayoutManager.Builder(contentView)
                 .setDefaultLayoutsBackgroundColor(android.R.color.transparent)
                 .setDefaultEmptyText(R.string.multi_empty)
+                .setDefaultEmptyImg(R.mipmap.img_no_content)
                 .setDefaultEmptyClickViewTextColor(contentView.getResources().getColor(R.color.colorTitleText))
                 .setDefaultLoadingText( R.string.multi_loading)
                 .setDefaultErrorText(R.string.multi_error)
+                .setDefaultErrorImg(R.mipmap.img_no_network)
                 .setDefaultErrorClickViewTextColor(contentView.getResources().getColor(R.color.colorTitleText))
                 .setOnStatusChildClickListener(new OnStatusChildClickListener() {
                     @Override

@@ -10,9 +10,24 @@ import java.io.Serializable;
  * @Email: 971613168@qq.com
  */
 public class SearchEvent implements Serializable {
+    public static final int EVENT_ACTION_SEARCH_GARAGE = 0;
+
+    public static final int EVENT_ACTION_SEARCH_INSURANCE_COMPANY = 1;
+    public static final int EVENT_ACTION_SEARCH_ALL = 2;
+
+    public int type = EVENT_ACTION_SEARCH_GARAGE;
+
+
+
     public SearchEvent(String keyWord) {
         this.keyWord = keyWord;
     }
+
+    public SearchEvent(String keyWord, int type) {
+        this.type = type;
+        this.keyWord = keyWord;
+    }
+
 
     public String getKeyWord() {
         return keyWord;

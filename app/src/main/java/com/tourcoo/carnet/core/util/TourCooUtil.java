@@ -385,4 +385,29 @@ public class TourCooUtil {
 
 
 
+    /**
+     * 判断app是否安装
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static boolean checkMapAppsIsExist(Context context,String packageName){
+        PackageInfo packageInfo;
+        try{
+            packageInfo = context.getPackageManager().getPackageInfo(packageName,0);
+        }catch (Exception e){
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        if (packageInfo == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+
+
 }

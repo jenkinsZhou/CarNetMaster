@@ -220,14 +220,11 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         initKeyBoard();
         initCarInfo(currentCarInfo);
         showCurrentSetting(currentCarInfo);
-
-        etEngineNumber.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                keyboardUtil.hideKeyboard();
-                return false;
-            }
-        });
+        listenKeyboard(etEngineNumber);
+        listenKeyboard(etDisplacement);
+        listenKeyboard(etCarInsuranceInfo);
+        listenKeyboard(etCarMaintainInfo);
+        listenKeyboard(etCarYearlyInspection);
     }
 
     private String getTime(Date date) {
@@ -1253,5 +1250,13 @@ public class CarEditActivity extends BaseTourCooTitleActivity implements View.On
         }
     }
 
-
+    private void listenKeyboard(EditText editText){
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                keyboardUtil.hideKeyboard();
+                return false;
+            }
+        });
+    }
 }

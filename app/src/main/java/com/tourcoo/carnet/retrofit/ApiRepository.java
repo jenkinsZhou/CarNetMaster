@@ -5,8 +5,10 @@ import android.text.TextUtils;
 import com.tourcoo.carnet.core.frame.retrofit.RetryWhen;
 import com.tourcoo.carnet.core.frame.retrofit.TourCoolRetrofit;
 import com.tourcoo.carnet.core.frame.retrofit.TourCoolTransformer;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.log.widget.utils.DateUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.InsuranceCompany;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.garage.CommentDetail;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
@@ -14,9 +16,11 @@ import com.tourcoo.carnet.entity.garage.GarageEntity;
 import com.tourcoo.carnet.entity.MessageInfo;
 import com.tourcoo.carnet.entity.car.CarFaultRemindType;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
+import com.tourcoo.carnet.entity.garage.ServiceInfo;
 import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.car.PayInfo;
 import com.tourcoo.carnet.entity.order.OrderDetail;
+import com.tourcoo.carnet.utils.Location;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +39,7 @@ import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_USER_CAR_OWER;
  * @Email: 971613168@qq.com
  */
 public class ApiRepository extends BaseRepository {
+    private static final String TAG = "ApiRepository";
 
     private static volatile ApiRepository instance;
     private ApiService mApiService;
@@ -118,12 +123,16 @@ public class ApiRepository extends BaseRepository {
      * @param pageSize
      * @return
      */
-    public Observable<BaseEntity> findNearbyGarages(String position, String distance, String pageIndex, String pageSize) {
+    public Observable<BaseEntity> findNearbyGarages(String orderId, String position, String distance, String pageIndex, String pageSize) {
         Map<String, Object> params = new HashMap<>(4);
         params.put("position", position);
         params.put("distance", distance);
         params.put("pageIndex", pageIndex);
         params.put("pageSize", pageSize);
+        if (!TextUtils.isEmpty(orderId)) {
+            params.put("orderId", orderId);
+        }
+
         return TourCoolTransformer.switchSchedulersIo(getApiService().findNearbyGarages(params).retryWhen(new RetryWhen()));
     }
 
@@ -178,6 +187,7 @@ public class ApiRepository extends BaseRepository {
         }
         if (!TextUtils.isEmpty(address)) {
             params.put("address", address);
+             TourCooLogUtil.i(TAG,TAG+":"+"打印的结果:"+address );
         }
         return TourCoolTransformer.switchSchedulersIo(getApiService().reportFault(params).retryWhen(new RetryWhen()));
     }
@@ -539,6 +549,7 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 绑定手机号
+     *
      * @param openid
      * @param mobile
      * @param vCode
@@ -553,5 +564,36 @@ public class ApiRepository extends BaseRepository {
         return TourCoolTransformer.switchSchedulersIo(getApiService().bindMobile(params).retryWhen(new RetryWhen()));
     }
 
+    /**
+     * 查询保险公司
+     *
+     * @param location
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public Observable<BaseEntity<InsuranceCompany>> queryAllInsurance(Location location, String keyword, int pageIndex, int pageSize) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("lat", location.getLatitude());
+        params.put("lng", location.getLongitude());
+        params.put("pageIndex", pageIndex);
+        params.put("pageSize", pageSize);
+        params.put("name", keyword);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().queryAllInsurance(params).retryWhen(new RetryWhen()));
+    }
+
+
+    public Observable<BaseEntity<InsuranceCompany.CompanyInfo>> queryInsuranceDetailById(String companyId) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", companyId);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().queryInsuranceDetailById(params).retryWhen(new RetryWhen()));
+    }
+
+
+    public Observable<BaseEntity<ServiceInfo>> findMyService(int orderId) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("orderId", orderId);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().findMyService(params).retryWhen(new RetryWhen()));
+    }
 
 }

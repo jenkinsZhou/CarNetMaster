@@ -32,16 +32,5 @@ public class CommonConstant {
     public static final String PREF_KEY_IS_REMEMBER_ACCOUNT = "PREF_KEY_IS_REMEMBER_ACCOUNT";
 
 
-    /**
-     * 上门维修
-     */
-    public static final int TYPE_CAR_REPAIR = 3;
-    /**
-     * 上门洗车
-     */
-    public static final int TYPE_CAR_WASH = 4;
-    /**
-     * 上门保养
-     */
-    public static final int TYPE_CAR_CURING = 5;
+
 }

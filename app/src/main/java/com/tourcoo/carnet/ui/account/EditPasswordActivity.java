@@ -168,7 +168,11 @@ public class EditPasswordActivity extends BaseTourCooTitleActivity implements Vi
             return;
         }
         if (TextUtils.isEmpty(getConfirmPass())) {
-            ToastUtil.show("请确认密码");
+            ToastUtil.show("请输入确认密码");
+            return;
+        }
+        if (TextUtils.isEmpty(getVCode())) {
+            ToastUtil.show("请输入验证码");
             return;
         }
         if (!getNewPass().equals(getConfirmPass())) {

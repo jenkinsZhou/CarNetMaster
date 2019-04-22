@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -67,7 +68,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.ui.order.LookEvaluationActivity.EXTRA_ORDER_ID;
 
 
 /**
@@ -82,7 +86,6 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     private RecyclerView mRecyclerView;
     private UploadImageAdapter uploadImageAdapter;
     private TextView tvLocation;
-    private TextView btnLocate;
     private List<LocalMedia> selectList = new ArrayList<>();
     private List<String> imageList = new ArrayList<>();
     private AMapLocation mapLocation;
@@ -91,24 +94,14 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     private MyHandler mHandler = new MyHandler(this);
     private Message message;
     private String currentPosition;
-    /**
-     * 上门服务订单
-     */
-    public static final String EXTRA_ORDER_TYPE = "EXTRA_ORDER_TYPE";
 
-
-    /**
-     * 故障报修订单
-     */
-    public static final String TYPE_REPAIR = "1";
-    /**
-     * 服务订单
-     */
-    public static final String TYPE_SERVICE = "2";
     /**
      * 回调回来的图片ur集合
      */
     private String mImages = "";
+
+    private String orderId = "";
+
 
     @Override
     public int getContentLayout() {
@@ -119,9 +112,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     public void initView(Bundle savedInstanceState) {
         mContentView.findViewById(R.id.ivCamera).setOnClickListener(this);
         mContentView.findViewById(R.id.btnRepair).setOnClickListener(this);
-        btnLocate = mContentView.findViewById(R.id.btnLocate);
         tvLocation = mContentView.findViewById(R.id.tvLocation);
-        btnLocate.setOnClickListener(this);
         tvLocation.setOnClickListener(this);
         rlAddImage = mContentView.findViewById(R.id.rlAddImage);
         mRecyclerView = mContentView.findViewById(R.id.rvUploadImage);
@@ -140,7 +131,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                intent.putExtra(EXTRA_ORDER_TYPE, TYPE_REPAIR);
                 intent.setClass(mContext, OrderHistoryActivity.class);
                 startActivity(intent);
             }
@@ -223,8 +214,22 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     /**
      * 显示验证码
      *
-     * @param vCode
+     * @param object
      */
+
+    private void parseOrderInfo(Object object) {
+        try {
+            String orderInfo = JSONObject.toJSONString(object);
+            JSONObject jsonObject = JSONObject.parseObject(orderInfo);
+            jsonObject.getString("captcha");
+            orderId = jsonObject.getString("orderId");
+            String vCode = jsonObject.getString("captcha");
+            showVCodeDialog(vCode);
+        } catch (Exception e) {
+            ToastUtil.showFailed("订单信息获取失败");
+        }
+    }
+
     private void showVCodeDialog(String vCode) {
         ConfirmDialog.Builder builder = new ConfirmDialog.Builder(
                 getActivity());
@@ -238,16 +243,21 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
                 intent.setClass(mContext, OrderHistoryActivity.class);
-                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                intent.putExtra(EXTRA_ORDER_TYPE, TYPE_REPAIR);
                 startActivity(intent);
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton("查看修理厂",
+        builder.setNegativeButton("查看附近修理厂",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
+                        //待接单
+                        //todo
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EXTRA_ORDER_ID, orderId);
+                        TourCooLogUtil.i(TAG, "orderId:" + orderId);
+                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class,bundle);
                         dialog.dismiss();
                     }
                 });
@@ -500,7 +510,8 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 clearUploadData();
-                                showVCodeDialog(entity.data.toString());
+                                parseOrderInfo(entity.data);
+                                closeLoadingDialog();
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }
@@ -699,7 +710,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         imageList.clear();
         currentPosition = "";
         selectList.clear();
-        tvLocation.setText("未获取位置信息");
+        addLocateImage("未获取位置信息,请点击图标获取");
         uploadImageAdapter.notifyDataSetChanged();
     }
 

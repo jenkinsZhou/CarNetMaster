@@ -1,19 +1,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="@color/whiteCommon"
+    >
+
+
     <ImageView
         android:id="@+id/sp_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@mipmap/img_loading_screen"
         android:layout_marginBottom="80dp"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
+        android:src="@mipmap/img_loading_screen" />
+
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_above="@id/sp_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dp_25"
+        android:src="@mipmap/icon_loading_screen_logo" />
 
 
+    <TextView
+        android:layout_below="@id/sp_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@drawable/bg_radius_14_blue"
+        android:textColor="@color/whiteCommon"
+        android:paddingLeft="@dimen/dp_37"
+        android:paddingRight="@dimen/dp_37"
+        android:paddingTop="@dimen/dp_7"
+        android:paddingBottom="@dimen/dp_7"
 
+        android:text="立即启动" />
 
 
 </RelativeLayout>

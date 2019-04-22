@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    >
 
-    <FrameLayout
+    <com.aries.ui.view.tab.CommonTabLayout
+        android:id="@+id/tabLayout_commonFastLib"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+    </com.aries.ui.view.tab.CommonTabLayout>
+
+    <RelativeLayout
         android:id="@+id/fLayout_containerFastMain"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tabLayout_commonFastLib"
+        android:layout_alignParentTop="true"
+        />
 
-    <include layout="@layout/layout_tab_main" />
-</LinearLayout>
+    <!--<include layout="@layout/layout_tab_main" />-->
+</RelativeLayout>

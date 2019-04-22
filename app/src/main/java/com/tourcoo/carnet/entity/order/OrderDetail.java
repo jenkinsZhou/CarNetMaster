@@ -94,8 +94,27 @@ public class OrderDetail {
         private String detail;
         private String position;
         private String create_user;
+        private double amount;
         private int paytype;
         private int status;
+        private int pay_from;
+
+        public int getPay_from() {
+            return pay_from;
+        }
+
+        public void setPay_from(int pay_from) {
+            this.pay_from = pay_from;
+        }
+
+
+        public double getAmount() {
+            return amount;
+        }
+
+        public void setAmount(double amount) {
+            this.amount = amount;
+        }
 
         public String getOwner_id() {
             return owner_id;

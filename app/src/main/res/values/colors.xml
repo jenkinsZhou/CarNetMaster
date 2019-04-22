@@ -11,6 +11,7 @@
     <color name="test5">#666666</color>
     <color name="color_f6">#f6f6f6</color>
     <color name="progressDefault">#449E9E9E</color>
+    <color name="whiteCommon">#FFFFFF</color>
     #dddddd
     <!--灰色字体通用-->
     <color name="text_gray_common">#999999</color>

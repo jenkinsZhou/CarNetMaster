@@ -322,10 +322,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             ToastUtil.show("请输入正确的手机号");
             return;
         }
-        if (TextUtils.isEmpty(getVcode())) {
-            ToastUtil.show("请输入验证码");
-            return;
-        }
+
         if (TextUtils.isEmpty(getPasword())) {
             ToastUtil.show("请输入密码");
             return;

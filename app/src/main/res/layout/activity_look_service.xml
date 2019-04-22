@@ -38,7 +38,7 @@
 
                 <!--  故障内容-->
                 <TextView
-                    android:id="@+id/tvFaultContent"
+                    android:id="@+id/tvServiceContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_12"
@@ -65,7 +65,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_marginTop="@dimen/dp_10"
-                    android:id="@+id/faultImageRecyclerView"
+                    android:id="@+id/serviceImageRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:overScrollMode="never">

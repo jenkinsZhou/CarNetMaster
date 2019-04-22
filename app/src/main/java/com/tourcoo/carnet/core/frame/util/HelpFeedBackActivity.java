@@ -75,6 +75,9 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
      */
     private String mImages = "";
 
+    private EditText etPhoneNumber;
+    private EditText etQQNumber;
+
     @Override
     public int getContentLayout() {
         return R.layout.activity_help_feed_back;
@@ -87,6 +90,8 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
         rlAddImage = mContentView.findViewById(R.id.rlAddImage);
         mRecyclerView = mContentView.findViewById(R.id.rvUploadImage);
         etRepairContent = mContentView.findViewById(R.id.etRepairContent);
+        etPhoneNumber = mContentView.findViewById(R.id.etPhoneNumber);
+        etQQNumber = mContentView.findViewById(R.id.etQQNumber);
         initProgressDialog();
     }
 
@@ -105,6 +110,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
         GridLayoutManager manager = new GridLayoutManager(mContext, 4, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
         uploadImageAdapter = new UploadImageAdapter(mContext, onAddPicClickListener);
+        uploadImageAdapter.setSelectMax(4);
         uploadImageAdapter.setOnEmptyCallBack(new UploadImageAdapter.OnEmptyCallBack() {
             @Override
             public void empty() {
@@ -267,6 +273,14 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
             ToastUtil.show("请输入反馈内容");
             return;
         }
+        if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
+            ToastUtil.show("请输入正确的手机号");
+            return;
+        }
+        if (TextUtils.isEmpty(getPhoneNumber()) && TextUtils.isEmpty(getQQNumber())) {
+            ToastUtil.show("请至少填写一种联系方式");
+            return;
+        }
         ApiRepository.getInstance().feedback(map).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
                     @Override
@@ -327,7 +341,7 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
      */
     private void doUpload() {
         if (selectList.isEmpty()) {
-              TourCooLogUtil.d(TAG, "不带图片");
+            TourCooLogUtil.d(TAG, "不带图片");
             uploadFeedBack(getMap());
         } else {
             uploadImage(imageList);
@@ -347,6 +361,14 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
         }
         if (imageList == null || imageList.isEmpty()) {
             ToastUtil.show("您还没选择图片");
+            return;
+        }
+        if (TextUtils.isEmpty(getPhoneNumber()) && TextUtils.isEmpty(getQQNumber())) {
+            ToastUtil.show("请至少填写一种联系方式");
+            return;
+        }
+        if (!TourCooUtil.isMobileNumber(getPhoneNumber())) {
+            ToastUtil.show("请输入正确的手机号");
             return;
         }
         File file;
@@ -469,18 +491,26 @@ public class HelpFeedBackActivity extends BaseTourCooTitleActivity implements Vi
 
 
     private Map<String, Object> getMap() {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(2);
         map.put("content", getDetail());
         if (!TextUtils.isEmpty(mImages)) {
             map.put("imgUrls", mImages);
         }
-        String mobile = AccountInfoHelper.getInstance().getUserInfoEntity().getUserInfo().getMobile();
-        if (!TextUtils.isEmpty(mobile)) {
-            map.put("phone", mobile);
+        if (!TextUtils.isEmpty(getPhoneNumber())) {
+            map.put("phone", getPhoneNumber());
+        }
+        if (!TextUtils.isEmpty(getQQNumber())) {
+            map.put("qq", getQQNumber());
         }
         return map;
     }
 
 
+    private String getPhoneNumber() {
+        return etPhoneNumber.getText().toString();
+    }
 
+    private String getQQNumber() {
+        return etQQNumber.getText().toString();
+    }
 }

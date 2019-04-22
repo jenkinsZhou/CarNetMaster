@@ -20,7 +20,7 @@
             android:id="@+id/tvCommentDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="askodjoajdklaj" />
+            android:text="未获取到评价" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvImageComment"

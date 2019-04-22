@@ -27,7 +27,7 @@ import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.entity.event.UserInfoRefreshEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.tourcoo.carnet.ui.MsgSystemActivity;
-import com.tourcoo.carnet.ui.factory.DoorToDoorServiceDetailActivity;
+import com.tourcoo.carnet.ui.factory.OrderDetailActivity;
 import com.tourcoo.carnet.ui.account.PersonalDataActivity;
 import com.tourcoo.carnet.ui.car.CarsManagementActivity;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
@@ -40,10 +40,12 @@ import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 
 import static com.tourcoo.carnet.core.common.EventConstant.EVENT_REQUEST_MSG_COUNT;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.BASE;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
-import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.EXTRA_ORDER_TYPE;
-import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_REPAIR;
 
 /**
  * @author :zhoujian
@@ -121,6 +123,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
             case R.id.stvHistoryOder:
                 Intent intentRepair = new Intent();
                 intentRepair.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
+                intentRepair.putExtra(EXTRA_ORDER_TAG_SERVICE,ORDER_TAG_SERVICE_ALL);
                 intentRepair.setClass(mContext, OrderHistoryActivity.class);
                 startActivity(intentRepair);
                 break;
@@ -132,7 +135,7 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 break;
             case R.id.stvReportWarning:
                 //报警记录
-                TourCooUtil.startActivity(mContext, DoorToDoorServiceDetailActivity.class);
+                TourCooUtil.startActivity(mContext, OrderDetailActivity.class);
                 break;
             case R.id.stvSystemMessage:
                 //系统消息

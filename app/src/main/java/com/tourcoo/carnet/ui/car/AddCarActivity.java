@@ -234,13 +234,12 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
         findViewById(R.id.llObdReceiveMode).setOnClickListener(this);
         findViewById(R.id.llLastMaintainDate).setOnClickListener(this);
         initKeyBoard();
-        etEngineNumber.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                keyboardUtil.hideKeyboard();
-                return false;
-            }
-        });
+        listenKeyboard(etEngineNumber);
+        listenKeyboard(etDisplacement);
+        listenKeyboard(etCarInsuranceInfo);
+        listenKeyboard(etCarMaintainInfo);
+        listenKeyboard(etCarYearlyInspection);
+
     }
 
     private String getTime(Date date) {
@@ -1040,5 +1039,17 @@ public class AddCarActivity extends BaseTourCooTitleActivity implements View.OnC
     public void setTitleBar(TitleBarView titleBar) {
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("添加车辆");
+    }
+
+
+
+    private void listenKeyboard(EditText editText){
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                keyboardUtil.hideKeyboard();
+                return false;
+            }
+        });
     }
 }

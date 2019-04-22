@@ -40,7 +40,6 @@
                     android:id="@+id/etRepairContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/dp_100"
                     android:layout_marginLeft="@dimen/dp_11"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_11"
@@ -48,6 +47,7 @@
                     android:gravity="top|left"
                     android:hint="请填写内容描述"
                     android:maxLength="200"
+                    android:minHeight="@dimen/dp_100"
                     android:textSize="12sp" />
 
                 <TextView
@@ -111,6 +111,63 @@
                 </RelativeLayout>
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="QQ号"
+                        android:textSize="@dimen/sp_13" />
+
+                    <EditText
+                        android:id="@+id/etQQNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="输入QQ号"
+                        android:textSize="@dimen/sp_13" />
+                </LinearLayout>
+
+                <include layout="@layout/line_horizontal_gray_1half_dp">
+
+                </include>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="手机号"
+                        android:textSize="@dimen/sp_13" />
+
+                    <EditText
+                        android:id="@+id/etPhoneNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="输入手机号"
+                        android:textSize="@dimen/sp_13" />
+                </LinearLayout>
+
+                <include layout="@layout/line_horizontal_gray_1half_dp">
+
+                </include>
             </LinearLayout>
 
 

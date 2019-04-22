@@ -84,7 +84,6 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     private RecyclerView rvGoodsField;
     private RecyclerView rvComment;
     private View emptyView;
-    private View errorView;
     private LinearLayout llRefresh;
     private int refreshFlag = LOAD_MORE;
     private static final int LOAD_MORE = 1;
@@ -115,7 +114,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         findViewById(R.id.rlCallPhone).setOnClickListener(this);
         rvComment = findViewById(R.id.rvComment);
         rvGoodsField = findViewById(R.id.rvGoodsField);
-        rvGoodsField.setLayoutManager(new GridLayoutManager(mContext, 4));
+        rvGoodsField.setLayoutManager(new GridLayoutManager(mContext, 3));
         rvComment.setLayoutManager(new LinearLayoutManager(mContext));
         mGoodFieldAdapter = new GoodFieldAdapter(tagList);
         tvGarageDescription = findViewById(R.id.tvGarageDescription);
@@ -142,7 +141,6 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         setBanner(mImageList);
         initCommentAdapter();
         initEmptyView();
-        initErrorView();
 //        setLoadMoreView();
         initStatusManager();
     }
@@ -194,6 +192,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         refreshFlag = REFRESH;
         currentPage = 1;
         smartRefreshLayout.setEnableLoadMore(true);
+        smartRefreshLayout.setNoMoreData(false);
         refreshComment();
     }
 
@@ -293,9 +292,6 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         llRefresh = emptyView.findViewById(R.id.llRefresh);
     }
 
-    private void initErrorView() {
-        errorView = LayoutInflater.from(mContext).inflate(R.layout.layout_view_error, null);
-    }
 
 
 
@@ -309,6 +305,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
 
 
     private void handleError(Throwable e) {
+        smartRefreshLayout.setEnableLoadMore(false);
         TourCooLogUtil.e(TAG, e.toString());
         int reason = R.string.exception_other_error;
 //        int code = FastError.EXCEPTION_OTHER_ERROR;
@@ -365,7 +362,8 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
             if (page == 1) {
                 if (!NetworkUtil.isConnected(CarNetApplication.getContext())) {
                     //可自定义网络错误页面展示
-                    mStatusLayoutManager.showCustomLayout(R.layout.layout_status_layout_manager_error);
+                    mStatusLayoutManager.showErrorLayout();
+//                    mStatusLayoutManager.showCustomLayout(R.layout.layout_status_layout_manager_error);
                 } else {
                     mStatusLayoutManager.showErrorLayout();
                 }
@@ -393,17 +391,20 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
                     @Override
                     public void onEmptyChildClick(View view) {
                         mStatusLayoutManager.showLoadingLayout();
+                        TourCooLogUtil.d(TAG, "点击了");
                         refreshComment();
                     }
 
                     @Override
                     public void onErrorChildClick(View view) {
+                          TourCooLogUtil.e(TAG, "点击了");
                         mStatusLayoutManager.showLoadingLayout();
                         refreshComment();
                     }
 
                     @Override
                     public void onCustomerChildClick(View view) {
+                        TourCooLogUtil.i(TAG, "点击了");
                         mStatusLayoutManager.showLoadingLayout();
                         refreshComment();
                     }

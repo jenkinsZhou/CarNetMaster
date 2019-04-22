@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.tourcoo.carnet.AccountInfoHelper;
@@ -38,7 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_CURING;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_CURING;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
 /**
@@ -264,6 +265,25 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
         return etRepairContent.getText().toString();
     }
 
+
+    /**
+     * 显示验证码
+     *
+     * @param object
+     */
+
+    private void parseOrderInfo(Object object) {
+        try {
+            String orderInfo = JSONObject.toJSONString(object);
+            JSONObject jsonObject = JSONObject.parseObject(orderInfo);
+            jsonObject.getString("captcha");
+            String vCode = jsonObject.getString("captcha");
+            showVCodeDialog(vCode);
+        } catch (Exception e) {
+            ToastUtil.showFailed("订单信息获取失败");
+        }
+    }
+
     /**
      * 上门保养
      */
@@ -288,7 +308,7 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 clearUploadData();
-                                showVCodeDialog(entity.data.toString());
+                                parseOrderInfo(entity.data);
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }
@@ -308,7 +328,7 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
      */
     private void clearUploadData() {
         currentPosition = "";
-        tvLocation.setText("未获取位置信息");
+        addLocateImage("未获取位置信息,请点击图标获取");
         etRepairContent.setText("");
     }
 

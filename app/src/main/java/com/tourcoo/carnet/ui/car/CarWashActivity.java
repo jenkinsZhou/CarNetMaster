@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.tourcoo.carnet.AccountInfoHelper;
@@ -38,7 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_WASH;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_WASH;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
 /**
@@ -80,6 +81,7 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
         }
         return mapLocation.getAddress();
     }
+
     @Override
     public void setTitleBar(TitleBarView titleBar) {
         super.setTitleBar(titleBar);
@@ -89,7 +91,7 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TourCooUtil.startActivity(mContext,OrderHistoryActivity.class);
+                TourCooUtil.startActivity(mContext, OrderHistoryActivity.class);
                 EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_WASH));
             }
         });
@@ -272,7 +274,7 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
             ToastUtil.show("未获取位置信息");
             return;
         }
-        ApiRepository.getInstance().doorToDoorService(carInfoEntity, "", getDetail(), currentPosition, TYPE_CAR_WASH,mAddress).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+        ApiRepository.getInstance().doorToDoorService(carInfoEntity, "", getDetail(), currentPosition, TYPE_CAR_WASH, mAddress).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
                     @Override
                     public void onRequestNext(BaseEntity entity) {
@@ -280,7 +282,7 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 clearUploadData();
-                                showVCodeDialog(entity.data.toString());
+                                parseOrderInfo(entity.data);
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }
@@ -295,6 +297,17 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
                 });
     }
 
+    private void parseOrderInfo(Object object) {
+        try {
+            String orderInfo = JSONObject.toJSONString(object);
+            JSONObject jsonObject = JSONObject.parseObject(orderInfo);
+            jsonObject.getString("captcha");
+            String vCode = jsonObject.getString("captcha");
+            showVCodeDialog(vCode);
+        } catch (Exception e) {
+            ToastUtil.showFailed("订单信息获取失败");
+        }
+    }
 
     /**
      * 获取位置信息
@@ -329,7 +342,6 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
         String msg = "接单验证码:";
         msg += vCode;
         showAlertDialog("提交成功", msg, "我知道了");
-
     }
 
     /**
@@ -337,7 +349,7 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
      */
     private void clearUploadData() {
         currentPosition = "";
-        tvLocation.setText("未获取位置信息");
+        addLocateImage("未获取位置信息,请点击图标获取");
         etRepairContent.setText("");
     }
 }

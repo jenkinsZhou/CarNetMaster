@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,9 +17,15 @@ import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.CoordinateConverter;
+import com.amap.api.maps.model.LatLng;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -26,15 +33,21 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.GridImageAdapter;
 import com.tourcoo.carnet.core.common.RequestConfig;
-import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
+import com.tourcoo.carnet.core.frame.interfaces.IMultiStatusView;
 import com.tourcoo.carnet.core.frame.manager.GlideManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
+import com.tourcoo.carnet.core.frame.util.SizeUtil;
+import com.tourcoo.carnet.core.helper.LocateHelper;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
+import com.tourcoo.carnet.core.permission.PermissionConstance;
+import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.threadpool.ThreadPoolManager;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
 import com.tourcoo.carnet.core.widget.confirm.PayDialog;
+import com.tourcoo.carnet.core.widget.core.action.ActionSheetDialog;
+import com.tourcoo.carnet.core.widget.core.action.BaseDialog;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.WeiXinPay;
@@ -42,24 +55,34 @@ import com.tourcoo.carnet.entity.car.PayInfo;
 import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.order.OrderDetail;
 import com.tourcoo.carnet.retrofit.ApiRepository;
+import com.tourcoo.carnet.ui.BaseTourCooTitleMultiViewActivity;
 import com.tourcoo.carnet.ui.order.LookEvaluationActivity;
 import com.tourcoo.carnet.ui.repair.FillEvaluationActivity;
+import com.tourcoo.carnet.ui.repair.LookServiceActivity;
+import com.tourcoo.carnet.utils.Location;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
+import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.tourcoo.carnet.core.common.OrderConstant.PAY_TYPE_ALI_PAY;
+import static com.tourcoo.carnet.core.common.OrderConstant.PAY_TYPE_WEI_XIN_PAY;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 import static com.tourcoo.carnet.core.common.WxConfig.APP_ID;
+import static com.tourcoo.carnet.core.util.TourCooUtil.checkMapAppsIsExist;
 import static com.tourcoo.carnet.core.widget.confirm.PayDialog.PAY_TYPE_ALI;
 import static com.tourcoo.carnet.core.widget.confirm.PayDialog.PAY_TYPE_WE_XIN;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CANCELED;
@@ -69,21 +92,26 @@ import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDE
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_EVALUATE;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_ORDER;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_WAIT_PAY;
-import static com.tourcoo.carnet.ui.order.HistoryServiceFragment.EXTRA_SERVICE_DETAIL;
+import static com.tourcoo.carnet.ui.order.HistoryServiceListFragment.EXTRA_SERVICE_DETAIL;
 import static com.tourcoo.carnet.ui.order.LookEvaluationActivity.EXTRA_ORDER_ID;
-import static com.tourcoo.carnet.ui.repair.HistoryFaultRepairFragment.CODE_REQUEST_FILL;
+import static com.tourcoo.carnet.ui.repair.HistoryFaultRepairListFragment.CODE_REQUEST_FILL;
 
 /**
  * @author :JenkinsZhou
- * @description :上门服务详情
+ * @description :订单详情(上门服务详情)
  * @company :途酷科技
  * @date 2019年03月22日16:54
  * @Email: 971613168@qq.com
  */
-public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity implements View.OnClickListener {
+public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks, IMultiStatusView {
+    public static final String EXTRA_IS_CLICK = "EXTRA_IS_CLICK";
+    /**
+     * 记录用户是否操做过
+     */
+    private boolean isClick = false;
+
     private static final String PAY_STATUS = "resultStatus";
     private static final String PAY_STATUS_SUCCESS = "9000";
-
     private PaymentHandler mHandler = new PaymentHandler(this);
     private IWXAPI api;
     private int mPayType;
@@ -112,6 +140,91 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
      */
     private static final int PERMISSIONS_REQUEST_CODE = 1002;
 
+
+    private Location mStart, mEnd;
+
+    //百度地图URL跳转到步行路线的参数
+
+    //头部 添加相应地区
+    private final static String BAIDU_HEAD = "baidumap://map/direction?region=0";
+    //起点的经纬度
+    private final static String BAIDU_ORIGIN = "&origin=";
+    //终点的经纬度
+    private final static String BAIDU_DESTINATION = "&destination=";
+    //路线规划方式
+    private final static String BAIDU_MODE = "&mode=walking";
+    //百度地图的包名
+    private final static String BAIDU_PKG = "com.baidu.BaiduMap";
+
+    //高德地图URL跳转到步行路线的参数
+
+    //头部 后面的sourceApplicaiton填自己APP的名字
+    private final static String GAODE_HEAD = "androidamap://route?sourceApplication=BaiduNavi";
+    //起点经度
+    private final static String GAODE_SLON = "&slon=";
+    //起点纬度
+    private final static String GAODE_SLAT = "&slat=";
+    //起点名字
+    private final static String GAODE_SNAME = "&sname=";
+    //终点经度
+    private final static String GAODE_DLON = "&dlon=";
+    //终点纬度
+    private final static String GAODE_DLAT = "&dlat=";
+    //终点名字
+    private final static String GAODE_DNAME = "&dname=";
+    // dev 起终点是否偏移(0:lat 和 lon 是已经加密后的,不需要国测加密; 1:需要国测加密)
+    // t = 1(公交) =2（驾车） =4(步行)
+    private final static String GAODE_MODE = "&dev=0&t=4";
+    //高德地图包名
+    private final static String GAODE_PKG = "com.autonavi.minimap";
+
+    //腾讯地图URL跳转到路线的参数
+
+    //头部 type出行方式
+    private final static String TX_HEAD = "qqmap://map/routeplan?type=walk";
+    //起点名称
+    private final static String TX_FROM = "&from=";
+    //起点的经纬度
+    private final static String TX_FROMCOORD = "&fromcoord=";
+    //终点名称
+    private final static String TX_TO = "&to=";
+    //终点的经纬度
+    private final static String TX_TOCOORD = "&tocoord=";
+    /**
+     * 本参数取决于type参数的取值
+     * 公交：type=bus，policy有以下取值
+     * 0：较快捷
+     * 1：少换乘
+     * 2：少步行
+     * 3：不坐地铁
+     * 驾车：type=drive，policy有以下取值
+     * 0：较快捷
+     * 1：无高速
+     * 2：距离
+     * policy的取值缺省为0
+     */
+    private final static String TX_END = "&policy=1&referer=myapp";
+    //腾讯地图包名
+    private final static String TX_PKG = "com.tencent.map";
+
+    private double myLat;
+    private double myLong;
+
+    private String myAddress = "";
+
+    private LinearLayout llPayInfo;
+
+    private TextView tvPayType;
+    private TextView tvPayForm;
+    private TextView tvPayAmount;
+
+    private LinearLayout llPayAmount;
+    private LinearLayout llPayForm;
+    private LinearLayout llPayType;
+
+    private LinearLayout llContentView;
+    private TextView repairFactory;
+
     @Override
     public int getContentLayout() {
         return R.layout.activity_door_to_door_service_detail;
@@ -121,13 +234,23 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
     public void initView(Bundle savedInstanceState) {
         //在这里可以不传AppId传null就可以
         api = WXAPIFactory.createWXAPI(mContext, null);
+        llContentView = findViewById(R.id.llContentView);
         faultImageRecyclerView = findViewById(R.id.faultImageRecyclerView);
         tvOrderNumber = findViewById(R.id.tvOrderNumber);
         tvOrderStatus = findViewById(R.id.tvOrderStatus);
         tvAddress = findViewById(R.id.tvAddress);
+        llPayInfo = findViewById(R.id.llPayInfo);
+        llPayType = findViewById(R.id.llPayType);
+        llPayForm = findViewById(R.id.llPayForm);
+        llPayAmount = findViewById(R.id.llPayAmount);
         tvRepairFactory = findViewById(R.id.tvRepairFactory);
+        tvRepairFactory.setOnClickListener(this);
+        tvPayType = findViewById(R.id.tvPayType);
+        tvPayForm = findViewById(R.id.tvPayForm);
+        tvPayAmount = findViewById(R.id.tvPayAmount);
         mFaultRepairInfo = (FaultRepairEntity.FaultRepairInfo) getIntent().getSerializableExtra(EXTRA_SERVICE_DETAIL);
         tvFirstFunction = findViewById(R.id.tvFirstFunction);
+        repairFactory = findViewById(R.id.repairFactory);
         tvSecondFunction = findViewById(R.id.tvSecondFunction);
         gridImageAdapter = new GridImageAdapter(imageUrList);
         GridLayoutManager manager = new GridLayoutManager(mContext, 4, RecyclerView.VERTICAL, false);
@@ -142,6 +265,7 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
     @Override
     public void loadData() {
         super.loadData();
+        getLocate();
         requestPermission();
         gridImageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -156,6 +280,26 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
 
     }
 
+
+    private void doRefreshRequest() {
+        mStatusLayoutManager.showLoadingLayout();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mFaultRepairInfo != null) {
+                    mOrderId = mFaultRepairInfo.getId() + "";
+                    getOrderDetail(mFaultRepairInfo.getId() + "");
+                }
+            }
+        }, delayTime);
+
+    }
+
+    @Override
+    protected IMultiStatusView getMultiStatusView() {
+        return this;
+    }
+
     @Override
     public void setTitleBar(TitleBarView titleBar) {
         super.setTitleBar(titleBar);
@@ -168,7 +312,26 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
             case R.id.tvFirstFunction:
                 break;
             case R.id.tvSecondFunction:
-                TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
+                if (mFaultRepairInfo == null) {
+                    ToastUtil.showFailed("未获取到订单信息");
+                    return;
+                }
+                Bundle bundle = new Bundle();
+                bundle.putString(EXTRA_ORDER_ID, mFaultRepairInfo.getId() + "");
+                TourCooLogUtil.i(TAG, "orderId:" + mFaultRepairInfo.getId());
+                TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class, bundle);
+                break;
+            case R.id.tvRepairFactory:
+                //定位并显示导航
+                if (mStart == null || mStart.getLatitude() == 0 || mStart.getLongitude() == 0) {
+                    ToastUtil.show("未获取到您的位置 无法导航");
+                    return;
+                }
+                if (mEnd == null || mEnd.getLatitude() == 0 || mEnd.getLongitude() == 0) {
+                    ToastUtil.show("未获取到目的地位置 无法导航 ");
+                    return;
+                }
+                showSheetDialog();
                 break;
             default:
                 break;
@@ -182,7 +345,7 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
         if (info == null) {
             return;
         }
-        String orderNum = "订单编号:" + info.getOut_trade_no();
+        String orderNum = info.getOut_trade_no();
         tvOrderNumber.setText(orderNum);
         showStatus(info);
         if (!TextUtils.isEmpty(info.getImages())) {
@@ -197,10 +360,14 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
             }
         }
         gridImageAdapter.notifyDataSetChanged();
-        showLocate(getNotNullValue(info.getAddress()));
-        tvRepairFactory.setText(getNotNullValue(info.getGarageName()));
+        tvAddress.setText(getNotNullValue(info.getAddress()));
+        showLocate(tvRepairFactory, getNotNullValue(info.getGarageName()));
         tvFaultContent.setText(getNotNullValue(info.getDetail()));
+        if (info.getStatus() == TYPE_STATUS_ORDER_FINISH || info.getStatus() == TYPE_STATUS_ORDER_CANCELED || info.getStatus() == TYPE_STATUS_ORDER_WAIT_ORDER) {
+            hideFactory();
+        }
         initClickFunctionByStatus(info);
+        showPayInfo(info);
     }
 
     private String getNotNullValue(String value) {
@@ -214,49 +381,58 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
         }
         switch (orderInfo.getStatus()) {
             case TYPE_STATUS_ORDER_WAIT_ORDER:
-                String captcha = "待接单(验证码:" + orderInfo.getCaptcha() + ")";
+                String captcha = "订单状态:待接单(验证码:" + orderInfo.getCaptcha() + ")";
                 tvOrderStatus.setText(captcha);
                 setVisibility(tvFirstFunction, true);
                 setVisibility(tvSecondFunction, true);
+                setVisibility(llPayInfo, false);
                 break;
             case TYPE_STATUS_ORDER_IN_SERVICE:
-                tvOrderStatus.setText("服务中");
+                tvOrderStatus.setText("订单状态:服务中");
                 setVisibility(tvFirstFunction, false);
                 setVisibility(tvSecondFunction, false);
+                setVisibility(llPayInfo, false);
                 break;
             case TYPE_STATUS_ORDER_WAIT_PAY:
-                tvOrderStatus.setText("待支付");
+                tvOrderStatus.setText("订单状态:待支付");
                 setVisibility(tvFirstFunction, true);
-                setVisibility(tvSecondFunction, false);
+                setVisibility(tvSecondFunction, true);
                 setSolidText(tvFirstFunction, "支付订单");
+                setHollowText(tvSecondFunction, "查看服务");
+                setVisibility(llPayInfo, false);
                 break;
             case TYPE_STATUS_ORDER_WAIT_EVALUATE:
-                tvOrderStatus.setText("待评价");
+                tvOrderStatus.setText("订单状态:待评价");
                 setVisibility(tvFirstFunction, false);
                 setVisibility(tvSecondFunction, true);
                 setSolidText(tvSecondFunction, "去评价");
+                setVisibility(llPayInfo, true);
                 break;
             case TYPE_STATUS_ORDER_FINISH:
-                tvOrderStatus.setText("服务完成");
+                tvOrderStatus.setText("订单状态:服务完成");
                 setVisibility(tvFirstFunction, true);
                 setSolidText(tvFirstFunction, "查看服务");
                 setVisibility(tvSecondFunction, false);
+                setVisibility(llPayInfo, true);
                 break;
             case TYPE_STATUS_ORDER_CANCELED:
-                tvOrderStatus.setText("已取消");
+                tvOrderStatus.setText("订单状态:已取消");
                 setVisibility(tvFirstFunction, false);
                 setVisibility(tvSecondFunction, false);
+                setVisibility(llPayInfo, false);
                 break;
             case TYPE_STATUS_ORDER_CLOSE:
-                tvOrderStatus.setText("已关闭");
+                tvOrderStatus.setText("订单状态:已关闭");
                 setVisibility(tvFirstFunction, false);
                 setVisibility(tvSecondFunction, true);
                 setHollowText(tvSecondFunction, "查看评价");
+                setVisibility(llPayInfo, true);
                 break;
             default:
-                tvOrderStatus.setText("未知");
+                tvOrderStatus.setText("订单状态:未知");
                 setVisibility(tvFirstFunction, false);
                 setVisibility(tvSecondFunction, false);
+                setVisibility(llPayInfo, false);
                 break;
         }
     }
@@ -268,19 +444,30 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
      */
     private void getOrderDetail(String orderId) {
         imageUrList.clear();
+        mStatusLayoutManager.showLoadingLayout();
         ApiRepository.getInstance().findDetail(orderId).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity<OrderDetail>>() {
                     @Override
                     public void onRequestNext(BaseEntity<OrderDetail> entity) {
+                        mStatusLayoutManager.showSuccessLayout();
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 if (entity.data != null && entity.data.getOrder() != null) {
                                     showDetailAndLoadFunction(entity.data.getOrder());
+                                    //加载位置信息
+
+                                    setEndPosition(entity.data.getOrder());
                                 }
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }
                         }
+                    }
+
+                    @Override
+                    public void onRequestError(Throwable e) {
+                        super.onRequestError(e);
+                        mStatusLayoutManager.showErrorLayout();
                     }
                 });
     }
@@ -294,6 +481,13 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
         }
     }
 
+    private void setVisibility(View view, boolean visible) {
+        if (visible) {
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.INVISIBLE);
+        }
+    }
 
     /**
      * 设置实心文本
@@ -329,24 +523,37 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
         tvFirstFunction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isClick = true;
                 switch (orderInfo.getStatus()) {
                     //查看附近修理厂
                     case TYPE_STATUS_ORDER_WAIT_ORDER:
                         //待接单
-                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EXTRA_ORDER_ID, orderInfo.getId() + "");
+                        TourCooLogUtil.i(TAG, "orderId:" + orderInfo.getId());
+                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class, bundle);
                         break;
                     //待支付
                     case TYPE_STATUS_ORDER_WAIT_PAY:
                         findAmount(orderInfo);
+                        break;
+                    case TYPE_STATUS_ORDER_FINISH:
+                        //订单已完成 （查看服务）
+                        skipLookServiceActivity(mFaultRepairInfo.getId());
                         break;
                     default:
                         break;
                 }
             }
         });
+        /**
+         *
+         * 第二个button
+         */
         tvSecondFunction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isClick = true;
                 switch (orderInfo.getStatus()) {
                     case TYPE_STATUS_ORDER_WAIT_ORDER:
                         //取消订单
@@ -365,6 +572,11 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
                         bundle.putString(EXTRA_ORDER_ID, mFaultRepairInfo.getId() + "");
                         TourCooUtil.startActivity(mContext, LookEvaluationActivity.class, bundle);
                         break;
+                    case TYPE_STATUS_ORDER_WAIT_PAY:
+                        //查看服务
+                        skipLookServiceActivity(mFaultRepairInfo.getId());
+                        break;
+
                     default:
                         break;
                 }
@@ -535,9 +747,10 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        // 将结果转发到EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
         switch (requestCode) {
             case PERMISSIONS_REQUEST_CODE: {
-
                 // 用户取消了权限弹窗
                 if (grantResults.length == 0) {
                     ToastUtil.show("关闭了权限弹窗");
@@ -560,11 +773,65 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
         }
     }
 
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        //权限已被用户授予
+        getLocate();
+        closeLoadingDialog();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        //权限被用户拒绝
+        ToastUtil.showFailed("您未授予定位权限,请前往授权管理授予权限");
+        closeLoadingDialog();
+    }
+
+    @Override
+    public View getMultiStatusContentView() {
+        return llContentView;
+    }
+
+    @Override
+    public void setMultiStatusView(StatusLayoutManager.Builder statusView) {
+
+    }
+
+    @Override
+    public View.OnClickListener getEmptyClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doRefreshRequest();
+            }
+        };
+    }
+
+    @Override
+    public View.OnClickListener getErrorClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doRefreshRequest();
+            }
+        };
+    }
+
+    @Override
+    public View.OnClickListener getCustomerClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doRefreshRequest();
+            }
+        };
+    }
+
     @SuppressWarnings("unchecked")
     private static class PaymentHandler extends Handler {
-        private WeakReference<DoorToDoorServiceDetailActivity> softReference;
+        private WeakReference<OrderDetailActivity> softReference;
 
-        public PaymentHandler(DoorToDoorServiceDetailActivity doorServiceDetailActivity) {
+        public PaymentHandler(OrderDetailActivity doorServiceDetailActivity) {
             softReference = new WeakReference<>(doorServiceDetailActivity);
         }
 
@@ -638,27 +905,25 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
 
     private ImageView getView() {
         ImageView imgView = new ImageView(this);
-        imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         imgView.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
         return imgView;
     }
 
-    private void showLocate(String text) {
-        text = TourCooUtil.getNotNullValue(text);
-     /*   SpannableString ss = new SpannableString(text + "  ");
+    private void showLocate(TextView tv, String text) {
+        SpannableString ss = new SpannableString(text + "  ");
         int len = ss.length();
         //图片
         Drawable d = ContextCompat.getDrawable(mContext, (R.mipmap.ic_positioning));
         d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
         //构建ImageSpan
         ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
-        ss.setSpan(span, len - 1, len, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);*/
-        tvAddress.setText(text);
+        ss.setSpan(span, len - 1, len, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv.setText(ss);
     }
 
-
     @Override
-    public void  onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case CODE_REQUEST_FILL:
@@ -671,4 +936,227 @@ public class DoorToDoorServiceDetailActivity extends BaseTourCooTitleActivity im
         }
     }
 
+
+    private void showSheetDialog() {
+        String[] array = new String[]{"百度地图", "高德地图"};
+        new ActionSheetDialog.ListIOSBuilder(this)
+                .addItems(array)
+                .setItemsTextColorResource(R.color.colorActionSheetItemText)
+                .setCancel(R.string.cancel)
+                .setCancelMarginTop(SizeUtil.dp2px(8))
+                .setCancelTextColorResource(R.color.colorActionSheetItemText)
+                .setOnItemClickListener(mOnItemClickListener)
+                .create()
+                .setDimAmount(0.6f)
+                .setAlpha(0.6f)
+                .show();
+    }
+
+
+    private ActionSheetDialog.OnItemClickListener mOnItemClickListener = new ActionSheetDialog.OnItemClickListener() {
+        @Override
+        public void onClick(BaseDialog dialog, View itemView, int position) {
+            switch (position) {
+                case 0:
+                    skipBaidu();
+                    break;
+                case 1:
+                    skipGaode();
+                    break;
+                default:
+                    break;
+
+            }
+            dialog.dismiss();
+        }
+    };
+
+
+    /**
+     * 坐标转换
+     *
+     * @param mStart
+     * @param mEnd
+     */
+    public void BD09ToGCJ02(Location mStart, Location mEnd) {
+        LatLng newStart = convertBaiduToGPS(new LatLng(mStart.getLatitude(), mStart.getLongitude()));
+        LatLng newEnd = convertBaiduToGPS(new LatLng(mEnd.getLatitude(), mEnd.getLongitude()));
+        mStart.setLatitude(newStart.latitude);
+        mStart.setLongitude(newStart.longitude);
+
+        mEnd.setLatitude(newEnd.latitude);
+        mEnd.setLongitude(newEnd.longitude);
+
+    }
+
+    /**
+     * 将百度地图坐标转换成GPS坐标
+     *
+     * @param sourceLatLng
+     * @return
+     */
+    public LatLng convertBaiduToGPS(LatLng sourceLatLng) {
+        // 将GPS设备采集的原始GPS坐标转换成百度坐标
+        CoordinateConverter converter = new CoordinateConverter(mContext);
+        converter.from(CoordinateConverter.CoordType.GPS);
+        // sourceLatLng待转换坐标
+        converter.coord(sourceLatLng);
+        LatLng desLatLng = converter.convert();
+        double latitude = 2 * sourceLatLng.latitude - desLatLng.latitude;
+        double longitude = 2 * sourceLatLng.longitude - desLatLng.longitude;
+        BigDecimal bdLatitude = new BigDecimal(latitude);
+        bdLatitude = bdLatitude.setScale(6, BigDecimal.ROUND_HALF_UP);
+        BigDecimal bdLongitude = new BigDecimal(longitude);
+        bdLongitude = bdLongitude.setScale(6, BigDecimal.ROUND_HALF_UP);
+        return new LatLng(bdLatitude.doubleValue(), bdLongitude.doubleValue());
+    }
+
+    private void getLocate() {
+        if (checkLocatePermission()) {
+            locate();
+        } else {
+            showLocatePermissionDialog("请前往权限管理授予定位权限");
+        }
+    }
+
+
+    /***
+     * 定位
+     */
+
+    private void locate() {
+        LocateHelper.getInstance().startLocation(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
+                    myLat = aMapLocation.getLatitude();
+                    myLong = aMapLocation.getLongitude();
+                    myAddress = aMapLocation.getAddress();
+                    setStartPosition(aMapLocation);
+                } else {
+                    ToastUtil.showFailed("定位失败");
+                }
+                closeLoadingDialog();
+                LocateHelper.getInstance().stopLocation();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocateHelper.getInstance().destroyLocationInstance();
+    }
+
+
+    /**
+     * 检查定位权限
+     */
+    private boolean checkLocatePermission() {
+        return PermissionManager.checkPermission(this, PermissionConstance.PERMS_LOCATE);
+    }
+
+    private void setStartPosition(AMapLocation mapLocation) {
+        if (mapLocation == null) {
+            return;
+        }
+        mStart = new Location(mapLocation.getLongitude(), mapLocation.getLatitude(), mapLocation.getAddress());
+    }
+
+    private void setEndPosition(OrderDetail.OrderInfo orderInfo) {
+        if (orderInfo == null) {
+            ToastUtil.show("未获取到订单信息");
+            return;
+        }
+        TourCooLogUtil.d("位置:myLong = " + myLong);
+        TourCooLogUtil.d("位置:myLat = " + myLat);
+        TourCooLogUtil.d("位置:getLng = " + orderInfo.getLng());
+        TourCooLogUtil.d("位置:getLat = " + orderInfo.getLat());
+        mEnd = new Location(orderInfo.getLng(), orderInfo.getLat(), orderInfo.getAddress());
+    }
+
+
+    private void skipBaidu() {
+        Intent intent = new Intent();
+        if (checkMapAppsIsExist(mContext, BAIDU_PKG)) {
+            intent.setData(Uri.parse(BAIDU_HEAD + BAIDU_ORIGIN + mStart.getLatitude()
+                    + "," + mStart.getLongitude() + BAIDU_DESTINATION + mEnd.getLatitude() + "," + mEnd.getLongitude()
+                    + BAIDU_MODE));
+            startActivity(intent);
+        } else {
+            Toast.makeText(mContext, "百度地图未安装", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void skipGaode() {
+        Intent intent = new Intent();
+        if (checkMapAppsIsExist(mContext, GAODE_PKG)) {
+            BD09ToGCJ02(mStart, mEnd);
+            intent.setAction("android.intent.action.VIEW");
+            intent.setPackage("com.autonavi.minimap");
+            intent.addCategory("android.intent.category.DEFAULT");
+            intent.setData(Uri.parse(GAODE_HEAD + GAODE_SLAT + mStart.getLatitude() + GAODE_SLON + mStart.getLongitude() +
+                    GAODE_SNAME + mStart.getName() + GAODE_DLAT + mEnd.getLatitude() + GAODE_DLON + mEnd.getLongitude() +
+                    GAODE_DNAME + mEnd.getName() + GAODE_MODE));
+            startActivity(intent);
+        } else {
+            Toast.makeText(mContext, "高德地图未安装", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_IS_CLICK, isClick);
+        setResult(RESULT_OK, intent);
+        super.finish();
+    }
+
+    private void skipLookServiceActivity(int orderId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(EXTRA_ORDER_ID, orderId);
+        TourCooUtil.startActivity(mContext, LookServiceActivity.class, bundle);
+    }
+
+
+    private void showPayInfo(OrderDetail.OrderInfo orderInfo) {
+        if (orderInfo == null) {
+            setVisibility(llPayInfo, false);
+            return;
+        }
+        switch (orderInfo.getPaytype()) {
+            //线上支付
+            case 0:
+                setVisibility(llPayForm, true);
+                setVisibility(llPayAmount, true);
+                setVisibility(llPayType, true);
+                tvPayType.setText("线上支付");
+                switch (orderInfo.getPay_from()) {
+                    case PAY_TYPE_WEI_XIN_PAY:
+                        tvPayForm.setText("支付宝支付");
+                        break;
+                    case PAY_TYPE_ALI_PAY:
+                        tvPayForm.setText("微信支付");
+                        break;
+                    default:
+                        setVisibility(llPayForm, false);
+                        break;
+                }
+                tvPayAmount.setText("￥ " + orderInfo.getAmount());
+                break;
+            //线下支付 隐藏支付平台和支付金额
+            default:
+                setVisibility(llPayForm, false);
+                setVisibility(llPayAmount, true);
+                setVisibility(llPayType, true);
+                tvPayType.setText("线下支付");
+                break;
+        }
+    }
+
+
+    private void hideFactory() {
+        repairFactory.setVisibility(View.GONE);
+        tvRepairFactory.setVisibility(View.GONE);
+    }
 }

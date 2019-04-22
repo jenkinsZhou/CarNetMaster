@@ -5,13 +5,14 @@ android {
         debug {
             keyAlias 'emi'
             keyPassword 'android'
-            storeFile file('C:/Users/JenkinsZhou/android/android_key_release.jks')
+            storeFile file('C:/Users/JenkinsZhou/android/android.jks')
+
             storePassword 'android'
         }
         release {
             keyAlias 'emi'
             keyPassword 'android'
-            storeFile file('C:/Users/JenkinsZhou/android/android.jks')
+            storeFile file('C:/Users/JenkinsZhou/android/android_key_release.jks')
             storePassword 'android'
         }
     }

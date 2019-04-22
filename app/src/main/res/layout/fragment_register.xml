@@ -148,7 +148,7 @@
             android:id="@+id/tvLicensing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="《车联网软件许可条例》"
+            android:text="《亿车聪软件许可条例》"
             android:textColor="#4287FF"
             android:textSize="@dimen/sp_10" />
 

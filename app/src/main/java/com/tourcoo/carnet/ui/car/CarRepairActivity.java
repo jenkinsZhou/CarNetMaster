@@ -1,5 +1,6 @@
 package com.tourcoo.carnet.ui.car;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,12 +10,14 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -35,12 +38,14 @@ import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
+import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
 import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
+import com.tourcoo.carnet.ui.factory.NearbyRepairFactoryActivity;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
 import com.tourcoo.carnet.ui.repair.RepairFaultFragment;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -65,11 +70,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_SERVICE;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
-import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.EXTRA_ORDER_TYPE;
-import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_REPAIR;
-import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_SERVICE;
+import static com.tourcoo.carnet.ui.order.LookEvaluationActivity.EXTRA_ORDER_ID;
 
 
 /**
@@ -80,6 +86,7 @@ import static com.tourcoo.carnet.ui.repair.RepairFaultFragment.TYPE_SERVICE;
  * @Email: 971613168@qq.com
  */
 public class CarRepairActivity extends BaseTourCooTitleActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks {
+    private String orderId = "";
     private RelativeLayout rlAddImage;
     private RecyclerView mRecyclerView;
     private UploadImageAdapter uploadImageAdapter;
@@ -112,6 +119,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         }
         return mapLocation.getAddress();
     }
+
     @Override
     public void initView(Bundle savedInstanceState) {
         mContentView.findViewById(R.id.ivCamera).setOnClickListener(this);
@@ -137,7 +145,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_ORDER_TYPE,TYPE_SERVICE);
+                intent.putExtra(EXTRA_ORDER_TYPE, TYPE_SERVICE);
                 intent.setClass(mContext, OrderHistoryActivity.class);
                 startActivity(intent);
                 EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_REPAIR));
@@ -218,18 +226,17 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         }
     }
 
-    /**
+  /*  *//**
      * 显示验证码
      *
-     * @param vCode
-     */
+     *//*
     private void showVCodeDialog(String vCode) {
         String msg = "接单验证码:";
         msg += vCode;
         showAlertDialog("提交成功", msg, "我知道了");
 
     }
-
+*/
 
     private void initItemClick() {
         uploadImageAdapter.setOnItemClickListener(new UploadImageAdapter.OnItemClickListener() {
@@ -469,7 +476,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
             ToastUtil.show("请输入故障描述");
             return;
         }
-        ApiRepository.getInstance().doorToDoorService(carInfoEntity, mImages, getDetail(), currentPosition,TYPE_CAR_REPAIR,mAddress).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+        ApiRepository.getInstance().doorToDoorService(carInfoEntity, mImages, getDetail(), currentPosition, TYPE_CAR_REPAIR, mAddress).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
                     @Override
                     public void onRequestNext(BaseEntity entity) {
@@ -477,12 +484,11 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 clearUploadData();
-                                showVCodeDialog(entity.data.toString());
+                                parseOrderInfo(entity.data);
                             } else {
                                 ToastUtil.showFailed(entity.message);
                             }
                         }
-
                     }
 
                     @Override
@@ -493,6 +499,24 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
                 });
     }
 
+    /**
+     * 显示验证码
+     *
+     * @param object
+     */
+
+    private void parseOrderInfo(Object object) {
+        try {
+            String orderInfo = JSONObject.toJSONString(object);
+            JSONObject jsonObject = JSONObject.parseObject(orderInfo);
+            jsonObject.getString("captcha");
+            String vCode = jsonObject.getString("captcha");
+            orderId = jsonObject.getString("orderId");
+            showVCodeDialog(vCode);
+        } catch (Exception e) {
+            ToastUtil.showFailed("订单信息获取失败");
+        }
+    }
 
     private String getDetail() {
         return etRepairContent.getText().toString();
@@ -672,7 +696,42 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         imageList.clear();
         currentPosition = "";
         selectList.clear();
-        tvLocation.setText("未获取位置信息");
+        addLocateImage("未获取位置信息,请点击图标获取");
         uploadImageAdapter.notifyDataSetChanged();
+    }
+
+
+    private void showVCodeDialog(String vCode) {
+        ConfirmDialog.Builder builder = new ConfirmDialog.Builder(
+                mContext);
+        builder.setPositiveButtonPosition(ConfirmDialog.RIGHT);
+        builder.setTitle("报修成功");
+        builder.setMessageGravity(Gravity.LEFT);
+        builder.setFirstMessage("接单验证码:" + vCode).setNegativeButtonButtonBold(true)
+                .setSecondMessage("可在报修订单查看报修详情");
+        builder.setPositiveButton("查看订单", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_ORDER_TYPE, TYPE_SERVICE);
+                intent.setClass(mContext, OrderHistoryActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("查看附近修理厂",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //待接单
+                        //todo
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EXTRA_ORDER_ID, orderId);
+                        TourCooLogUtil.i(TAG, "orderId:" + orderId);
+                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class,bundle);
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 }

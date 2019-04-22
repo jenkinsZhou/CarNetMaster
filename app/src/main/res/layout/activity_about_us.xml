@@ -72,6 +72,7 @@
         app:sLeftTextSize="@dimen/sp_15"
         app:sLeftTextString="去评分"
         app:sLeftTextColor="#333333"
+        android:visibility="gone"
         app:sLeftViewMarginLeft="@dimen/dp_25"
         app:sRightIconRes="@mipmap/ic_more"
         >

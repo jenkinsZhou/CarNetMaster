@@ -9,5 +9,6 @@ package com.tourcoo.carnet.entity.event;
  */
 public class EventConstant  {
 
-    public static final int EVENT_ACTION_PAY_FRESH = 1001;
+    public static final int EVENT_ACTION_PAY_FRESH_SUCCESS = 1001;
+    public static final int EVENT_ACTION_PAY_FRESH_FAILED = 1000;
 }

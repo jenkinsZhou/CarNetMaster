@@ -39,7 +39,7 @@ import androidx.annotation.NonNull;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
-import static com.tourcoo.carnet.ui.repair.FastSearchActivity.EVENT_CLEAR_INPUT;
+import static com.tourcoo.carnet.entity.event.SearchEvent.EVENT_ACTION_SEARCH_GARAGE;
 import static com.tourcoo.carnet.ui.repair.RepairFactoryDetailActivity.EXTRA_GARAGE_DETAIL;
 
 /**
@@ -54,6 +54,8 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
     private String currentPosition = "";
     private String keyWord = "";
 
+    private FastSearchActivity fastSearchActivity;
+
     @Override
     public int getContentLayout() {
         return R.layout.layout_refresh_recycler;
@@ -61,6 +63,7 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        fastSearchActivity = (FastSearchActivity) mContext;
         initItemClick();
         EventBus.getDefault().register(mContext);
         mRefreshLoadDelegate.mStatusManager.showSuccessLayout();
@@ -128,6 +131,7 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
      * 获取附近修理厂列表
      */
     private void searchGarages(String pageIndex, String pageSize) {
+        keyWord = fastSearchActivity.getInput();
         TourCooLogUtil.i("当前请求的页码：", pageIndex + "关键字:" + keyWord);
         ApiRepository.getInstance().searchGarages(currentPosition, keyWord, pageIndex, pageSize).compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity<GarageEntity>>(getIHttpRequestControl()) {
@@ -152,7 +156,7 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
     @SuppressLint("WrongConstant")
     @Subscriber(mode = ThreadMode.MAIN)
     public void onSearch(SearchEvent searchEvent) {
-        if (searchEvent != null) {
+        if (searchEvent != null && searchEvent.type == EVENT_ACTION_SEARCH_GARAGE) {
             keyWord = searchEvent.getKeyWord();
             depotDescriptionAdapter.getData().clear();
             requestByPosition();
@@ -163,7 +167,7 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
     @SuppressLint("WrongConstant")
     @Subscriber(mode = ThreadMode.MAIN)
     public void clearInput(int clear) {
-        if (clear == EVENT_CLEAR_INPUT) {
+        if (clear == EVENT_ACTION_SEARCH_GARAGE) {
             keyWord = "";
         }
     }
@@ -200,13 +204,12 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
     }
 
     /**
-     * 显示验证码
+     * 显示权限弹窗
      *
      * @param msg
      */
     private void showPermissionDialog(String msg) {
         showAlertDialog("需要定位权限", msg, "我知道了");
-
     }
 
 

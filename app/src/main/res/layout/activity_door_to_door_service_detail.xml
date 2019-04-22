@@ -7,165 +7,317 @@
 
     <include layout="@layout/layout_title_bar" />
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
+        android:id="@+id/llContentView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!--订单状态布局-->
-            <TextView
-                android:id="@+id/tvOrderNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_22"
-                android:layout_marginTop="@dimen/dp_15"
-                android:text="订单编号:"
-                android:textColor="@color/blueCommon"
-                android:textSize="@dimen/sp_12" />
+            android:layout_height="wrap_content">
 
-            <!--订单状态布局-->
-            <TextView
-                android:id="@+id/tvOrderStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_22"
-                android:layout_marginTop="@dimen/dp_5"
-                android:text="订单状态：服务中"
-                android:textColor="@color/blueCommon"
-                android:textSize="@dimen/sp_12" />
-            <!--第二部分布局(白色圆角区域)-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_10"
-                android:background="@drawable/bg_radius_12_white"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_12">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/ic_introduction"
-                    android:drawablePadding="@dimen/dp_5"
-                    android:text="故障简述"
-                    android:textColor="#171717"
-                    android:textSize="@dimen/sp_15" />
-
-                <!--  故障内容-->
-                <TextView
-                    android:id="@+id/tvFaultContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_12"
-                    android:textSize="@dimen/sp_11"
-                    android:text="内容描述内容描述内容描述内容描述内容描述内容描述内
-容描述内容描述内容描述内容描述内容描述内容描述内容
-描述内容描述内容描述内容描述内容描述内容描述内容描
-述内容描述内容描述内容描述" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:drawableLeft="@mipmap/ic_introduction"
-                    android:drawablePadding="@dimen/dp_5"
-                    android:text="附加图片"
-                    android:textColor="#171717"
-                    android:textSize="@dimen/sp_15" />
-
-               <!-- <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:descendantFocusability="blocksDescendants">-->
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:id="@+id/faultImageRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:overScrollMode="never">
-
-                    </androidx.recyclerview.widget.RecyclerView>
-               <!-- </RelativeLayout>-->
-
-
-                <TextView
-                    android:id="@+id/btnLocate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_18"
-                    android:drawableLeft="@mipmap/ic_position"
-                    android:drawablePadding="@dimen/dp_5"
-                    android:text="上门地址"
-                    android:textColor="#171717"
-                    android:textSize="@dimen/sp_15" />
-
-                <!-- "上门地址"-->
+                android:orientation="vertical">
+                <!--订单状态布局-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
+
+                    <!--订单状态布局-->
                     <TextView
+                        android:id="@+id/tvOrderStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="地址:"
-                        android:textColor="@color/blueCommon" />
-
-                    <TextView
-                        android:id="@+id/tvAddress"
-                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_22"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:text="订单状态：服务中"
+                        android:textColor="@color/blueCommon"
+                        android:textSize="@dimen/sp_12" />
+                    <!--第二部分布局(白色圆角区域)-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="安徽省合肥市蜀山区高速翡翠湖畔" />
+                        android:layout_margin="@dimen/dp_10"
+                        android:background="@drawable/bg_radius_12_white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_12">
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/dp_18"
+                                android:layout_height="@dimen/dp_18"
+                                android:layout_gravity="center_vertical"
+                                android:src="@mipmap/ic_position" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_3"
+                                android:text="订单编号: "
+                                android:textColor="#171717"
+                                android:textSize="@dimen/sp_15" />
+
+                            <TextView
+                                android:id="@+id/tvOrderNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="1223232515"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_13" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_15"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/dp_16"
+                                android:layout_height="@dimen/dp_16"
+                                android:layout_gravity="center_vertical"
+                                android:src="@mipmap/ic_introduction" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:text="故障简述"
+                                android:textColor="#171717"
+                                android:textSize="@dimen/sp_15" />
+                        </LinearLayout>
+
+                        <!--  故障内容-->
+                        <TextView
+                            android:id="@+id/tvFaultContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_12"
+
+                            android:textSize="@dimen/sp_11" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_15"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/dp_16"
+                                android:layout_height="@dimen/dp_16"
+                                android:layout_gravity="center_vertical"
+                                android:src="@mipmap/ic_picture" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:text="附加图片"
+                                android:textColor="#171717"
+                                android:textSize="@dimen/sp_15" />
+                        </LinearLayout>
+
+                        <!-- <RelativeLayout
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:descendantFocusability="blocksDescendants">-->
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/faultImageRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:overScrollMode="never">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+                        <!-- </RelativeLayout>-->
+
+
+                        <TextView
+                            android:id="@+id/btnLocate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_18"
+                            android:drawableLeft="@mipmap/ic_position"
+                            android:drawablePadding="@dimen/dp_5"
+                            android:text="上门地址"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <!-- "上门地址"-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="地址:"
+                                android:textColor="@color/blueCommon" />
+
+                            <TextView
+                                android:id="@+id/tvAddress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="安徽省合肥市蜀山区高速翡翠湖畔" />
+
+                        </LinearLayout>
+                        <!-- 维修厂-->
+                        <TextView
+                            android:id="@+id/repairFactory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_18"
+                            android:drawableLeft="@mipmap/ic_introduction"
+                            android:drawablePadding="@dimen/dp_5"
+                            android:text="维修厂"
+                            android:textColor="#171717"
+                            android:textSize="@dimen/sp_15" />
+
+                        <TextView
+                            android:id="@+id/tvRepairFactory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_18"
+                            android:text="合肥成铭汽车修理厂（潜山路店）" />
+                    </LinearLayout>
+
+
+                    <!--支付信息-->
+                    <LinearLayout
+                        android:id="@+id/llPayInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dp_10"
+                        android:background="@drawable/bg_radius_12_white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_12">
+
+
+                        <LinearLayout
+                            android:id="@+id/llPayType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/payType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@mipmap/ic_payment_amount"
+                                android:drawablePadding="@dimen/dp_5"
+                                android:text="支付方式:  "
+                                android:textColor="#171717"
+                                android:textSize="@dimen/sp_15" />
+
+
+                            <TextView
+                                android:id="@+id/tvPayType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="支付方式"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_14" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/llPayForm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/payForm"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@mipmap/ic_payment_platform"
+                                android:drawablePadding="@dimen/dp_5"
+                                android:text="支付平台:  "
+                                android:textColor="#171717"
+                                android:textSize="@dimen/sp_15" />
+
+
+                            <TextView
+                                android:id="@+id/tvPayForm"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="支付平台"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_14" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/llPayAmount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/payAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@mipmap/ic_payment_method"
+                                android:drawablePadding="@dimen/dp_5"
+                                android:text="支付金额:  "
+                                android:textColor="#171717"
+                                android:textSize="@dimen/sp_15" />
+
+
+                            <TextView
+                                android:id="@+id/tvPayAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="支付金额"
+                                android:textColor="@color/red_common"
+                                android:textSize="@dimen/sp_14" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-                <!-- 维修厂-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_18"
-                    android:drawableLeft="@mipmap/ic_introduction"
-                    android:drawablePadding="@dimen/dp_5"
-                    android:text="维修厂"
-                    android:textColor="#171717"
-                    android:textSize="@dimen/sp_15" />
 
                 <TextView
-                    android:id="@+id/tvRepairFactory"
-                    android:layout_marginTop="@dimen/dp_18"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="合肥成铭汽车修理厂（潜山路店）" />
+                    android:id="@+id/tvFirstFunction"
+                    style="@style/TextViewButtonBlueBgMatchParentStyle"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:text="附近修理厂"
+                    android:textColor="@color/white"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvSecondFunction"
+                    style="@style/TextViewButtonBlueBgMatchParentStyleBaseHollow"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_marginBottom="@dimen/dp_30"
+                    android:text="取消服务"
+                    android:textColor="@color/blueCommon" />
 
 
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            <TextView
-                style="@style/TextViewButtonBlueBgMatchParentStyle"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:text="附近修理厂"
-                android:id="@+id/tvFirstFunction"
-                android:textColor="@color/white"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/tvSecondFunction"
-                style="@style/TextViewButtonBlueBgMatchParentStyleBaseHollow"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginTop="@dimen/dp_15"
-                android:layout_marginRight="@dimen/dp_10"
-                android:layout_marginBottom="@dimen/dp_30"
-                android:text="取消服务"
-                android:textColor="@color/blueCommon" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
-
+    </LinearLayout>
 </LinearLayout>

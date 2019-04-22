@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whiteCommon"
+    android:minHeight="@dimen/dp_500"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/whiteCommon">
+
+        <ImageView
+            android:id="@+id/ivNetError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/img_no_network" />
+
+        <TextView
+            android:id="@+id/tvNoNet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivNetError"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="网络未连接" />
+
+        <TextView
+            android:id="@+id/tvRetry"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_10"
+            android:layout_below="@id/tvNoNet"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="点击重试" />
+    </RelativeLayout>
+
+</RelativeLayout>

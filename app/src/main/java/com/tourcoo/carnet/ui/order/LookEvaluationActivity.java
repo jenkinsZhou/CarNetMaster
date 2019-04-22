@@ -154,7 +154,7 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
 
     private ImageView getView() {
         ImageView imgView = new ImageView(this);
-        imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         imgView.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
         return imgView;
     }

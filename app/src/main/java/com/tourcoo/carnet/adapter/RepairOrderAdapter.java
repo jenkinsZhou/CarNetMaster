@@ -14,9 +14,9 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 
-import static com.tourcoo.carnet.core.common.CommonConstant.TYPE_CAR_WASH;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.FaultRepairInfo.TYPE_CAR_CURING;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.FaultRepairInfo.TYPE_CAR_REPAIR;
+import static com.tourcoo.carnet.entity.order.FaultRepairEntity.FaultRepairInfo.TYPE_CAR_WASH;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CANCELED;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CLOSE;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_FINISH;
@@ -49,7 +49,7 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
         helper.addOnClickListener(R.id.tvLeftButton);
         helper.addOnClickListener(R.id.tvRightButton);
         TextView tvOrderType = helper.getView(R.id.tvOrderType);
-        switch (item.getOrderType()) {
+        switch (item.getType()) {
             case TYPE_CAR_REPAIR:
                 tvOrderType.setText("维修简述:");
                 break;
@@ -73,7 +73,7 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
                 setHollowText(tvRightButton, "取消服务");
                 break;
             case TYPE_STATUS_ORDER_IN_SERVICE:
-                helper.setText(R.id.tvRepairStatus, "维修中");
+                helper.setText(R.id.tvRepairStatus, "服务中");
                 setHollowText(tvRightButton, "取消服务");
                 setVisibility(tvLeftButton, false);
                 setVisibility(tvRightButton, false);
