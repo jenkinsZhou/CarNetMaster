@@ -61,6 +61,8 @@ import androidx.core.content.ContextCompat;
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 import static android.app.Activity.RESULT_OK;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_CURRENT_TAB;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
 import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
@@ -255,9 +257,11 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
                 //跳转到服务详情页面
                 FaultRepairEntity.FaultRepairInfo info = (FaultRepairEntity.FaultRepairInfo) adapter.getData().get(position);
                 Intent intent = new Intent();
+                intent.putExtra(EXTRA_SERVICE_DETAIL, info);
+                //表明是故障报修TAB
+                intent.putExtra(TAB_KEY, TAB_REPAIR);
                 intent.setClass(mContext, OrderDetailActivity.class);
                 refreshPosition = position;
-                intent.putExtra(EXTRA_SERVICE_DETAIL, info);
                 startActivityForResult(intent, CODE_REQUEST_REPAIR_DETAIL);
             }
         });
@@ -541,6 +545,7 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
             req.prepayId = weiXinPay.getPaymentStr();
             api.registerApp(WxConfig.APP_ID);
             api.sendReq(req);
+            OrderConstant.currentOrderTabTag = EXTRA_ORDER_TAG_REPAIR;
         }
 
 
@@ -626,7 +631,7 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
             mCurrentFaultRepairInfo = repairOrderAdapter.getData().get(refreshPosition);
             mCurrentFaultRepairInfo.setStatus(status);
             repairOrderAdapter.refreshNotifyItemChanged(refreshPosition);
-            TourCooLogUtil.d("已经执行刷新：位置:"+refreshPosition);
+            TourCooLogUtil.d("已经执行刷新：位置:" + refreshPosition);
         }
     }
 
@@ -641,14 +646,14 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
                 }
                 break;
             case CODE_REQUEST_REPAIR_DETAIL:
-                 TourCooLogUtil.i(TAG,TAG+":"+"收到回调(故障报修)" );
+                TourCooLogUtil.i(TAG, TAG + ":" + "收到回调(故障报修)");
                 if (data != null) {
                     int orderStatus = data.getIntExtra(EXTRA_ORDER_STATUS, -1);
-                    TourCooLogUtil.i(TAG,TAG+":"+ "收到回调:orderStatus="+orderStatus);
+                    TourCooLogUtil.i(TAG, TAG + ":" + "收到回调:orderStatus=" + orderStatus);
                     if (orderStatus == -1) {
                         mRefreshLayout.autoRefresh(100);
-                    }else {
-                        TourCooLogUtil.i(TAG,TAG+":"+ "刷新了状态:"+orderStatus);
+                    } else {
+                        TourCooLogUtil.i(TAG, TAG + ":" + "刷新了状态:" + orderStatus);
                         //根据状态刷新UI
                         refreshStatus(orderStatus);
                     }
@@ -656,7 +661,7 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
                 break;
             default:
 //                refreshRequest();
-                TourCooLogUtil.e(TAG,TAG+":"+"收到回调" );
+                TourCooLogUtil.e(TAG, TAG + ":" + "收到回调");
                 break;
         }
     }
@@ -665,10 +670,11 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onBaseEvent(BaseEvent event) {
         if (event == null) {
-            TourCooLogUtil.w(TAG, "直接拦截（故障报修）");
+            TourCooLogUtil.e(TAG, "直接拦截（故障报修）");
             return;
         }
         if (EXTRA_ORDER_TAG_SERVICE.equals(OrderConstant.currentOrderTabTag)) {
+            TourCooLogUtil.w(TAG, "直接拦截（故障报修）");
             return;
         }
         switch (event.id) {

@@ -78,10 +78,10 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
 
     @Override
     public void loadData(int page) {
-        if (checkLocatePermission()) {
-            searchGarages(String.valueOf(page), String.valueOf(mDefaultPageSize));
+        if (TextUtils.isEmpty(currentPosition)) {
+            mStatusManager.showLoadingLayout();
         } else {
-            mStatusManager.showEmptyLayout();
+            searchGarages(String.valueOf(page), String.valueOf(mDefaultPageSize));
         }
 
     }
@@ -278,6 +278,7 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
         depotDescriptionAdapter.getData().clear();
         searchGarages(String.valueOf(1), String.valueOf(mDefaultPageSize));
     }
+
 
 
 }

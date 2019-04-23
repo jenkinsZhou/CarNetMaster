@@ -84,9 +84,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_CURRENT_TAB;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.PAY_TYPE_ALI_PAY;
 import static com.tourcoo.carnet.core.common.OrderConstant.PAY_TYPE_WEI_XIN_PAY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 import static com.tourcoo.carnet.core.common.WxConfig.APP_ID;
 import static com.tourcoo.carnet.core.util.TourCooUtil.checkMapAppsIsExist;
@@ -235,7 +239,7 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
 
     private LinearLayout llContentView;
     private TextView repairFactory;
-
+    private int currentTab;
 
     @Override
     public int getContentLayout() {
@@ -245,6 +249,8 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
     @Override
     public void initView(Bundle savedInstanceState) {
         //在这里可以不传AppId传null就可以
+        currentTab = getIntent().getIntExtra(TAB_KEY,TAB_REPAIR);
+         TourCooLogUtil.i(TAG,TAG+":"+ "currentTab="+currentTab);
         api = WXAPIFactory.createWXAPI(mContext, null);
         llContentView = findViewById(R.id.llContentView);
         faultImageRecyclerView = findViewById(R.id.faultImageRecyclerView);
@@ -723,6 +729,13 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
             req.prepayId = weiXinPay.getPaymentStr();
             api.registerApp(APP_ID);
             api.sendReq(req);
+            if(currentTab == TAB_REPAIR){
+                TourCooLogUtil.d("请求结果", "故障报修的tab");
+                OrderConstant.currentOrderTabTag = EXTRA_ORDER_TAG_REPAIR;
+            }else {
+                TourCooLogUtil.i("请求结果", "上门服务的tab");
+                OrderConstant.currentOrderTabTag = EXTRA_ORDER_TAG_SERVICE;
+            }
         }
     }
 

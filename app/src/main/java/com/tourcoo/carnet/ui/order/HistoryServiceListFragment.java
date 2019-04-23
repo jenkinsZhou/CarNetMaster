@@ -683,10 +683,11 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onBaseEvent(BaseEvent event) {
         if (event == null) {
-            TourCooLogUtil.w(TAG, "直接拦截(上门服务)");
+            TourCooLogUtil.e(TAG, "直接拦截(上门服务)");
             return;
         }
         if (EXTRA_ORDER_TAG_REPAIR.equals(OrderConstant.currentOrderTabTag)) {
+            TourCooLogUtil.w(TAG, "直接拦截(上门服务)");
             return;
         }
         switch (event.id) {
@@ -697,7 +698,6 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
             case EVENT_ACTION_PAY_FRESH_FAILED:
                 TourCooLogUtil.i(TAG, "接收到回调");
                 refreshStatus(TYPE_STATUS_ORDER_WAIT_PAY);
-
                 break;
             default:
                 break;
