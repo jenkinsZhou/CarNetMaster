@@ -133,9 +133,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
                 mImageList.add(RequestConfig.BASE + image);
             }
         }
-        for (String image : mImageList) {
-            TourCooLogUtil.d("图片url:" + image);
-        }
+
         initTagList(garageInfo);
         mGoodFieldAdapter.bindToRecyclerView(rvGoodsField);
         setBanner(mImageList);

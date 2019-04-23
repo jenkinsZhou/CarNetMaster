@@ -47,12 +47,11 @@ public class RepairDepotDescriptionAdapter extends BaseQuickAdapter<GarageInfo, 
         if (item.getTagNames() == null) {
             item.setTagNames("");
         }
-        if (!TextUtils.isEmpty(item.getImage())) {
-            GlideManager.loadImg(RequestConfig.BASE + item.getImage(), helper.getView(R.id.rivRepairDepot));
-        }
+        TourCooLogUtil.i(TAG, TAG + ":修理厂名称:" + item.getName() + "图片URL：" + item.getImage());
+        GlideManager.loadImg(RequestConfig.BASE + item.getImage(), helper.getView(R.id.rivRepairDepot), R.mipmap.img_placeholder);
         List<String> tagList = new ArrayList<>();
         String[] tagNames = item.getTagNames().split(",");
-        Collections.addAll(tagList,tagNames);
+        Collections.addAll(tagList, tagNames);
         if (tagList.isEmpty()) {
             helper.setVisible(R.id.tvGoodField1, false);
             helper.setVisible(R.id.tvGoodField2, false);
