@@ -249,8 +249,8 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
     @Override
     public void initView(Bundle savedInstanceState) {
         //在这里可以不传AppId传null就可以
-        currentTab = getIntent().getIntExtra(TAB_KEY,TAB_REPAIR);
-         TourCooLogUtil.i(TAG,TAG+":"+ "currentTab="+currentTab);
+        currentTab = getIntent().getIntExtra(TAB_KEY, TAB_REPAIR);
+        TourCooLogUtil.i(TAG, TAG + ":" + "currentTab=" + currentTab);
         api = WXAPIFactory.createWXAPI(mContext, null);
         llContentView = findViewById(R.id.llContentView);
         faultImageRecyclerView = findViewById(R.id.faultImageRecyclerView);
@@ -424,8 +424,9 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
                 break;
             case TYPE_STATUS_ORDER_WAIT_EVALUATE:
                 tvOrderStatus.setText("订单状态:待评价");
-                setVisibility(tvFirstFunction, false);
+                setVisibility(tvFirstFunction, true);
                 setVisibility(tvSecondFunction, true);
+                setHollowText(tvFirstFunction, "查看服务");
                 setSolidText(tvSecondFunction, "去评价");
                 setVisibility(llPayInfo, true);
                 break;
@@ -558,6 +559,10 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
                         findAmount(orderInfo);
                         break;
                     case TYPE_STATUS_ORDER_FINISH:
+                        //订单已完成 （查看服务）
+                        skipLookServiceActivity(mFaultRepairInfo.getId());
+                        break;
+                    case TYPE_STATUS_ORDER_WAIT_EVALUATE:
                         //订单已完成 （查看服务）
                         skipLookServiceActivity(mFaultRepairInfo.getId());
                         break;
@@ -729,10 +734,10 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
             req.prepayId = weiXinPay.getPaymentStr();
             api.registerApp(APP_ID);
             api.sendReq(req);
-            if(currentTab == TAB_REPAIR){
+            if (currentTab == TAB_REPAIR) {
                 TourCooLogUtil.d("请求结果", "故障报修的tab");
                 OrderConstant.currentOrderTabTag = EXTRA_ORDER_TAG_REPAIR;
-            }else {
+            } else {
                 TourCooLogUtil.i("请求结果", "上门服务的tab");
                 OrderConstant.currentOrderTabTag = EXTRA_ORDER_TAG_SERVICE;
             }
@@ -1135,7 +1140,7 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
     public void finish() {
         Intent intent = new Intent();
         //将订单状态回调给上一页面，上个页面根据状态刷新
-         TourCooLogUtil.i(TAG,TAG+":"+"回调出去的状态:"+currentOrderStatus);
+        TourCooLogUtil.i(TAG, TAG + ":" + "回调出去的状态:" + currentOrderStatus);
         intent.putExtra(EXTRA_ORDER_STATUS, currentOrderStatus);
         setResult(RESULT_OK, intent);
         super.finish();
@@ -1191,7 +1196,6 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onBaseEvent(BaseEvent event) {
         if (event == null) {
@@ -1204,7 +1208,7 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
         switch (event.id) {
             case EVENT_ACTION_PAY_FRESH_SUCCESS:
                 TourCooLogUtil.i(TAG, "接收到回调");
-             doRefreshRequest();
+                doRefreshRequest();
                 break;
             case EVENT_ACTION_PAY_FRESH_FAILED:
                 TourCooLogUtil.i(TAG, "接收到回调");
@@ -1214,7 +1218,6 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
                 break;
         }
     }
-
 
 
 }

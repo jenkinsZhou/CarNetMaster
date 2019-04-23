@@ -237,7 +237,6 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
     }
 
 
-
     /**
      * 设置item点击事件
      */
@@ -311,13 +310,13 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
                      * 待评价
                      */
                     case TYPE_STATUS_ORDER_WAIT_EVALUATE:
-//                        Bundle bundle = new Bundle();
-//                        bundle.putSerializable("FaultRepairInfo", faultRepairInfo);
-                        Intent intent = new Intent();
-                        intent.putExtra("FaultRepairInfo", faultRepairInfo);
-                        intent.setClass(mContext, FillEvaluationActivity.class);
-                        startActivityForResult(intent, CODE_REQUEST_FILL);
-//                        TourcooUtil.startActivity(mContext, FillEvaluationActivity.class, bundle);
+                        if (view.getId() == R.id.tvRightButton) {
+                            //填写评价
+                            skipFillComment(faultRepairInfo);
+                        } else if (view.getId() == R.id.tvLeftButton) {
+                            //查看服务
+                            skipLookServiceActivity(faultRepairInfo.getId());
+                        }
                         break;
                     case TYPE_STATUS_ORDER_CANCELED:
                         //服务已经取消
@@ -630,8 +629,6 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
     }
 
 
-
-
     /**
      * 确认取消服务
      */
@@ -690,5 +687,12 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
         }
     }
 
+
+    private void skipFillComment(FaultRepairEntity.FaultRepairInfo faultRepairInfo) {
+        Intent intent = new Intent();
+        intent.putExtra("FaultRepairInfo", faultRepairInfo);
+        intent.setClass(mContext, FillEvaluationActivity.class);
+        startActivityForResult(intent, CODE_REQUEST_FILL);
+    }
 
 }

@@ -324,10 +324,13 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
                      * 待评价
                      */
                     case TYPE_STATUS_ORDER_WAIT_EVALUATE:
-                        Intent intent1 = new Intent();
-                        intent1.putExtra("FaultRepairInfo", faultRepairInfo);
-                        intent1.setClass(mContext, FillEvaluationActivity.class);
-                        startActivityForResult(intent1, CODE_REQUEST_FILL);
+                        if (view.getId() == R.id.tvRightButton) {
+                            //填写评价
+                            skipFillComment(faultRepairInfo);
+                        } else if (view.getId() == R.id.tvLeftButton) {
+                            //查看服务
+                            skipLookServiceActivity(faultRepairInfo.getId());
+                        }
                         break;
                     case TYPE_STATUS_ORDER_CANCELED:
                         //服务已经取消
@@ -697,5 +700,10 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
         TourCooUtil.startActivity(mContext, LookServiceActivity.class, bundle);
     }
 
-
+    private void skipFillComment(FaultRepairEntity.FaultRepairInfo faultRepairInfo) {
+        Intent intent = new Intent();
+        intent.putExtra("FaultRepairInfo", faultRepairInfo);
+        intent.setClass(mContext, FillEvaluationActivity.class);
+        startActivityForResult(intent, CODE_REQUEST_FILL);
+    }
 }
