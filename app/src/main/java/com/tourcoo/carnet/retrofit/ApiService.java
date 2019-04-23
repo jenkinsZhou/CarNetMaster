@@ -102,7 +102,7 @@ public interface ApiService {
      * @return
      */
     @POST("order/reportFault")
-    Observable<BaseEntity> reportFault(@QueryMap Map<String, Object> map);
+    Observable<BaseEntity> reportFault(@Body Map<String, Object> map);
 
     /**
      * 获取我的订单列表
@@ -356,6 +356,7 @@ public interface ApiService {
 
     /**
      * 获取修理厂详情
+     *
      * @param map
      * @return
      */
@@ -418,5 +419,10 @@ public interface ApiService {
     @GET("order/check-order-service")
     Observable<BaseEntity<ServiceInfo>> findMyService(@QueryMap Map<String, Object> map);
 
-
+    /**
+     * 客服热线
+     * @return
+     */
+    @GET("custom-service/phone")
+    Observable<String> getServicePhone();
 }

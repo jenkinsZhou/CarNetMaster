@@ -46,7 +46,6 @@
         android:background="@color/white"
         app:sLeftTextColor="#333333"
         app:sLeftViewMarginLeft="@dimen/dp_25"
-        app:sRightTextString="4008866666"
         >
 
     </com.allen.library.SuperTextView>

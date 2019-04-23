@@ -54,7 +54,7 @@ public class BaseSettingActivity extends BaseTourCooTitleActivity implements Vie
         switch (v.getId()) {
             case R.id.btnExitLogin:
                 AccountInfoHelper.getInstance().deleteUserAccount();
-                SharedPreferencesUtil.clearAll(mContext);
+//                SharedPreferencesUtil.clearAll(mContext);
                 Activity activity = StackUtil.getInstance().getActivity(MainTabActivity.class);
                 if (activity != null) {
                     TourCooLogUtil.i("执行了:");

@@ -14,7 +14,7 @@
         <RelativeLayout
             android:id="@+id/rlCallPhone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_36"
+            android:layout_height="@dimen/dp_48"
             android:layout_alignParentBottom="true"
             android:background="@color/colorPrimary">
 

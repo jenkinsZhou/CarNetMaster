@@ -30,6 +30,21 @@ public class AccountInfoHelper {
     private CarInfoEntity currentCar;
     private static final String TAG = "AccountInfoHelper";
     private String openId = "";
+
+    public static final String PREF_TEL_PHONE_KEY = "PREF_TEL_PHONE_KEY";
+
+    public String getServicePhone() {
+        return servicePhone;
+    }
+
+    public void setServicePhone(String servicePhone) {
+        this.servicePhone = servicePhone;
+    }
+
+    /**
+     * 客服热线
+     */
+    private String servicePhone = "";
     /**
      * 车辆信息列表
      */
@@ -191,10 +206,10 @@ public class AccountInfoHelper {
     }
 
     public String getOpenId() {
-        if(TextUtils.isEmpty(openId)){
+        if (TextUtils.isEmpty(openId)) {
             openId = "";
         }
-          TourCooLogUtil.i(TAG, "openId=" +openId);
+        TourCooLogUtil.i(TAG, "openId=" + openId);
         return openId;
     }
 }

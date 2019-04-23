@@ -21,14 +21,14 @@ public class RequestConfig {
      */
 //    public static final String BASE_URL = "http://192.168.1.71:8090/api/";
 
-    public static final String BASE_URL = "https://tourcoo.xiaomiqiu.com/api/";
+//    public static final String BASE_URL = "https://tourcoo.xiaomiqiu.com/api/";
 
 
     /**
      * 外网服务器
      * http://119.3.20.53:8090/iov/api/
      */
-//    public static final String BASE_URL = "http://119.3.20.53:8090/iov/api/";
+    public static final String BASE_URL = "http://119.3.20.53:8090/iov/api/";
 
     /**
      * 图片相关url的前缀

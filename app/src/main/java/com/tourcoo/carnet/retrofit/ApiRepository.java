@@ -603,4 +603,12 @@ public class ApiRepository extends BaseRepository {
         return TourCoolTransformer.switchSchedulersIo(getApiService().findMyService(params).retryWhen(new RetryWhen()));
     }
 
+
+    /**
+     * 客服热线
+     * @return
+     */
+    public Observable<String> getServicePhone() {
+        return TourCoolTransformer.switchSchedulersIo(getApiService().getServicePhone().retryWhen(new RetryWhen()));
+    }
 }
