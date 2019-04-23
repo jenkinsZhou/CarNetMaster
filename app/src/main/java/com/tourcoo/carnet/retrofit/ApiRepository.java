@@ -187,7 +187,7 @@ public class ApiRepository extends BaseRepository {
         }
         if (!TextUtils.isEmpty(address)) {
             params.put("address", address);
-             TourCooLogUtil.i(TAG,TAG+":"+"打印的结果:"+address );
+            TourCooLogUtil.i(TAG, TAG + ":" + "打印的结果:" + address);
         }
         return TourCoolTransformer.switchSchedulersIo(getApiService().reportFault(params).retryWhen(new RetryWhen()));
     }
@@ -252,7 +252,7 @@ public class ApiRepository extends BaseRepository {
         params.put("orderId", faultRepairInfo.getId());
         if (!TextUtils.isEmpty(images)) {
             params.put("images", images);
-             TourCooLogUtil.i(TAG,TAG+":"+ "上传图片:"+images);
+            TourCooLogUtil.i(TAG, TAG + ":" + "上传图片:" + images);
         }
         return TourCoolTransformer.switchSchedulersIo(getApiService().commentOrder(params).retryWhen(new RetryWhen()));
     }
@@ -520,6 +520,12 @@ public class ApiRepository extends BaseRepository {
         Map<String, Object> params = new HashMap<>(1);
         params.put("id", id);
         return TourCoolTransformer.switchSchedulersIo(getApiService().findDetail(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseEntity> findGarageDetail(String id) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("id", id);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().findGarageDetail(params).retryWhen(new RetryWhen()));
     }
 
 

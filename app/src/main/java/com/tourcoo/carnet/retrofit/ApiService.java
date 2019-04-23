@@ -353,6 +353,16 @@ public interface ApiService {
     @POST("order/findDetail")
     Observable<BaseEntity<OrderDetail>> findDetail(@QueryMap Map<String, Object> map);
 
+
+    /**
+     * 获取修理厂详情
+     * @param map
+     * @return
+     */
+    @POST("garage/findDetail")
+    Observable<BaseEntity> findGarageDetail(@QueryMap Map<String, Object> map);
+
+
     /**
      * 获取评论详情
      *
@@ -400,7 +410,8 @@ public interface ApiService {
     Observable<BaseEntity<InsuranceCompany.CompanyInfo>> queryInsuranceDetailById(@QueryMap Map<String, Object> map);
 
     /**
-     *查看修理厂服务内容
+     * 查看修理厂服务内容
+     *
      * @param map
      * @return
      */

@@ -32,6 +32,7 @@ import com.tourcoo.carnet.core.common.RequestConfig;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.base.activity.WebViewActivity;
 import com.tourcoo.carnet.core.frame.manager.GlideManager;
+import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.frame.util.NetworkUtil;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
@@ -43,6 +44,7 @@ import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.garage.CommentEntity;
 import com.tourcoo.carnet.entity.garage.CommentInfo;
 import com.tourcoo.carnet.entity.garage.GarageInfo;
+import com.tourcoo.carnet.entity.order.OrderDetail;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
@@ -127,11 +129,13 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         banner.setAutoPlayAble(false);
         garageInfo = (GarageInfo) getIntent().getExtras().getSerializable(EXTRA_GARAGE_DETAIL);
         showDetail();
+
         if (garageInfo != null && !TextUtils.isEmpty(garageInfo.getImages())) {
             String[] images = garageInfo.getImages().split(",");
             for (String image : images) {
                 mImageList.add(RequestConfig.BASE + image);
             }
+            getDetail(garageInfo.getId());
         }
 
         initTagList(garageInfo);
@@ -474,5 +478,29 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         startActivity(intent);
     }
 
+
+
+    private void getDetail(String id) {
+        ApiRepository.getInstance().findGarageDetail(id).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+                subscribe(new BaseLoadingObserver<BaseEntity>() {
+                    @Override
+                    public void onRequestNext(BaseEntity entity) {
+                        mStatusLayoutManager.showSuccessLayout();
+                        if (entity != null) {
+                            if (entity.code == CODE_REQUEST_SUCCESS) {
+
+                            } else {
+//                                ToastUtil.showFailed(entity.message);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onRequestError(Throwable e) {
+                        super.onRequestError(e);
+                        mStatusLayoutManager.showErrorLayout();
+                    }
+                });
+    }
 
 }
