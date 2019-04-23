@@ -236,17 +236,7 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
         }
     }
 
-    /**
-     * 刷新订单类型
-     *
-     * @param orderType
-     */
-    private void refreshOrderType(int orderType) {
-        for (FaultRepairEntity.FaultRepairInfo repairInfo : repairOrderAdapter.getData()) {
-            repairInfo.setOrderType(orderType);
-        }
-        repairOrderAdapter.notifyDataSetChanged();
-    }
+
 
     /**
      * 设置item点击事件
@@ -295,7 +285,7 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
                      * 服务中
                      */
                     case TYPE_STATUS_ORDER_IN_SERVICE:
-                        ToastUtil.show("服务中");
+                        //do nothing
                         break;
                     /**
                      * 完成
@@ -639,11 +629,7 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
         }
     }
 
-  /*  @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onOrderTypeEvent(OrderEvent orderEvent) {
-        orderType = orderEvent.type;
-//        refreshRequest();
-    }*/
+
 
 
     /**

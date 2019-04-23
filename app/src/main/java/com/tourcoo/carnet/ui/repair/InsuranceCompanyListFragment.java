@@ -143,6 +143,7 @@ public class InsuranceCompanyListFragment extends BaseRefreshFragment<InsuranceC
                     public void onRequestError(Throwable e) {
                         super.onRequestError(e);
                         closeLoadingDialog();
+                        mStatusManager.showErrorLayout();
                         mRefreshLayout.finishRefresh(false);
                         mRefreshLayout.finishLoadMore(false);
                     }
@@ -185,6 +186,7 @@ public class InsuranceCompanyListFragment extends BaseRefreshFragment<InsuranceC
      */
     private void getLocate() {
         if (checkLocatePermission()) {
+            mStatusManager.showLoadingLayout();
             locate();
         } else {
             showPermissionDialog("请前往权限管理授予定位权限");

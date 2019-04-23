@@ -8,10 +8,14 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.common.RequestConfig;
 import com.tourcoo.carnet.core.frame.manager.GlideManager;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.widget.ratingstar.RatingStarView;
 import com.tourcoo.carnet.entity.garage.GarageInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -23,6 +27,8 @@ import java.util.List;
  * @Email: 971613168@qq.com
  */
 public class RepairDepotDescriptionAdapter extends BaseQuickAdapter<GarageInfo, BaseViewHolder> {
+    private static final String TAG = "RepairDepotDescriptionAdapter";
+
     public RepairDepotDescriptionAdapter() {
         super(R.layout.item_repir_depot);
     }
@@ -38,41 +44,63 @@ public class RepairDepotDescriptionAdapter extends BaseQuickAdapter<GarageInfo, 
             ratingStarView.setEnabled(false);
             ratingStarView.setRating(item.getLevel());
         }
-        if( item.getTagNames() == null){
+        if (item.getTagNames() == null) {
             item.setTagNames("");
         }
-        String[] tagNames = item.getTagNames().split(",");
-        List<String> tagList = Arrays.asList(tagNames);
         if (!TextUtils.isEmpty(item.getImage())) {
             GlideManager.loadImg(RequestConfig.BASE + item.getImage(), helper.getView(R.id.rivRepairDepot));
         }
-        if (tagList != null && !tagList.isEmpty()) {
-            switch (tagList.size()) {
-                case 1:
-                    if (!TextUtils.isEmpty(tagList.get(0))) {
-                        helper.setVisible(R.id.tvGoodField1, true);
-                        helper.setVisible(R.id.tvGoodField2, false);
-                        helper.setVisible(R.id.tvGoodField3, false);
-                        setLabel(helper, R.id.tvGoodField1, tagList.get(0));
-                    }
-
-                    break;
-                case 2:
-                    setLabel(helper, R.id.tvGoodField1, tagList.get(0));
-                    setLabel(helper, R.id.tvGoodField2, tagList.get(1));
-                    helper.setVisible(R.id.tvGoodField1, true);
-                    helper.setVisible(R.id.tvGoodField2, true);
-                    helper.setVisible(R.id.tvGoodField3, false);
-                    break;
-                default:
-                    setLabel(helper, R.id.tvGoodField1, tagList.get(0));
-                    setLabel(helper, R.id.tvGoodField2, tagList.get(1));
-                    setLabel(helper, R.id.tvGoodField3, tagList.get(2));
-                    helper.setVisible(R.id.tvGoodField1, true);
-                    helper.setVisible(R.id.tvGoodField2, true);
-                    helper.setVisible(R.id.tvGoodField3, true);
-                    break;
+        List<String> tagList = new ArrayList<>();
+        String[] tagNames = item.getTagNames().split(",");
+        Collections.addAll(tagList,tagNames);
+        if (tagList.isEmpty()) {
+            helper.setVisible(R.id.tvGoodField1, false);
+            helper.setVisible(R.id.tvGoodField2, false);
+            helper.setVisible(R.id.tvGoodField3, false);
+            return;
+        }
+        for (int i = tagList.size() - 1; i >= 0; i--) {
+            if (TextUtils.isEmpty(tagList.get(i))) {
+                tagList.remove(i);
             }
+        }
+        if (tagList.isEmpty()) {
+            helper.setVisible(R.id.tvGoodField1, false);
+            helper.setVisible(R.id.tvGoodField2, false);
+            helper.setVisible(R.id.tvGoodField3, false);
+            return;
+        }
+        TourCooLogUtil.i(TAG, tagList);
+        switch (tagList.size()) {
+            case 1:
+                if (!TextUtils.isEmpty(tagList.get(0))) {
+                    helper.setVisible(R.id.tvGoodField1, true);
+                    helper.setVisible(R.id.tvGoodField2, false);
+                    helper.setVisible(R.id.tvGoodField3, false);
+                    setLabel(helper, R.id.tvGoodField1, tagList.get(0));
+                }
+
+                break;
+            case 2:
+                setLabel(helper, R.id.tvGoodField1, tagList.get(0));
+                setLabel(helper, R.id.tvGoodField2, tagList.get(1));
+                helper.setVisible(R.id.tvGoodField1, true);
+                helper.setVisible(R.id.tvGoodField2, true);
+                helper.setVisible(R.id.tvGoodField3, false);
+                break;
+            case 0:
+                helper.setVisible(R.id.tvGoodField1, false);
+                helper.setVisible(R.id.tvGoodField2, false);
+                helper.setVisible(R.id.tvGoodField3, false);
+                break;
+            default:
+                setLabel(helper, R.id.tvGoodField1, tagList.get(0));
+                setLabel(helper, R.id.tvGoodField2, tagList.get(1));
+                setLabel(helper, R.id.tvGoodField3, tagList.get(2));
+                helper.setVisible(R.id.tvGoodField1, true);
+                helper.setVisible(R.id.tvGoodField2, true);
+                helper.setVisible(R.id.tvGoodField3, true);
+                break;
         }
     }
 

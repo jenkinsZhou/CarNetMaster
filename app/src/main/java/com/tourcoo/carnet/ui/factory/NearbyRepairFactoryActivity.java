@@ -345,7 +345,7 @@ public class NearbyRepairFactoryActivity extends BaseTourCooTitleActivity implem
     private void findNearbyGarages(String pageIndex, String pageSize) {
         mStatusLayoutManager.showLoadingLayout();
         TourCooLogUtil.i(TAG, "当前请求的页码:" + pageIndex + "默认每页的数目:" + pageSize);
-        ApiRepository.getInstance().findNearbyGarages(orderId, currentPosition, "50", pageIndex, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
+        ApiRepository.getInstance().findNearbyGarages(orderId, currentPosition, "100", pageIndex, pageSize).compose(bindUntilEvent(ActivityEvent.DESTROY)).
                 subscribe(new BaseObserver<BaseEntity>() {
                     @Override
                     public void onRequestNext(BaseEntity entity) {

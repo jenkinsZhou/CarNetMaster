@@ -1,10 +1,13 @@
 package com.tourcoo.carnet.ui.repair;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
@@ -44,6 +47,7 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
     private EditText etSearch;
 
     private int currentSelectPosition;
+    private ImageView ivClear;
 
 
     private String[] titles = new String[]{"修理厂", "保险公司"};
@@ -58,8 +62,10 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
         searchViewpager = findViewById(R.id.searchViewpager);
         searchTabLayout = findViewById(R.id.searchTabLayout);
         etSearch = findViewById(R.id.etSearch);
-        findViewById(R.id.ivClear).setOnClickListener(this);
+        ivClear = findViewById(R.id.ivClear);
+        ivClear.setOnClickListener(this);
         findViewById(R.id.ivSearch).setOnClickListener(this);
+        initInputListener();
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -219,4 +225,27 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
         return "";
     }
 
+
+    private void initInputListener(){
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                    if(s.length() == 0){
+                    ivClear.setVisibility(View.INVISIBLE);
+                    }else {
+                        ivClear.setVisibility(View.VISIBLE);
+                    }
+            }
+        });
+    }
 }

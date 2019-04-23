@@ -87,8 +87,9 @@ public class RepairOrderAdapter extends BaseQuickAdapter<FaultRepairEntity.Fault
 
                 break;
             case TYPE_STATUS_ORDER_WAIT_EVALUATE:
+                setVisibility(tvLeftButton, true);
                 helper.setText(R.id.tvRepairStatus, "待评价");
-                setVisibility(tvLeftButton, false);
+                setHollowText(tvLeftButton, "查看服务");
                 setSolidText(tvRightButton, "填写评价");
                 break;
             case TYPE_STATUS_ORDER_FINISH:

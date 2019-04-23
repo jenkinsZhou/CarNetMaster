@@ -66,7 +66,6 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
         fastSearchActivity = (FastSearchActivity) mContext;
         initItemClick();
         EventBus.getDefault().register(mContext);
-        mRefreshLoadDelegate.mStatusManager.showSuccessLayout();
         getLocateAndRequest();
     }
 
@@ -148,6 +147,12 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
                                 ToastUtil.showFailed(entity.message);
                             }
                         }
+                    }
+
+                    @Override
+                    public void onRequestError(Throwable e) {
+                        super.onRequestError(e);
+                        mStatusManager.showErrorLayout();
                     }
                 });
     }
