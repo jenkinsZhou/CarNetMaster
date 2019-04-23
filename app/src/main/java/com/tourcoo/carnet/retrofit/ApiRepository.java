@@ -252,6 +252,7 @@ public class ApiRepository extends BaseRepository {
         params.put("orderId", faultRepairInfo.getId());
         if (!TextUtils.isEmpty(images)) {
             params.put("images", images);
+             TourCooLogUtil.i(TAG,TAG+":"+ "上传图片:"+images);
         }
         return TourCoolTransformer.switchSchedulersIo(getApiService().commentOrder(params).retryWhen(new RetryWhen()));
     }

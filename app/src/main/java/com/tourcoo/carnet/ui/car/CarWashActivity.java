@@ -1,5 +1,6 @@
 package com.tourcoo.carnet.ui.car;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -26,7 +27,6 @@ import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
-import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -39,8 +39,13 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_SERVICE;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_CURING;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_WASH;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.ui.order.OrderHistoryActivity.EXTRA_SKIP_TAG;
 
 /**
  * @author :zhoujian
@@ -91,8 +96,7 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TourCooUtil.startActivity(mContext, OrderHistoryActivity.class);
-                EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_WASH));
+                skipToOrderHistory();
             }
         });
     }
@@ -351,5 +355,21 @@ public class CarWashActivity extends BaseTourCooTitleActivity implements View.On
         currentPosition = "";
         addLocateImage("未获取位置信息,请点击图标获取");
         etRepairContent.setText("");
+    }
+
+
+    /**
+     * 从上门洗车跳转至订单历史
+     */
+    private void skipToOrderHistory() {
+        Intent intent = new Intent();
+        //将订单类型置为上门保养
+        intent.putExtra(EXTRA_ORDER_TYPE, TYPE_CAR_WASH);
+        //当前要显示上门服务的tab
+        intent.putExtra(TAB_KEY, TAB_SERVICE);
+        //上门服务跳转的标记
+        intent.putExtra(EXTRA_SKIP_TAG, TYPE_CAR_WASH);
+        intent.setClass(mContext, OrderHistoryActivity.class);
+        startActivity(intent);
     }
 }

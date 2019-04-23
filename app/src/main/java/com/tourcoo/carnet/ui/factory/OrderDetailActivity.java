@@ -32,6 +32,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.GridImageAdapter;
+import com.tourcoo.carnet.core.common.OrderConstant;
 import com.tourcoo.carnet.core.common.RequestConfig;
 import com.tourcoo.carnet.core.frame.interfaces.IMultiStatusView;
 import com.tourcoo.carnet.core.frame.manager.GlideManager;
@@ -52,6 +53,7 @@ import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.WeiXinPay;
 import com.tourcoo.carnet.entity.car.PayInfo;
+import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.order.OrderDetail;
 import com.tourcoo.carnet.retrofit.ApiRepository;
@@ -61,6 +63,10 @@ import com.tourcoo.carnet.ui.repair.FillEvaluationActivity;
 import com.tourcoo.carnet.ui.repair.LookServiceActivity;
 import com.tourcoo.carnet.utils.Location;
 import com.trello.rxlifecycle3.android.ActivityEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
@@ -78,6 +84,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.PAY_TYPE_ALI_PAY;
 import static com.tourcoo.carnet.core.common.OrderConstant.PAY_TYPE_WEI_XIN_PAY;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
@@ -85,6 +92,8 @@ import static com.tourcoo.carnet.core.common.WxConfig.APP_ID;
 import static com.tourcoo.carnet.core.util.TourCooUtil.checkMapAppsIsExist;
 import static com.tourcoo.carnet.core.widget.confirm.PayDialog.PAY_TYPE_ALI;
 import static com.tourcoo.carnet.core.widget.confirm.PayDialog.PAY_TYPE_WE_XIN;
+import static com.tourcoo.carnet.entity.event.EventConstant.EVENT_ACTION_PAY_FRESH_FAILED;
+import static com.tourcoo.carnet.entity.event.EventConstant.EVENT_ACTION_PAY_FRESH_SUCCESS;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CANCELED;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_CLOSE;
 import static com.tourcoo.carnet.entity.order.FaultRepairEntity.TYPE_STATUS_ORDER_FINISH;
@@ -105,6 +114,8 @@ import static com.tourcoo.carnet.ui.repair.HistoryFaultRepairListFragment.CODE_R
  */
 public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks, IMultiStatusView {
     public static final String EXTRA_IS_CLICK = "EXTRA_IS_CLICK";
+    public static final String EXTRA_ORDER_STATUS = "EXTRA_ORDER_STATUS";
+    private int currentOrderStatus;
     /**
      * 记录用户是否操做过
      */
@@ -225,6 +236,7 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
     private LinearLayout llContentView;
     private TextView repairFactory;
 
+
     @Override
     public int getContentLayout() {
         return R.layout.activity_door_to_door_service_detail;
@@ -255,6 +267,7 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
         gridImageAdapter = new GridImageAdapter(imageUrList);
         GridLayoutManager manager = new GridLayoutManager(mContext, 4, RecyclerView.VERTICAL, false);
         tvFaultContent = findViewById(R.id.tvFaultContent);
+        EventBus.getDefault().register(this);
         faultImageRecyclerView.setLayoutManager(manager);
         faultImageRecyclerView.setNestedScrollingEnabled(false);
         //由于尺寸固定所以设置为true,提高性能
@@ -366,6 +379,8 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
         if (info.getStatus() == TYPE_STATUS_ORDER_FINISH || info.getStatus() == TYPE_STATUS_ORDER_CANCELED || info.getStatus() == TYPE_STATUS_ORDER_WAIT_ORDER) {
             hideFactory();
         }
+        //将请求到的订单状态赋值
+        currentOrderStatus = info.getStatus();
         initClickFunctionByStatus(info);
         showPayInfo(info);
     }
@@ -413,7 +428,7 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
                 setVisibility(tvFirstFunction, true);
                 setSolidText(tvFirstFunction, "查看服务");
                 setVisibility(tvSecondFunction, false);
-                setVisibility(llPayInfo, true);
+                setVisibility(llPayInfo, false);
                 break;
             case TYPE_STATUS_ORDER_CANCELED:
                 tvOrderStatus.setText("订单状态:已取消");
@@ -455,7 +470,6 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
                                 if (entity.data != null && entity.data.getOrder() != null) {
                                     showDetailAndLoadFunction(entity.data.getOrder());
                                     //加载位置信息
-
                                     setEndPosition(entity.data.getOrder());
                                 }
                             } else {
@@ -947,8 +961,7 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
                 .setCancelTextColorResource(R.color.colorActionSheetItemText)
                 .setOnItemClickListener(mOnItemClickListener)
                 .create()
-                .setDimAmount(0.6f)
-                .setAlpha(0.6f)
+//                .setDimAmount(0.6f)
                 .show();
     }
 
@@ -1044,8 +1057,9 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        EventBus.getDefault().unregister(this);
         LocateHelper.getInstance().destroyLocationInstance();
+        super.onDestroy();
     }
 
 
@@ -1107,7 +1121,9 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
     @Override
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_IS_CLICK, isClick);
+        //将订单状态回调给上一页面，上个页面根据状态刷新
+         TourCooLogUtil.i(TAG,TAG+":"+"回调出去的状态:"+currentOrderStatus);
+        intent.putExtra(EXTRA_ORDER_STATUS, currentOrderStatus);
         setResult(RESULT_OK, intent);
         super.finish();
     }
@@ -1147,9 +1163,10 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
             //线下支付 隐藏支付平台和支付金额
             default:
                 setVisibility(llPayForm, false);
-                setVisibility(llPayAmount, true);
                 setVisibility(llPayType, true);
+                setVisibility(llPayAmount, true);
                 tvPayType.setText("线下支付");
+                tvPayAmount.setText("￥ " + orderInfo.getAmount());
                 break;
         }
     }
@@ -1159,4 +1176,32 @@ public class OrderDetailActivity extends BaseTourCooTitleMultiViewActivity imple
         repairFactory.setVisibility(View.GONE);
         tvRepairFactory.setVisibility(View.GONE);
     }
+
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onBaseEvent(BaseEvent event) {
+        if (event == null) {
+            TourCooLogUtil.w(TAG, "直接拦截（故障报修）");
+            return;
+        }
+        if (EXTRA_ORDER_TAG_SERVICE.equals(OrderConstant.currentOrderTabTag)) {
+            return;
+        }
+        switch (event.id) {
+            case EVENT_ACTION_PAY_FRESH_SUCCESS:
+                TourCooLogUtil.i(TAG, "接收到回调");
+             doRefreshRequest();
+                break;
+            case EVENT_ACTION_PAY_FRESH_FAILED:
+                TourCooLogUtil.i(TAG, "接收到回调");
+                doRefreshRequest();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+
 }

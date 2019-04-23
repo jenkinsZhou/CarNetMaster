@@ -31,6 +31,13 @@ import androidx.viewpager.widget.ViewPager;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
 import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_SERVICE;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_CURING;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_WASH;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_FAULT_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
 
 /**
@@ -46,8 +53,27 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
     private TextView tvTabRepair;
     private TextView tvTabService;
     private MyHandler mMyHandler = new MyHandler();
-    private String type;
+    /**
+     * 订单类型
+     */
+    public String orderType;
+
+    /**
+     * 当前需要显示的tab
+     */
+    public int currentTab = TAB_REPAIR;
+
+    /**
+     *
+     */
     private int serviceTag;
+
+    /**
+     * 跳转来的tag（默认显示故障报修）
+     */
+    private int skipTag = TYPE_FAULT_REPAIR;
+
+    public static final String EXTRA_SKIP_TAG = "EXTRA_SKIP_TAG";
 
     @Override
     public int getContentLayout() {
@@ -62,10 +88,16 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         tvTabRepair.setOnClickListener(this);
         tvTabService.setOnClickListener(this);
         EventBus.getDefault().register(this);
-        type = getIntent().getStringExtra(EXTRA_ORDER_TYPE);
+        //传递来的订单类型
+        orderType = getIntent().getStringExtra(EXTRA_ORDER_TYPE);
         serviceTag = getIntent().getIntExtra(EXTRA_ORDER_TAG_SERVICE, -1);
-        TourCooLogUtil.i(TAG, "测试类型:" + type);
-        TourCooLogUtil.i(TAG, "测试类型serviceTag:" + serviceTag);
+        //需要显示的tab页
+        currentTab = getIntent().getIntExtra(TAB_KEY, TAB_REPAIR);
+        skipTag = getIntent().getIntExtra(EXTRA_SKIP_TAG, TYPE_FAULT_REPAIR);
+        TourCooLogUtil.i(TAG, "测试类型:orderType=" + orderType);
+        TourCooLogUtil.i(TAG, "测试类型:currentTab=" + currentTab);
+        TourCooLogUtil.i(TAG, "测试类型:serviceTag=" + serviceTag);
+        TourCooLogUtil.i(TAG, "测试类型:skipTag=" + skipTag);
     }
 
     @Override
@@ -86,24 +118,71 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
         orderHistoryViewPager.addOnPageChangeListener(this);
         orderHistoryViewPager.setAdapter(pagerAdapter);
         //必须在 viewPager.setAdapter()之后使用
-        if (TYPE_REPAIR.equals(type)) {
+     /*   if (TYPE_REPAIR.equals(orderType)) {
             showHistoryFault();
             TourCooLogUtil.i(TAG, "接收到");
         } else {
             showHistoryService();
             TourCooLogUtil.e(TAG, "接收到");
+        }*/
+        TourCooLogUtil.e(TAG, "接收到的tab=" + currentTab);
+        switch (currentTab) {
+            //显示故障报修
+            case TAB_REPAIR:
+                showHistoryFault();
+                break;
+            case TAB_SERVICE:
+                showHistoryService();
+                break;
+            default:
+                TourCooLogUtil.e(TAG, "显示默认值:" + currentTab);
+                showHistoryFault();
+                break;
         }
+    }
 
+    /**
+     * 用户要显示故障报修页面 所以当前状态设为故障报修
+     */
+    private void showTab0() {
+        orderType = TYPE_REPAIR;
+        showHistoryFault();
+    }
+
+
+    private void showTab1() {
+        //用户要显示上门服务页面 所以当前状态设为上门服务
+        if (isAllService()) {
+            //如果要显示全部则服务类型置为“全部”(3,4,5)
+            orderType = TYPE_CAR_REPAIR + "," + TYPE_CAR_WASH + "," + TYPE_CAR_CURING;
+        } else {
+            switch (skipTag) {
+                case TYPE_CAR_REPAIR:
+                    orderType = TYPE_CAR_REPAIR + "";
+                    break;
+                case TYPE_CAR_CURING:
+                    orderType = TYPE_CAR_CURING + "";
+                    break;
+                case TYPE_CAR_WASH:
+                    orderType = TYPE_CAR_WASH + "";
+                    break;
+                default:
+                    orderType = TYPE_CAR_REPAIR + "," + TYPE_CAR_WASH + "," + TYPE_CAR_CURING;
+                    break;
+            }
+        }
+        TourCooLogUtil.i(TAG, "value:" + "订单类型:" + orderType);
+        showHistoryService();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvTabRepair:
-                showHistoryFault();
+                showTab0();
                 break;
             case R.id.tvTabService:
-                showHistoryService();
+                showTab1();
                 break;
             default:
                 break;
@@ -119,6 +198,11 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
     @Override
     public void onPageSelected(int position) {
         setCurrentTab(position);
+        if(position == 0){
+            showTab0();
+        }else {
+            showTab1();
+        }
     }
 
     @Override
@@ -180,7 +264,7 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onBaseEvent(BaseEvent event) {
-        EventBus.getDefault().postSticky(new OrderEvent(event.id));
+       /* EventBus.getDefault().postSticky(new OrderEvent(event.id));
         mMyHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -192,7 +276,7 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
                     TourCooLogUtil.e(TAG, "接收到");
                 }
             }
-        }, 100);
+        }, 100);*/
     }
 
     private void showHistoryService() {
@@ -218,6 +302,8 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
     public boolean isAllService() {
         return serviceTag == ORDER_TAG_SERVICE_ALL;
     }
+
+
 
 
 }

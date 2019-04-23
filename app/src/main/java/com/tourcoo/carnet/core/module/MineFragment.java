@@ -43,9 +43,13 @@ import static com.tourcoo.carnet.core.common.EventConstant.EVENT_REQUEST_MSG_COU
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
 import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_FAULT_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.BASE;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.ui.order.OrderHistoryActivity.EXTRA_SKIP_TAG;
 
 /**
  * @author :zhoujian
@@ -121,11 +125,12 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
                 TourCooUtil.startActivity(mContext, BaseSettingActivity.class);
                 break;
             case R.id.stvHistoryOder:
-                Intent intentRepair = new Intent();
+            /*    Intent intentRepair = new Intent();
                 intentRepair.putExtra(EXTRA_ORDER_TYPE,TYPE_REPAIR);
                 intentRepair.putExtra(EXTRA_ORDER_TAG_SERVICE,ORDER_TAG_SERVICE_ALL);
                 intentRepair.setClass(mContext, OrderHistoryActivity.class);
-                startActivity(intentRepair);
+                startActivity(intentRepair);*/
+                skipToOrderHistory();
                 break;
             case R.id.stvHelpFeedBack:
                 TourCooUtil.startActivity(mContext, HelpFeedBackActivity.class);
@@ -286,5 +291,22 @@ public class MineFragment extends BaseTitleFragment implements View.OnClickListe
         userInfo.setUserId(userId);
         TourCooLogUtil.i("更新syc", userInfo);
         AccountInfoHelper.getInstance().updateAndSaveUserInfo(userInfo);
+    }
+
+
+    /**
+     * 从故障报修跳转至订单历史
+     */
+    private void skipToOrderHistory(){
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_ORDER_TYPE, TYPE_REPAIR);
+        //显示上门服务中的全部订单
+        intent.putExtra(EXTRA_ORDER_TAG_SERVICE, ORDER_TAG_SERVICE_ALL);
+        //当前要显示故障报修的tab
+        intent.putExtra(TAB_KEY, TAB_REPAIR);
+        //故障报修跳转的标记
+        intent.putExtra(EXTRA_SKIP_TAG, TYPE_FAULT_REPAIR);
+        intent.setClass(mContext, OrderHistoryActivity.class);
+        startActivity(intent);
     }
 }

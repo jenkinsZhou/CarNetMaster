@@ -65,7 +65,7 @@ public class SplashActivity extends BaseTitleActivity {
         ivBg = findViewById(R.id.sp_bg);
         Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_back);
         TourCooUtil.getTintDrawable(drawable, Color.WHITE);
-        RxJavaManager.getInstance().setTimer(500)
+        RxJavaManager.getInstance().setTimer(1000)
                 .compose(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new BaseObserver<Long>() {
 

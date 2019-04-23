@@ -17,6 +17,7 @@ import com.tourcoo.carnet.entity.event.BaseEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_SERVICE;
 import static com.tourcoo.carnet.core.common.WxConfig.APP_ID;
 import static com.tourcoo.carnet.entity.event.EventConstant.EVENT_ACTION_PAY_FRESH_FAILED;
 import static com.tourcoo.carnet.entity.event.EventConstant.EVENT_ACTION_PAY_FRESH_SUCCESS;
@@ -75,14 +76,15 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                     EventBus.getDefault().post(new BaseEvent(EVENT_ACTION_PAY_FRESH_SUCCESS));
                     break;
                 case -1:
-                    Toast.makeText(this, "支付失败，请重新尝试支付", Toast.LENGTH_SHORT).show();
-                    EventBus.getDefault().post(new BaseEvent(EVENT_ACTION_PAY_FRESH_FAILED));
+                    ToastUtil.showFailed("支付失败，请重新尝试支付");
+                    EventBus.getDefault().post(new BaseEvent(EVENT_ACTION_PAY_FRESH_FAILED,TYPE_SERVICE));
                     break;
                 case -2:
-                    Toast.makeText(this, "您已经取消支付，请重新尝试支付", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show("您已经取消支付，请重新尝试支付");
                     EventBus.getDefault().post(new BaseEvent(EVENT_ACTION_PAY_FRESH_FAILED));
                     break;
                 default:
+                    EventBus.getDefault().post(new BaseEvent(EVENT_ACTION_PAY_FRESH_FAILED));
                     break;
             }
 

@@ -90,13 +90,13 @@ public class FastSearchActivity extends BaseTourCooTitleActivity implements View
         super.setTitleBar(titleBar);
         titleBar.setTitleMainText("快速检索");
         titleBar.setRightTextColor(TourCooUtil.getColor(R.color.blueCommon));
-        titleBar.setRightText("附近修理厂");
+      /*  titleBar.setRightText("附近修理厂");
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
             }
-        });
+        });*/
     }
 
     @Override

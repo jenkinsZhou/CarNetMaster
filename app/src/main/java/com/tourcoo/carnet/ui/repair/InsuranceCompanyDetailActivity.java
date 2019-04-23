@@ -240,7 +240,7 @@ public class InsuranceCompanyDetailActivity extends BaseTourCooTitleMultiViewAct
                 .setCancelTextColorResource(R.color.colorActionSheetItemText)
                 .setOnItemClickListener(mOnItemClickListener)
                 .create()
-                .setDimAmount(0.6f)
+//                .setDimAmount(0.6f)
 //                .setAlpha(0.6f)
                 .show();
     }

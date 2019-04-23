@@ -549,7 +549,7 @@ public class PersonalDataActivity extends BaseTourCooTitleActivity implements Vi
                     }
                 })
                 .create()
-                .setDimAmount(0.6f)
+//                .setDimAmount(0.6f)
                 .show();
         mEditText = editText;
     }

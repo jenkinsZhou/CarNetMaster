@@ -70,12 +70,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_FAULT_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_SERVICE;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 import static com.tourcoo.carnet.ui.order.LookEvaluationActivity.EXTRA_ORDER_ID;
+import static com.tourcoo.carnet.ui.order.OrderHistoryActivity.EXTRA_SKIP_TAG;
 
 
 /**
@@ -144,11 +151,7 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_ORDER_TYPE, TYPE_SERVICE);
-                intent.setClass(mContext, OrderHistoryActivity.class);
-                startActivity(intent);
-                EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_REPAIR));
+                skipToOrderHistory();
             }
         });
     }
@@ -226,9 +229,10 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         }
     }
 
-  /*  *//**
+    /*  */
+
+    /**
      * 显示验证码
-     *
      *//*
     private void showVCodeDialog(String vCode) {
         String msg = "接单验证码:";
@@ -237,7 +241,6 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
 
     }
 */
-
     private void initItemClick() {
         uploadImageAdapter.setOnItemClickListener(new UploadImageAdapter.OnItemClickListener() {
             @Override
@@ -694,9 +697,9 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         clearInput();
         mImages = "";
         imageList.clear();
-        currentPosition = "";
+//        currentPosition = "";
         selectList.clear();
-        addLocateImage("未获取位置信息,请点击图标获取");
+//        addLocateImage("未获取位置信息,请点击图标获取");
         uploadImageAdapter.notifyDataSetChanged();
     }
 
@@ -712,10 +715,11 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
         builder.setPositiveButton("查看订单", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent();
+            /*    Intent intent = new Intent();
                 intent.putExtra(EXTRA_ORDER_TYPE, TYPE_SERVICE);
                 intent.setClass(mContext, OrderHistoryActivity.class);
-                startActivity(intent);
+                startActivity(intent);*/
+                skipToOrderHistory();
                 dialog.dismiss();
             }
         });
@@ -728,10 +732,25 @@ public class CarRepairActivity extends BaseTourCooTitleActivity implements View.
                         Bundle bundle = new Bundle();
                         bundle.putString(EXTRA_ORDER_ID, orderId);
                         TourCooLogUtil.i(TAG, "orderId:" + orderId);
-                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class,bundle);
+                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class, bundle);
                         dialog.dismiss();
                     }
                 });
         builder.create().show();
+    }
+
+
+    /**
+     * 从上门维修跳转至订单历史
+     */
+    private void skipToOrderHistory() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_ORDER_TYPE, TYPE_CAR_REPAIR);
+        //当前要显示上门服务的tab
+        intent.putExtra(TAB_KEY, TAB_SERVICE);
+        //上门维修跳转的标记
+        intent.putExtra(EXTRA_SKIP_TAG, TYPE_CAR_REPAIR);
+        intent.setClass(mContext, OrderHistoryActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package com.tourcoo.carnet.ui.car;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -39,8 +40,13 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_CURING;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.ui.order.OrderHistoryActivity.EXTRA_SKIP_TAG;
 
 /**
  * @author :zhoujian
@@ -83,8 +89,7 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TourCooUtil.startActivity(mContext, OrderHistoryActivity.class);
-                EventBus.getDefault().postSticky(new BaseEvent(TYPE_CAR_CURING));
+                skipToOrderHistory();
             }
         });
     }
@@ -327,8 +332,8 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
      * 清空上一次上传的数据
      */
     private void clearUploadData() {
-        currentPosition = "";
-        addLocateImage("未获取位置信息,请点击图标获取");
+//        currentPosition = "";
+//        addLocateImage("未获取位置信息,请点击图标获取");
         etRepairContent.setText("");
     }
 
@@ -359,5 +364,20 @@ public class CarCuringActivity extends BaseTourCooTitleActivity implements View.
         return mapLocation.getAddress();
     }
 
+
+    /**
+     * 从上门保养跳转至订单历史
+     */
+    private void skipToOrderHistory() {
+        Intent intent = new Intent();
+        //将订单类型置为上门保养
+        intent.putExtra(EXTRA_ORDER_TYPE, TYPE_CAR_CURING);
+        //当前要显示上门服务的tab
+        intent.putExtra(TAB_KEY, TAB_SERVICE);
+        //上门服务跳转的标记
+        intent.putExtra(EXTRA_SKIP_TAG, TYPE_CAR_CURING);
+        intent.setClass(mContext, OrderHistoryActivity.class);
+        startActivity(intent);
+    }
 
 }

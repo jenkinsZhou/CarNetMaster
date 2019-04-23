@@ -68,10 +68,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
+import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
+import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
+import static com.tourcoo.carnet.core.common.OrderConstant.TAB_REPAIR;
+import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_FAULT_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 import static com.tourcoo.carnet.ui.order.LookEvaluationActivity.EXTRA_ORDER_ID;
+import static com.tourcoo.carnet.ui.order.OrderHistoryActivity.EXTRA_SKIP_TAG;
 
 
 /**
@@ -130,10 +136,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         titleBar.setOnRightTextClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_ORDER_TYPE, TYPE_REPAIR);
-                intent.setClass(mContext, OrderHistoryActivity.class);
-                startActivity(intent);
+                skipToOrderHistory();
             }
         });
     }
@@ -241,10 +244,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         builder.setPositiveButton("查看订单", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent();
-                intent.setClass(mContext, OrderHistoryActivity.class);
-                intent.putExtra(EXTRA_ORDER_TYPE, TYPE_REPAIR);
-                startActivity(intent);
+                skipToOrderHistory();
                 dialog.dismiss();
             }
         });
@@ -708,11 +708,26 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         clearInput();
         mImages = "";
         imageList.clear();
-        currentPosition = "";
+//        currentPosition = "";
         selectList.clear();
-        addLocateImage("未获取位置信息,请点击图标获取");
+//        addLocateImage("未获取位置信息,请点击图标获取");
         uploadImageAdapter.notifyDataSetChanged();
     }
 
 
+    /**
+     * 从故障报修跳转至订单历史
+     */
+    private void skipToOrderHistory(){
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_ORDER_TYPE, TYPE_REPAIR);
+        //显示上门服务中的全部订单
+        intent.putExtra(EXTRA_ORDER_TAG_SERVICE, ORDER_TAG_SERVICE_ALL);
+        //当前要显示故障报修的tab
+        intent.putExtra(TAB_KEY, TAB_REPAIR);
+        //故障报修跳转的标记
+        intent.putExtra(EXTRA_SKIP_TAG, TYPE_FAULT_REPAIR);
+        intent.setClass(mContext, OrderHistoryActivity.class);
+        startActivity(intent);
+    }
 }

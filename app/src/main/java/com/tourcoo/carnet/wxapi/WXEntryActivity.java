@@ -92,7 +92,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 finish();
                 break;
             default:
-                ToastUtil.show("未知");
+//                ToastUtil.show("未知");
                 break;
         }
 

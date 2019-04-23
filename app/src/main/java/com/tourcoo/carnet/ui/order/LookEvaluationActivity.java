@@ -141,9 +141,19 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
         String images = getNotNullValue(commentDetail.getImages());
         List<String> imageList = Arrays.asList(images.split(","));
         for (int i = 0; i < imageList.size(); i++) {
-            imageList.set(i, RequestConfig.BASE + imageList.get(i));
+            if (!TextUtils.isEmpty(imageList.get(i))) {
+                imageList.set(i, RequestConfig.BASE + imageList.get(i));
+            }
         }
         imageUrList.addAll(imageList);
+        for (int i = imageUrList.size() - 1; i >= 0; i--) {
+            if (TextUtils.isEmpty(imageUrList.get(i))) {
+                imageUrList.remove(i);
+            }
+        }
+        for (String s : imageUrList) {
+            TourCooLogUtil.i(TAG, TAG + ":" + "图片url:" + s);
+        }
         gridImageAdapter.notifyDataSetChanged();
     }
 
