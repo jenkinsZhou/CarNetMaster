@@ -594,9 +594,9 @@ public class NearbyRepairFactoryActivity extends BaseTourCooTitleActivity implem
         }
         List<Marker> markerList = aMap.getMapScreenMarkers();
         if (markerList != null) {
-            if (markerList.size() > MAX_MARKER_SIZE) {
+            /*if (markerList.size() > MAX_MARKER_SIZE) {
                 return;
-            }
+            }*/
         }
         try {
             List<Location> locationList = new ArrayList<>();

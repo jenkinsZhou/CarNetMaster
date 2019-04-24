@@ -377,6 +377,8 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
     }
 
 
+
+
     @Override
     public void loadData() {
         super.loadData();

@@ -44,7 +44,7 @@ import static com.tourcoo.carnet.ui.repair.RepairFactoryDetailActivity.EXTRA_GAR
 
 /**
  * @author :zhoujian
- * @description :修理厂列表
+ * @description :全部修理厂列表
  * @company :翼迈科技
  * @date 2019年 03月 18日 23时05分
  * @Email: 971613168@qq.com
