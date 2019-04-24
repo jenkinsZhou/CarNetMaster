@@ -84,7 +84,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_CURRENT_TAB;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.PAY_TYPE_ALI_PAY;

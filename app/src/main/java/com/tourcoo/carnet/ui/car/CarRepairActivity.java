@@ -43,7 +43,6 @@ import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
-import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.tourcoo.carnet.ui.factory.NearbyRepairFactoryActivity;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
@@ -51,7 +50,6 @@ import com.tourcoo.carnet.ui.repair.RepairFaultFragment;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import org.apache.commons.lang.StringUtils;
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -70,16 +68,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
-import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
 import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
-import static com.tourcoo.carnet.core.common.OrderConstant.TAB_REPAIR;
 import static com.tourcoo.carnet.core.common.OrderConstant.TAB_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_REPAIR;
-import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_FAULT_REPAIR;
-import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_REPAIR;
-import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_SERVICE;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 import static com.tourcoo.carnet.ui.order.LookEvaluationActivity.EXTRA_ORDER_ID;
 import static com.tourcoo.carnet.ui.order.OrderHistoryActivity.EXTRA_SKIP_TAG;

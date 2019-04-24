@@ -658,7 +658,7 @@ public class NearbyRepairFactoryActivity extends BaseTourCooTitleActivity implem
         markerOption.position(latLng);
         markerOption.visible(true);
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                .decodeResource(getResources(), R.mipmap.ic_marker)));
+                .decodeResource(getResources(), R.mipmap.ic_circle)));
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
         //设置marker平贴地图效果
         markerOption.setFlat(true);

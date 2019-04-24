@@ -13,8 +13,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civAvatar"
-            android:layout_width="@dimen/dp_42"
-            android:layout_height="@dimen/dp_42"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
             android:layout_centerVertical="true"
             android:src="@mipmap/icon192" />
 

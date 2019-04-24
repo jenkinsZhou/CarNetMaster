@@ -28,6 +28,7 @@
                 android:textStyle="bold"
                 app:sDividerLineType="none"
                 app:sLeftTextString="新消息通知"
+                android:visibility="gone"
                 app:sRightIconRes="@mipmap/ic_more"
                 app:sUseRipple="false"></com.allen.library.SuperTextView>
 

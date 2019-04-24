@@ -4,6 +4,7 @@ import android.accounts.AccountsException;
 import android.accounts.NetworkErrorException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -75,7 +76,7 @@ import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
  * @date 2019年03月25日18:42
  * @Email: 971613168@qq.com
  */
-public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implements OnRefreshListener, OnLoadMoreListener, View.OnClickListener{
+public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implements OnRefreshListener, OnLoadMoreListener, View.OnClickListener {
     protected BGABanner banner;
     private List<String> mImageList = new ArrayList<>();
     private GarageInfo garageInfo;
@@ -103,7 +104,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
      */
     private CommentAdapter mCommentAdapter;
     private List<String> tagList = new ArrayList<>();
-    public static final String  EXTRA_GARAGE_DETAIL = "EXTRA_GARAGE_DETAIL";
+    public static final String EXTRA_GARAGE_DETAIL = "EXTRA_GARAGE_DETAIL";
 
     @Override
     public int getContentLayout() {
@@ -126,7 +127,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         smartRefreshLayout.setOnRefreshListener(this);
         smartRefreshLayout.setOnLoadMoreListener(this);
         smartRefreshLayout.setEnableRefresh(false);
-        banner.setAutoPlayAble(false);
+        banner.setAutoPlayAble(true);
         garageInfo = (GarageInfo) getIntent().getExtras().getSerializable(EXTRA_GARAGE_DETAIL);
         showDetail();
 
@@ -140,7 +141,13 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
 
         initTagList(garageInfo);
         mGoodFieldAdapter.bindToRecyclerView(rvGoodsField);
-        setBanner(mImageList);
+        if (!mImageList.isEmpty()) {
+            setBanner(mImageList);
+        } else {
+            List<Drawable> drawables = new ArrayList<>();
+            drawables.add(TourCooUtil.getDrawable(R.mipmap.img_placeholder));
+            setBannerDrable(drawables);
+        }
         initCommentAdapter();
         initEmptyView();
 //        setLoadMoreView();
@@ -161,14 +168,12 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     }
 
 
-
-
     private void refreshComment() {
         findGarageCommentList(garageInfo.getId(), 1, pageSize);
     }
 
     private void loadMoreComment(int page) {
-          TourCooLogUtil.i(TAG, "当前请求的页码:"+page+"---当前每页请求数量:"+pageSize);
+        TourCooLogUtil.i(TAG, "当前请求的页码:" + page + "---当前每页请求数量:" + pageSize);
         findGarageCommentList(garageInfo.getId(), page, pageSize);
     }
 
@@ -183,6 +188,23 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
             @Override
             public void onBannerItemClick(BGABanner banner, View itemView, Object model, int position) {
                 WebViewActivity.start(mContext, model.toString(), false);
+            }
+        });
+        banner.setData(images, null);
+    }
+
+
+    private void setBannerDrable(List<Drawable> images) {
+        banner.setAdapter(new BGABanner.Adapter() {
+            @Override
+            public void fillBannerItem(BGABanner banner, View itemView, Object model, int position) {
+                GlideManager.loadImg(model, (ImageView) itemView);
+            }
+        });
+        banner.setDelegate(new BGABanner.Delegate() {
+            @Override
+            public void onBannerItemClick(BGABanner banner, View itemView, Object model, int position) {
+//                WebViewActivity.start(mContext, model.toString(), false);
             }
         });
         banner.setData(images, null);
@@ -295,10 +317,6 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     }
 
 
-
-
-
-
     private void initCommentAdapter() {
         mCommentAdapter = new CommentAdapter();
         mCommentAdapter.removeAllFooterView();
@@ -386,8 +404,10 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         StatusLayoutManager.Builder builder = new StatusLayoutManager.Builder(contentView)
                 .setDefaultLayoutsBackgroundColor(android.R.color.transparent)
                 .setDefaultEmptyText(R.string.multi_empty)
+                .setDefaultEmptyImg(R.mipmap.img_no_content)
                 .setDefaultEmptyClickViewTextColor(contentView.getResources().getColor(R.color.colorTitleText))
                 .setDefaultErrorText(R.string.multi_error)
+                .setDefaultErrorImg(R.mipmap.img_no_network)
                 .setDefaultErrorClickViewTextColor(contentView.getResources().getColor(R.color.colorTitleText))
                 .setOnStatusChildClickListener(new OnStatusChildClickListener() {
                     @Override
@@ -399,7 +419,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
 
                     @Override
                     public void onErrorChildClick(View view) {
-                          TourCooLogUtil.e(TAG, "点击了");
+                        TourCooLogUtil.e(TAG, "点击了");
                         mStatusLayoutManager.showLoadingLayout();
                         refreshComment();
                     }
@@ -456,9 +476,6 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
     }
 
 
-
-
-
     @Override
     public void onLoadMore(RefreshLayout refreshLayout) {
         currentPage++;
@@ -470,6 +487,7 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
 
     /**
      * 调用拨号功能
+     *
      * @param phone 电话号码
      */
     private void call(String phone) {
@@ -477,7 +495,6 @@ public class RepairFactoryDetailActivity extends BaseTourCooTitleActivity implem
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-
 
 
     private void getDetail(String id) {

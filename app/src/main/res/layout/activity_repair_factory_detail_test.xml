@@ -14,7 +14,7 @@
         <RelativeLayout
             android:id="@+id/rlCallPhone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_48"
+            android:layout_height="@dimen/dp_40"
             android:layout_alignParentBottom="true"
             android:background="@color/colorPrimary">
 
@@ -80,7 +80,6 @@
                            android:layout_marginLeft="@dimen/dp_20"
                            android:layout_marginTop="@dimen/dp_10"
                            android:gravity="left"
-                           android:text="合肥成铭汽车修理厂(潜山路店）"
                            android:textColor="#333333"
                            android:textSize="@dimen/sp_15" />
 
@@ -129,7 +128,6 @@
                            android:layout_marginTop="@dimen/dp_10"
                            android:lineSpacingMultiplier="1.2"
                            android:paddingBottom="@dimen/dp_8"
-                           android:text="合肥成铭汽车修理厂办公室地址位于和平路118号，于1997年07月16日在合肥市工商行政管理局注册成立，在工厂发展壮大的22年里，我们始终为客户提供良好的技术支持、健全的售后服务，主要经营汽车修理、保养、摩托车修理等业务。"
                            android:textColor="#999999"
                            android:textSize="@dimen/sp_11" />
 

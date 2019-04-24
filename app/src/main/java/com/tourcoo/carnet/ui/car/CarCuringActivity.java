@@ -27,12 +27,9 @@ import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.car.CarInfoEntity;
-import com.tourcoo.carnet.entity.event.BaseEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.tourcoo.carnet.ui.order.OrderHistoryActivity;
 import com.trello.rxlifecycle3.android.ActivityEvent;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -44,7 +41,6 @@ import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
 import static com.tourcoo.carnet.core.common.OrderConstant.TAB_KEY;
 import static com.tourcoo.carnet.core.common.OrderConstant.TAB_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_CURING;
-import static com.tourcoo.carnet.core.common.OrderConstant.TYPE_CAR_REPAIR;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 import static com.tourcoo.carnet.ui.order.OrderHistoryActivity.EXTRA_SKIP_TAG;
 
