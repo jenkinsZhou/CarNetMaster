@@ -91,7 +91,6 @@ public class MsgSystemActivity extends BaseRefreshLoadActivity<MessageInfo> {
     private void getMsgList(boolean isShowLoading, int pageIndex, int pageSize) {
         mUserInfoEntity = AccountInfoHelper.getInstance().getUserInfoEntity();
         if (mUserInfoEntity == null || mUserInfoEntity.getUserInfo() == null) {
-            ToastUtil.show("未获取用户信息");
             return;
         }
         if (isShowLoading) {

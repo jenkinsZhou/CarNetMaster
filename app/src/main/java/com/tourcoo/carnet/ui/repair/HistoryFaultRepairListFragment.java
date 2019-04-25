@@ -291,7 +291,7 @@ public class HistoryFaultRepairListFragment extends BaseRefreshFragment<FaultRep
                             Bundle bundle = new Bundle();
                             bundle.putString(EXTRA_ORDER_ID, mCurrentFaultRepairInfo.getId() + "");
                             TourCooLogUtil.i(TAG, "orderId:" + mCurrentFaultRepairInfo.getId());
-                            TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class);
+                            TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class,bundle);
                         }
                         break;
                     /**
