@@ -43,10 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_12"
                     android:textSize="@dimen/sp_11"
-                    android:text="内容描述内容描述内容描述内容描述内容描述内容描述内
-容描述内容描述内容描述内容描述内容描述内容描述内容
-描述内容描述内容描述内容描述内容描述内容描述内容描
-述内容描述内容描述内容描述" />
+                    android:text="" />
 
                 <TextView
                     android:layout_width="wrap_content"

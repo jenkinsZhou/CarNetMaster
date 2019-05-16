@@ -19,7 +19,6 @@ import com.bumptech.glide.request.target.Target;
 import com.previewlibrary.loader.IZoomMediaLoader;
 import com.previewlibrary.loader.MySimpleTarget;
 import com.tourcoo.carnet.R;
-import com.tourcoo.carnet.core.frame.manager.GlideManager;
 
 /**
  * @author :JenkinsZhou

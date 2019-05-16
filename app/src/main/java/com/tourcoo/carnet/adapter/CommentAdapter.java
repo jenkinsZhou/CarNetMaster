@@ -1,6 +1,8 @@
 package com.tourcoo.carnet.adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,12 +11,14 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.previewlibrary.GPreviewBuilder;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.common.RequestConfig;
 import com.tourcoo.carnet.core.frame.manager.GlideManager;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.ratingstar.RatingStarView;
+import com.tourcoo.carnet.entity.ImageEntity;
 import com.tourcoo.carnet.entity.garage.CommentInfo;
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -61,7 +66,14 @@ public class CommentAdapter extends BaseQuickAdapter<CommentInfo, BaseViewHolder
             gridImageAdapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    onThumbnailClick(imageUrlList.get(position));
+                    List<ImageEntity> imageEntityList = parseImageEntityList(gridImageAdapter.getData());
+                    computeBoundsBackward(commentImageRecyclerView, imageEntityList);
+                    GPreviewBuilder.from((Activity) mContext)
+                            .setData(imageEntityList)
+                            .setCurrentIndex(position)
+                            .setSingleFling(true)
+                            .setType(GPreviewBuilder.IndicatorType.Number)
+                            .start();
                 }
             });
         }
@@ -71,6 +83,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentInfo, BaseViewHolder
             ratingStarView.setEnabled(false);
             ratingStarView.setRating(item.getLevel());
         }
+
         String imageUrl = RequestConfig.BASE + TourCooUtil.getNotNullValue(item.getOwnerIconUrl());
         GlideManager.loadImg(imageUrl, circleImageView, mDrawable);
     }
@@ -98,6 +111,42 @@ public class CommentAdapter extends BaseQuickAdapter<CommentInfo, BaseViewHolder
         imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         imgView.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
         return imgView;
+    }
+
+
+    private List<ImageEntity> parseImageEntityList(List<String> imageUrlList) {
+        List<ImageEntity> imageEntityList = new ArrayList<>();
+        if (imageUrlList == null || imageUrlList.isEmpty()) {
+            return imageEntityList;
+        }
+        ImageEntity imageEntity;
+        for (String url : imageUrlList) {
+            imageEntity = new ImageEntity();
+            imageEntity.setImageUrl(url);
+            imageEntityList.add(imageEntity);
+        }
+        return imageEntityList;
+    }
+
+    /**
+     * 查找信息
+     * 从第一个完整可见item逆序遍历，如果初始位置为0，则不执行方法内循环
+     */
+    private void computeBoundsBackward(RecyclerView imageRecyclerView, List<ImageEntity> imageEntityList) {
+        if (imageRecyclerView == null || !(imageRecyclerView.getLayoutManager() instanceof GridLayoutManager)) {
+            return;
+        }
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) imageRecyclerView.getLayoutManager();
+        int firstCompletelyVisiblePos = gridLayoutManager.findFirstVisibleItemPosition();
+        for (int i = firstCompletelyVisiblePos; i < imageEntityList.size(); i++) {
+            View itemView = gridLayoutManager.findViewByPosition(i);
+            Rect bounds = new Rect();
+            if (itemView != null) {
+                ImageView thumbView = itemView.findViewById(R.id.additionalRoundedImageView);
+                thumbView.getGlobalVisibleRect(bounds);
+            }
+            imageEntityList.get(i).setBounds(bounds);
+        }
     }
 }
 
