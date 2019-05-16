@@ -425,4 +425,12 @@ public interface ApiService {
      */
     @GET("custom-service/phone")
     Observable<String> getServicePhone();
+
+
+    /**
+     * 注册条例
+     * @return
+     */
+    @POST("signLogin/findOrdinance")
+    Observable<BaseEntity<String>> findOrdinance();
 }

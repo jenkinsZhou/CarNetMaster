@@ -40,7 +40,6 @@
                 android:layout_height="@dimen/dp_15"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/dp_10"
-                android:layout_toRightOf="@id/tvNickName"
                 android:clickable="false"
                 android:focusable="false"
                 android:padding="2dp"

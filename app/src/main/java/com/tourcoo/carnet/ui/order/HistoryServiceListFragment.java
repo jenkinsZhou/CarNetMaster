@@ -535,8 +535,6 @@ public class HistoryServiceListFragment extends BaseRefreshFragment<FaultRepairE
             api.sendReq(req);
             OrderConstant.currentOrderTabTag = EXTRA_ORDER_TAG_SERVICE;
         }
-
-
     }
 
     private void aliPay(PayInfo payInfo) {

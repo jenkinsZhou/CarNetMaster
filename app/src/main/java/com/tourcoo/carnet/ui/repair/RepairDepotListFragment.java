@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
@@ -283,7 +284,6 @@ public class RepairDepotListFragment extends BaseRefreshFragment<GarageInfo> imp
         depotDescriptionAdapter.getData().clear();
         searchGarages(String.valueOf(1), String.valueOf(mDefaultPageSize));
     }
-
 
 
 }

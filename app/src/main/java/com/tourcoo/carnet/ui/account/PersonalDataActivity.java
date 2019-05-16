@@ -35,7 +35,6 @@ import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.tourcoo.carnet.core.widget.bigkoo.pickerview.view.OptionsPickerView;
 import com.tourcoo.carnet.core.widget.core.view.radius.RadiusEditText;

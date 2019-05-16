@@ -36,4 +36,6 @@ public class RequestConfig {
     public static final String BASE = "http://119.3.20.53:8090/iov/";
 
 
+    public static final String BASE_URL_HEADER = "http://119.3.20.53:8090/iov";
+
 }

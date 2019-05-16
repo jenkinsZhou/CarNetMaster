@@ -131,11 +131,10 @@ public class HttpRequestControlImpl implements HttpRequestControl {
             }
         }
         if (requestControl == null || requestControl.getStatusLayoutManager() == null) {
-
             if (DEBUG_MODE) {
                 ToastUtil.show(reason);
             } else {
-                ToastUtil.show("服务器异常");
+                ToastUtil.show("服务器出了点小差");
             }
             return;
         }

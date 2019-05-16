@@ -473,7 +473,7 @@ public class ApiRepository extends BaseRepository {
 
 
     /**
-     * 充值密码
+     * 重置密码
      *
      * @return
      */
@@ -611,4 +611,13 @@ public class ApiRepository extends BaseRepository {
     public Observable<String> getServicePhone() {
         return TourCoolTransformer.switchSchedulersIo(getApiService().getServicePhone().retryWhen(new RetryWhen()));
     }
+
+    /**
+     * 注册条例
+     * @return
+     */
+    public Observable<BaseEntity<String>> findOrdinance() {
+        return TourCoolTransformer.switchSchedulersIo(getApiService().findOrdinance().retryWhen(new RetryWhen()));
+    }
+
 }

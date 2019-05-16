@@ -39,6 +39,7 @@ import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
+import com.tourcoo.carnet.core.widget.core.view.navigation.KeyboardHelper;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;
@@ -59,6 +60,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -68,6 +70,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
+import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TAG_SERVICE;
 import static com.tourcoo.carnet.core.common.OrderConstant.EXTRA_ORDER_TYPE;
 import static com.tourcoo.carnet.core.common.OrderConstant.ORDER_TAG_SERVICE_ALL;
@@ -124,6 +127,9 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         mRecyclerView = mContentView.findViewById(R.id.rvUploadImage);
         etRepairContent = mContentView.findViewById(R.id.etRepairContent);
         initProgressDialog();
+        KeyboardHelper.with(mContext)
+                .setEnable(SOFT_INPUT_ADJUST_NOTHING);
+
     }
 
 
@@ -257,7 +263,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
                         Bundle bundle = new Bundle();
                         bundle.putString(EXTRA_ORDER_ID, orderId);
                         TourCooLogUtil.i(TAG, "orderId:" + orderId);
-                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class,bundle);
+                        TourCooUtil.startActivity(mContext, NearbyRepairFactoryActivity.class, bundle);
                         dialog.dismiss();
                     }
                 });
@@ -718,7 +724,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
     /**
      * 从故障报修跳转至订单历史
      */
-    private void skipToOrderHistory(){
+    private void skipToOrderHistory() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_ORDER_TYPE, TYPE_REPAIR);
         //显示上门服务中的全部订单

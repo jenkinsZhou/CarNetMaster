@@ -15,6 +15,7 @@ import com.tourcoo.carnet.core.frame.base.activity.WebViewActivity;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseFragment;
 import com.tourcoo.carnet.core.frame.manager.RxJavaManager;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
+import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.module.MainTabActivity;
 import com.tourcoo.carnet.core.util.ToastUtil;
@@ -22,6 +23,7 @@ import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
+import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.List;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
+import static com.tourcoo.carnet.core.common.RequestConfig.BASE_URL_HEADER;
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
 /**
@@ -44,6 +47,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
      * 注册标记
      */
     private static final String TAG_REGISTER = "userInfo";
+    private String mUrl = "";
 
     private TextView tvSendVerificationCode;
     private List<Disposable> disposableList = new ArrayList<>();
@@ -72,6 +76,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
         etPassword = mContentView.findViewById(R.id.etPassword);
         etPasswordConfirm = mContentView.findViewById(R.id.etPasswordConfirm);
         cBoxAgree = mContentView.findViewById(R.id.cBoxAgree);
+        findOrdinance();
     }
 
 
@@ -102,15 +107,15 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvLicensing:
-                WebViewActivity.start(mContext, "https://baidu.com");
+                WebViewActivity.start(mContext, mUrl);
                 break;
             case R.id.tvSendVerificationCode:
                 doSendVCode();
                 break;
             case R.id.tvRegister:
-                if(cBoxAgree.isChecked()){
+                if (cBoxAgree.isChecked()) {
                     doRegister();
-                }else {
+                } else {
                     ToastUtil.show("您未同意注册条例");
                 }
 
@@ -293,7 +298,7 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             JSONObject data = JSONObject.parseObject(jsonStr);
             JSONObject userInfo = data.getJSONObject("userInfo");
             int userId = userInfo.getIntValue("id");
-            if(userInfoEntity.getUserInfo() != null){
+            if (userInfoEntity.getUserInfo() != null) {
                 userInfoEntity.getUserInfo().setUserId(userId);
                 TourCooLogUtil.i(TAG, "设置成功:" + userId);
             }
@@ -308,4 +313,23 @@ public class RegisterFragment extends BaseFragment implements View.OnClickListen
             TourcooLogUtil.i(TAG,userInfoEntity.getToken());
             TourcooLogUtil.i(TAG,userInfoEntity.getUserInfo().getCreateTime());
             AccountInfoHelper.getInstance().setUserInfoEntity(userInfoEntity);*/
+
+
+    /**
+     * 获取注册条例
+     */
+    private void findOrdinance() {
+        ApiRepository.getInstance().findOrdinance().compose(bindUntilEvent(FragmentEvent.DESTROY)).
+                subscribe(new BaseObserver<BaseEntity<String>>() {
+                    @Override
+                    public void onRequestNext(BaseEntity<String> entity) {
+                        closeLoadingDialog();
+                        if (entity != null) {
+                            TourCooLogUtil.e(TAG, entity);
+                            mUrl = BASE_URL_HEADER + entity.data;
+                            TourCooLogUtil.i(TAG, TAG + ":" + mUrl);
+                        }
+                    }
+                });
+    }
 }

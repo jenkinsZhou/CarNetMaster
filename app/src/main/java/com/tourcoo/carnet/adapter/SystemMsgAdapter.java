@@ -1,17 +1,13 @@
 package com.tourcoo.carnet.adapter;
 
-import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.log.widget.utils.DateUtil;
 import com.tourcoo.carnet.entity.MessageInfo;
-import com.tourcoo.carnet.entity.MsgSystemEntity;
 
-import java.util.List;
 
-import androidx.annotation.Nullable;
 
 /**
  * @author :JenkinsZhou

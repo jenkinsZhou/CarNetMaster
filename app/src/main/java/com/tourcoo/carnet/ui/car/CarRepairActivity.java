@@ -39,6 +39,7 @@ import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.confirm.ConfirmDialog;
+import com.tourcoo.carnet.core.widget.core.view.navigation.KeyboardHelper;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.ImgeEntity;

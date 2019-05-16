@@ -12,14 +12,20 @@ import com.google.android.material.tabs.TabLayout;
 import com.tourcoo.carnet.CarNetApplication;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
+import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
+import com.tourcoo.carnet.core.frame.util.SharedPreferencesUtil;
 import com.tourcoo.carnet.core.helper.LocateHelper;
 import com.tourcoo.carnet.core.helper.TitleBarViewHelper;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.permission.PermissionConstance;
 import com.tourcoo.carnet.core.permission.PermissionManager;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.widget.core.util.StatusBarUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.core.widget.custom.WrapContentHeightViewPager;
+import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.retrofit.ApiRepository;
+import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.tourcoo.carnet.AccountInfoHelper.PREF_TEL_PHONE_KEY;
 
 /**
  * @author :zhoujian
@@ -128,7 +136,7 @@ public class LoginRegisterActivity extends BaseTourCooTitleActivity implements V
         loginTabLayout.setupWithViewPager(loginViewpager);
         initTabTitle();
         requestPermission();
-//        getLocate();
+
     }
 
     private void initTabTitle() {
@@ -209,4 +217,7 @@ public class LoginRegisterActivity extends BaseTourCooTitleActivity implements V
                     }, PERMISSIONS_REQUEST_CODE);
         }
     }
+
+
+
 }
