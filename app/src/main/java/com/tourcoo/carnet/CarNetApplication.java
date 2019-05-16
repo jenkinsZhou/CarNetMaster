@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 
+import com.previewlibrary.ZoomMediaLoader;
 import com.tourcoo.carnet.core.common.CommonConfig;
 import com.tourcoo.carnet.core.crash.CrashManager;
 import com.tourcoo.carnet.core.frame.UiConfigManager;
@@ -17,12 +18,15 @@ import com.tourcoo.carnet.core.frame.util.SizeUtil;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.log.widget.LogFileEngineFactory;
 import com.tourcoo.carnet.core.log.widget.config.LogLevel;
+import com.tourcoo.carnet.core.threadpool.ThreadPoolManager;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.squareup.leakcanary.LeakCanary;
+import com.tourcoo.carnet.utils.GlideImageLoader;
 
 import org.litepal.LitePalApplication;
 
 import androidx.multidex.MultiDex;
+
 import cn.jpush.android.api.JPushInterface;
 
 import static com.tourcoo.carnet.core.common.CommonConfig.DEBUG_MODE;
@@ -46,6 +50,7 @@ public class CarNetApplication extends LitePalApplication {
         mContext = this;
         initLog();
         initCrashHandle();
+        asyncLoad();
         ToastUtil.init(mContext);
         //最简单UI配置模式-必须进行初始化
         UiConfigManager.init(this);
@@ -105,7 +110,7 @@ public class CarNetApplication extends LitePalApplication {
         //以下为配置多BaseUrl--默认方式一优先级高 可通过FastRetrofit.getInstance().setHeaderPriorityEnable(true);设置方式二优先级
         //方式一 通过Service 里的method-(如:) 设置 推荐 使用该方式不需设置如方式二的额外Header
         //内存泄漏检测工具
-        if(CommonConfig.DEBUG_MODE){
+        if (CommonConfig.DEBUG_MODE) {
             if (LeakCanary.isInAnalyzerProcess(mContext)) {
                 return;
             }
@@ -169,5 +174,18 @@ public class CarNetApplication extends LitePalApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+
+    /**
+     * 异步加载
+     */
+    private void asyncLoad() {
+        ThreadPoolManager.getThreadPoolProxy().execute(new Runnable() {
+            @Override
+            public void run() {
+                ZoomMediaLoader.getInstance().init(new GlideImageLoader());
+            }
+        });
     }
 }

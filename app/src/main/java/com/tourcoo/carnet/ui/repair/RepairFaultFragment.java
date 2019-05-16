@@ -127,6 +127,7 @@ public class RepairFaultFragment extends BaseTitleFragment implements View.OnCli
         mRecyclerView = mContentView.findViewById(R.id.rvUploadImage);
         etRepairContent = mContentView.findViewById(R.id.etRepairContent);
         initProgressDialog();
+        //
         KeyboardHelper.with(mContext)
                 .setEnable(SOFT_INPUT_ADJUST_NOTHING);
 

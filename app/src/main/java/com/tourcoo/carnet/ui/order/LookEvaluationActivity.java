@@ -1,6 +1,7 @@
 package com.tourcoo.carnet.ui.order;
 
 import android.app.Dialog;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.previewlibrary.GPreviewBuilder;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.GridImageAdapter;
 import com.tourcoo.carnet.core.common.RequestConfig;
@@ -21,6 +23,7 @@ import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.core.widget.ratingstar.RatingStarView;
 import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.ImageEntity;
 import com.tourcoo.carnet.entity.garage.CommentDetail;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
@@ -73,7 +76,15 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
         gridImageAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                onThumbnailClick(view, gridImageAdapter.getData().get(position));
+//                onThumbnailClick(view, gridImageAdapter.getData().get(position));
+                List<ImageEntity> imageEntityList = parseImageEntityList(gridImageAdapter.getData());
+                    computeBoundsBackward(rvImageComment, imageEntityList);
+                    GPreviewBuilder.from(mContext)
+                            .setData(imageEntityList)
+                            .setCurrentIndex(position)
+                            .setSingleFling(true)
+                            .setType(GPreviewBuilder.IndicatorType.Number)
+                            .start();
             }
         });
 
@@ -187,5 +198,40 @@ public class LookEvaluationActivity extends BaseTourCooTitleActivity {
         });
     }
 
+
+    private List<ImageEntity> parseImageEntityList(List<String> imageUrlList) {
+        List<ImageEntity> imageEntityList = new ArrayList<>();
+        if (imageUrlList == null || imageUrlList.isEmpty()) {
+            return imageEntityList;
+        }
+        ImageEntity imageEntity;
+        for (String url : imageUrlList) {
+            imageEntity = new ImageEntity();
+            imageEntity.setImageUrl(url);
+            imageEntityList.add(imageEntity);
+        }
+        return imageEntityList;
+    }
+
+    /**
+     * 查找信息
+     * 从第一个完整可见item逆序遍历，如果初始位置为0，则不执行方法内循环
+     */
+    private void computeBoundsBackward(RecyclerView imageRecyclerView, List<ImageEntity> imageEntityList) {
+        if (imageRecyclerView == null || !(imageRecyclerView.getLayoutManager() instanceof GridLayoutManager)) {
+            return;
+        }
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) imageRecyclerView.getLayoutManager();
+        int firstCompletelyVisiblePos = gridLayoutManager.findFirstVisibleItemPosition();
+        for (int i = firstCompletelyVisiblePos; i < imageEntityList.size(); i++) {
+            View itemView = gridLayoutManager.findViewByPosition(i);
+            Rect bounds = new Rect();
+            if (itemView != null) {
+                ImageView thumbView = itemView.findViewById(R.id.additionalRoundedImageView);
+                thumbView.getGlobalVisibleRect(bounds);
+            }
+            imageEntityList.get(i).setBounds(bounds);
+        }
+    }
 
 }
