@@ -84,7 +84,7 @@ public class CheckVersionHelper {
                                 updateEntity.force = false;
                                 updateEntity.versionName = "1.0.2";
                                 updateEntity.versionCode = 2;
-                                updateEntity.url = "http://www.baidu.com/test.apk";
+                                updateEntity.url = "http://www.baidu.com/bg_rectangle_blue_hollow_horizon.apk";
                                 checkVersion(updateEntity);
                             }
                         } :
@@ -106,7 +106,7 @@ public class CheckVersionHelper {
                                 updateEntity.force = false;
                                 updateEntity.versionName = "1.0.2";
                                 updateEntity.versionCode = 2;
-                                updateEntity.url = "http://www.baidu.com/test.apk";
+                                updateEntity.url = "http://www.baidu.com/bg_rectangle_blue_hollow_horizon.apk";
                                 checkVersion(updateEntity);
                             }
                         });

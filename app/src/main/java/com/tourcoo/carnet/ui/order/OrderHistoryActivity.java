@@ -125,7 +125,6 @@ public class OrderHistoryActivity extends BaseTourCooTitleActivity implements Vi
             showHistoryService();
             TourCooLogUtil.e(TAG, "接收到");
         }*/
-        TourCooLogUtil.e(TAG, "接收到的tab=" + currentTab);
         switch (currentTab) {
             //显示故障报修
             case TAB_REPAIR:

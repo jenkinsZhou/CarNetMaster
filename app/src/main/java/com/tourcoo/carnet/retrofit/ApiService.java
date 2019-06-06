@@ -295,7 +295,7 @@ public interface ApiService {
      * @return
      */
     @POST("app/version/last/appVersionInfo")
-    Observable<BaseEntity> appVersionInfo(@QueryMap Map<String, Object> map);
+    Observable<BaseEntity> requestAppVersionInfo(@QueryMap Map<String, Object> map);
 
     /**
      * 修改个人资料

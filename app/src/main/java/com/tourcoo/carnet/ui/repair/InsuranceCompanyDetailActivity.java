@@ -59,7 +59,7 @@ import static com.tourcoo.carnet.core.util.TourCooUtil.checkMapAppsIsExist;
 public class InsuranceCompanyDetailActivity extends BaseTourCooTitleMultiViewActivity implements View.OnClickListener {
     public static final String EXTRA_COMPANY_ID = "EXTRA_COMPANY_ID";
     private int companyId;
-    private InsuranceCompanyDetail companyDetail;
+    private InsuranceCompany.CompanyInfo mCompanyInfo;
     private TextView tvWarrantyCompanyName;
     private TextView tvWarrantyCompanyDepiction;
     private SuperTextView stvAlarmPhone;
@@ -178,6 +178,7 @@ public class InsuranceCompanyDetailActivity extends BaseTourCooTitleMultiViewAct
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 //todo
+                                mCompanyInfo = entity.data;
                                 showCompanyInfo(entity.data);
                                 //加载位置信息
                                 //todo
@@ -198,7 +199,7 @@ public class InsuranceCompanyDetailActivity extends BaseTourCooTitleMultiViewAct
                 doNaVi();
                 break;
             case R.id.tvCallPhone:
-                showPhoneDialog(companyDetail);
+                showPhoneDialog(mCompanyInfo);
                 break;
             default:
                 break;
@@ -455,7 +456,7 @@ public class InsuranceCompanyDetailActivity extends BaseTourCooTitleMultiViewAct
     }
 
 
-    private void showPhoneDialog(InsuranceCompanyDetail companyDetail) {
+    private void showPhoneDialog(InsuranceCompany.CompanyInfo companyDetail) {
         //客服电话
         if (companyDetail == null || TextUtils.isEmpty(companyDetail.getTelephone())) {
             ToastUtil.show("未获取到联系方式");

@@ -11,10 +11,7 @@ public class RequestConfig {
     public static final String TAG = "RequestConfig";
     public static final int CODE_REQUEST_SUCCESS = 1;
     public static final int CODE_REQUEST_SUCCESS_NOT_REGISTER = -100;
-    /**
-     *顾总电脑IP
-     */
-//    public static final String BASE_URL = "http://192.168.1.85:8090/api/";
+
     /**
      * 方平电脑IP
      * 192.168.1.71

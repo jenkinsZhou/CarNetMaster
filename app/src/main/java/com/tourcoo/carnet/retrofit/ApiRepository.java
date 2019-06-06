@@ -620,4 +620,14 @@ public class ApiRepository extends BaseRepository {
         return TourCoolTransformer.switchSchedulersIo(getApiService().findOrdinance().retryWhen(new RetryWhen()));
     }
 
+
+    /**
+     * 获取后台最新app版本信息
+     * @return
+     */
+    public Observable<BaseEntity> requestAppVersionInfo() {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("deviceType", "android");
+        return TourCoolTransformer.switchSchedulersIo(getApiService().requestAppVersionInfo(params).retryWhen(new RetryWhen()));
+    }
 }

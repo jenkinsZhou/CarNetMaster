@@ -16,9 +16,11 @@ import com.tourcoo.carnet.core.frame.util.SharedPreferencesUtil;
 import com.tourcoo.carnet.core.helper.CheckVersionHelper;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
+import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.garage.ServiceInfo;
+import com.tourcoo.carnet.obd.report.DrivingReportActivity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
@@ -45,6 +47,7 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
     public void initView(Bundle savedInstanceState) {
         findViewById(R.id.stvAppVersion).setOnClickListener(this);
         findViewById(R.id.stvPhoneNumber).setOnClickListener(this);
+        findViewById(R.id.stvDrivingReport).setOnClickListener(this);
         stvPhoneNumber = findViewById(R.id.stvPhoneNumber);
         phone = (String) SharedPreferencesUtil.get(PREF_TEL_PHONE_KEY, "");
         showPhone(phone);
@@ -77,6 +80,9 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
                     return;
                 }
                 call(phone);
+                break;
+            case R.id.stvDrivingReport:
+                TourCooUtil.startActivity(mContext, DrivingReportActivity.class);
                 break;
             default:
                 break;
