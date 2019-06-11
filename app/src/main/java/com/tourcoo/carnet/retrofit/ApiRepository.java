@@ -20,6 +20,7 @@ import com.tourcoo.carnet.entity.garage.ServiceInfo;
 import com.tourcoo.carnet.entity.order.FaultRepairEntity;
 import com.tourcoo.carnet.entity.car.PayInfo;
 import com.tourcoo.carnet.entity.order.OrderDetail;
+import com.tourcoo.carnet.entity.update.VersionEntity;
 import com.tourcoo.carnet.utils.Location;
 
 import java.util.HashMap;
@@ -630,4 +631,7 @@ public class ApiRepository extends BaseRepository {
         params.put("deviceType", "android");
         return TourCoolTransformer.switchSchedulersIo(getApiService().requestAppVersionInfo(params).retryWhen(new RetryWhen()));
     }
+
+
+
 }

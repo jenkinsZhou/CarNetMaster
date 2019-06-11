@@ -31,11 +31,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp_10"
-
         android:text="v1.0.0"
         android:textColor="#999999"
         android:textSize="@dimen/sp_13" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+    </LinearLayout>
     <com.allen.library.SuperTextView
         android:id="@+id/stvPhoneNumber"
         android:layout_width="match_parent"
@@ -57,7 +61,7 @@
         android:layout_height="@dimen/dp_45"
         app:sLeftTextSize="@dimen/sp_15"
         app:sLeftTextString="版本更新"
-        android:visibility="gone"
+        android:visibility="visible"
         app:sLeftTextColor="#333333"
         app:sLeftViewMarginLeft="@dimen/dp_25"
         app:sRightIconRes="@mipmap/ic_more"

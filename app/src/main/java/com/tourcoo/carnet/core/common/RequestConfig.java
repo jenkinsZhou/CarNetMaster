@@ -26,7 +26,7 @@ public class RequestConfig {
      * http://119.3.20.53:8090/iov/api/
      */
     public static final String BASE_URL = "http://119.3.20.53:8090/iov/api/";
-
+    public static final String BASE_URL_NO_LINE = "http://119.3.20.53:8090/iov/api/";
     /**
      * 图片相关url的前缀
      */

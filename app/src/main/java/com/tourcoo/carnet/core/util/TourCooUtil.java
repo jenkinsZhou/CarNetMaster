@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tourcoo.carnet.CarNetApplication;
+import com.tourcoo.carnet.core.common.RequestConfig;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import java.util.List;
@@ -37,7 +38,10 @@ import static com.tourcoo.carnet.core.log.widget.config.LogConstant.TAG;
  * @Email: 971613168@qq.com
  */
 public class TourCooUtil {
-
+    private static final String STRING_EMPTY = "";
+    private static final String STRING_LINE = "/";
+    private static final String URL_TAG = "http";
+    private static final String URL_TAG_HTTPS = "https";
     private static int ACTIVITY_SINGLE_FLAG = Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
     /**
@@ -140,6 +144,23 @@ public class TourCooUtil {
      */
     public static int getVersionCode(Context context) {
         try {
+            PackageManager packageManager = context.getPackageManager();
+            if (null != packageManager) {
+                PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+                if (null != packageInfo) {
+                    return packageInfo.versionCode;
+                }
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            TourCooLogUtil.e("getVersionCode:" + e.getMessage());
+        }
+        return -1;
+    }
+
+
+    public static int getVersionCode() {
+        try {
+            Context context = CarNetApplication.sContext;
             PackageManager packageManager = context.getPackageManager();
             if (null != packageManager) {
                 PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
@@ -384,30 +405,41 @@ public class TourCooUtil {
     }
 
 
-
     /**
      * 判断app是否安装
+     *
      * @param context
      * @param packageName
      * @return
      */
-    public static boolean checkMapAppsIsExist(Context context,String packageName){
+    public static boolean checkMapAppsIsExist(Context context, String packageName) {
         PackageInfo packageInfo;
-        try{
-            packageInfo = context.getPackageManager().getPackageInfo(packageName,0);
-        }catch (Exception e){
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+        } catch (Exception e) {
             packageInfo = null;
             e.printStackTrace();
         }
-        if (packageInfo == null){
+        if (packageInfo == null) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
 
-
-
-
+    public static String getUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return STRING_EMPTY;
+        }
+        if (url.contains(URL_TAG) || url.contains(URL_TAG_HTTPS)) {
+            return url;
+        } else {
+            if (url.startsWith(STRING_LINE)) {
+                return RequestConfig.BASE_URL_NO_LINE + url;
+            } else {
+                return RequestConfig.BASE_URL + url;
+            }
+        }
+    }
 }

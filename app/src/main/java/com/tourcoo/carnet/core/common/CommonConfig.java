@@ -13,7 +13,7 @@ public class CommonConfig {
     /**
      * 是否开启调试模式
      */
-    public static boolean DEBUG_MODE = false;
+    public static boolean DEBUG_MODE = true;
     /**
      * 吐司默认持续时间
      */

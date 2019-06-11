@@ -186,7 +186,7 @@ public class UiConfigImpl implements DefaultRefreshHeaderCreator, LoadMoreFoot,
         if (activity != null) {
             titleBar.setTitleMainText(activity.getTitle());
         }
-        ViewCompat.setElevation(titleBar, mContext.getResources().getDimension(R.dimen.dp_elevation));
+//        ViewCompat.setElevation(titleBar, mContext.getResources().getDimension(R.dimen.dp_elevation));
         return false;
     }
 

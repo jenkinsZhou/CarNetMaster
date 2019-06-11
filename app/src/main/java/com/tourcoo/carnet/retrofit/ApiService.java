@@ -13,6 +13,7 @@ import com.tourcoo.carnet.entity.MessageInfo;
 import com.tourcoo.carnet.entity.car.CarFaultRemindType;
 import com.tourcoo.carnet.entity.car.PayInfo;
 import com.tourcoo.carnet.entity.order.OrderDetail;
+import com.tourcoo.carnet.entity.update.VersionEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -294,8 +295,12 @@ public interface ApiService {
      * @param map
      * @return
      */
-    @POST("app/version/last/appVersionInfo")
+    @GET("app/version/last/appVersionInfo")
     Observable<BaseEntity> requestAppVersionInfo(@QueryMap Map<String, Object> map);
+
+
+
+
 
     /**
      * 修改个人资料

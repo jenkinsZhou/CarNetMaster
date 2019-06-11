@@ -1,13 +1,28 @@
 package com.tourcoo.carnet.ui.setting;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.allen.library.SuperTextView;
+import com.allenliu.versionchecklib.utils.AppUtils;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
+import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
+import com.blankj.utilcode.util.ActivityUtils;
 import com.tourcoo.carnet.AccountInfoHelper;
+import com.tourcoo.carnet.CarNetApplication;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
@@ -18,14 +33,16 @@ import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
+import com.tourcoo.carnet.core.widget.dialog.update.BaseUpdateDialog;
 import com.tourcoo.carnet.entity.BaseEntity;
-import com.tourcoo.carnet.entity.garage.ServiceInfo;
+import com.tourcoo.carnet.entity.account.UserInfoEntity;
+import com.tourcoo.carnet.entity.update.VersionEntity;
 import com.tourcoo.carnet.obd.report.DrivingReportActivity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import static com.tourcoo.carnet.AccountInfoHelper.PREF_TEL_PHONE_KEY;
-import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
+import static com.tourcoo.carnet.core.common.RequestConfig.BASE_URL;
 
 /**
  * @author :zhoujian
@@ -37,6 +54,8 @@ import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 public class AboutUsActivity extends BaseTourCooTitleActivity implements View.OnClickListener {
     private String phone;
     private SuperTextView stvPhoneNumber;
+    private TextView tvAppVersion;
+    public static final String TIPS_IS_THE_LATEST_VERSION = "当前已经是最新版本";
 
     @Override
     public int getContentLayout() {
@@ -48,12 +67,20 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
         findViewById(R.id.stvAppVersion).setOnClickListener(this);
         findViewById(R.id.stvPhoneNumber).setOnClickListener(this);
         findViewById(R.id.stvDrivingReport).setOnClickListener(this);
+        findViewById(R.id.stvAppVersion).setOnClickListener(this);
+        tvAppVersion = findViewById(R.id.tvAppVersion);
+        tvAppVersion.setOnClickListener(this);
         stvPhoneNumber = findViewById(R.id.stvPhoneNumber);
         phone = (String) SharedPreferencesUtil.get(PREF_TEL_PHONE_KEY, "");
         showPhone(phone);
-        getServicePhone();
+        showAppVersion();
     }
 
+    @Override
+    public void loadData() {
+        super.loadData();
+        getServicePhone();
+    }
 
     private void showPhone(String phone) {
         if (TextUtils.isEmpty(phone)) {
@@ -72,7 +99,7 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.stvAppVersion:
-                CheckVersionHelper.with(this).checkVersion(true);
+                requestAppVersionInfo();
                 break;
             case R.id.stvPhoneNumber:
                 if (TextUtils.isEmpty(phone)) {
@@ -115,5 +142,124 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
                         }
                     }
                 });
+    }
+
+
+    /**
+     * 检测版本信息
+     */
+    private void requestAppVersionInfo() {
+        ApiRepository.getInstance().requestAppVersionInfo().compose(bindUntilEvent(ActivityEvent.DESTROY)).
+                subscribe(new BaseLoadingObserver<BaseEntity>() {
+                    @Override
+                    public void onRequestNext(BaseEntity entity) {
+                        if (entity == null || entity.data == null) {
+                            ToastUtil.show("当前已经是最新版本");
+                            return;
+                        }
+                        VersionEntity versionEntity = parseVersionInfo(entity.data);
+                        //检测更新
+                        checkUpdate(versionEntity);
+                    }
+
+                    @Override
+                    public void onRequestError(Throwable e) {
+                        super.onRequestError(e);
+                    }
+                });
+    }
+
+    /**
+     * 判断是否需要更新
+     *
+     * @param versionEntity
+     */
+    private void checkUpdate(VersionEntity versionEntity) {
+        if (versionEntity == null) {
+            ToastUtil.show(TIPS_IS_THE_LATEST_VERSION);
+            return;
+        }
+        if (TourCooUtil.getVersionCode() >= versionEntity.getLastCode()) {
+            //表示已经是最新版本 无需更新
+            ToastUtil.show(TIPS_IS_THE_LATEST_VERSION);
+        } else {
+            //需要版本更新 直接更新下载
+            String downloadUrl = TourCooUtil.getUrl(versionEntity.getDownloadUrl());
+            TourCooLogUtil.e(TAG, TAG + ":" + "下载的链接:" + downloadUrl);
+            updateVersion(downloadUrl, versionEntity.getTitle(), versionEntity.getContent(), versionEntity.isForceUpdate());
+        }
+    }
+
+
+    /**
+     * 务必用库传回来的context 实例化你的dialog
+     * 自定义的dialog UI参数展示，使用versionBundle
+     *
+     * @return
+     */
+    private CustomVersionDialogListener createCustomDialogOne() {
+        CustomVersionDialogListener listener = new CustomVersionDialogListener() {
+            @Override
+            public Dialog getCustomVersionDialog(Context context, UIData versionBundle) {
+                BaseUpdateDialog baseDialog = new BaseUpdateDialog(context, R.style.UpdateDialog, R.layout.custom_dialog_one_layout);
+                TextView textView = baseDialog.findViewById(R.id.tv_msg);
+                LinearLayout llUpdateContent = baseDialog.findViewById(R.id.llUpdateContent);
+                llUpdateContent.setBackgroundColor(TourCooUtil.getColor(R.color.whiteCommon));
+                textView.setText(versionBundle.getContent());
+                return baseDialog;
+            }
+        };
+        return listener;
+    }
+
+
+    public void updateVersion(String downloadUrl, String title, String content, boolean isForce) {
+        try {
+            DownloadBuilder builder = AllenVersionChecker.getInstance()
+                    .downloadOnly(
+                            UIData.create().setDownloadUrl(downloadUrl).setTitle(title).setContent(content)
+                    );
+
+            if (isForce) {
+//        强制更新 取消回调
+                builder.setForceUpdateListener(new ForceUpdateListener() {
+                    @Override
+                    public void onShouldForceUpdate() {
+                        ActivityUtils.finishAllActivities();
+                    }
+                });
+            }
+            //静默下载
+            builder.setSilentDownload(false);
+            //如果本地有安装包缓存也会重新下载apk
+            builder.setForceRedownload(true);
+            //更新界面选择
+            builder.setCustomVersionDialogListener(createCustomDialogOne());
+            //自定义下载路径
+            builder.setDownloadAPKPath(Environment.getExternalStorageDirectory() + "/CarNetMaster/download/");
+            builder.executeMission(CarNetApplication.sContext);
+        } catch (Exception e) {
+            ToastUtil.showFailed("下载地址有误");
+            TourCooLogUtil.e(TAG, TAG + "更新异常:" + e.toString());
+        }
+    }
+
+
+    private VersionEntity parseVersionInfo(Object jsonStr) {
+        if (jsonStr == null) {
+            return null;
+        }
+        try {
+            return JSON.parseObject(JSON.toJSONString(jsonStr), VersionEntity.class);
+        } catch (Exception e) {
+            TourCooLogUtil.e(TAG, "错误" + e.toString());
+            return null;
+        }
+    }
+
+
+    private void showAppVersion() {
+        String versionName = "V " + TourCooUtil.getVersionName(mContext);
+        tvAppVersion.setText(versionName);
     }
 }

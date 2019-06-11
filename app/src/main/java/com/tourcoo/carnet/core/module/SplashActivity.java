@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.tourcoo.carnet.AccountInfoHelper;
 import com.tourcoo.carnet.R;
@@ -36,7 +37,6 @@ public class SplashActivity extends BaseTitleActivity {
     private ImageView ivBg;
     private Disposable mDisposable;
     private String url = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1551858906703&di=1ca8f8f6a8b88467bd4051128bf76ee2&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Fa9716e409a267f1923ded98bb7642a42b80bd7961b5438-kdBlwv_fw658";
-
     @Override
     public int getContentLayout() {
         return R.layout.activity_splash;
@@ -63,6 +63,8 @@ public class SplashActivity extends BaseTitleActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         ivBg = findViewById(R.id.sp_bg);
+       RelativeLayout rlContentView = findViewById(R.id.rlContentView);
+        rlContentView.setBackgroundColor( TourCooUtil.getColor(R.color.whiteCommon));
         Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_back);
         TourCooUtil.getTintDrawable(drawable, Color.WHITE);
         RxJavaManager.getInstance().setTimer(1000)
