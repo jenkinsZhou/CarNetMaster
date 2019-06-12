@@ -13,20 +13,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.allen.library.SuperTextView;
 import com.allenliu.versionchecklib.callback.OnCancelListener;
-import com.allenliu.versionchecklib.utils.AppUtils;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.UIData;
-import com.allenliu.versionchecklib.v2.callback.CustomDownloadFailedListener;
 import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
 import com.allenliu.versionchecklib.v2.ui.DownloadingActivity;
 import com.blankj.utilcode.util.ActivityUtils;
-import com.tourcoo.carnet.AccountInfoHelper;
 import com.tourcoo.carnet.CarNetApplication;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseTourCooTitleActivity;
@@ -34,22 +30,19 @@ import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
 import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
 import com.tourcoo.carnet.core.frame.util.SharedPreferencesUtil;
 import com.tourcoo.carnet.core.frame.util.StackUtil;
-import com.tourcoo.carnet.core.helper.CheckVersionHelper;
 import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.core.view.titlebar.TitleBarView;
-import com.tourcoo.carnet.core.widget.custom.HorizontalProgressBar;
 import com.tourcoo.carnet.core.widget.dialog.update.BaseUpdateDialog;
+import com.tourcoo.carnet.core.widget.dialog.update.UpdateDownloadingDialog;
 import com.tourcoo.carnet.entity.BaseEntity;
-import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.update.VersionEntity;
 import com.tourcoo.carnet.obd.report.DrivingReportActivity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import static com.tourcoo.carnet.AccountInfoHelper.PREF_TEL_PHONE_KEY;
-import static com.tourcoo.carnet.core.common.RequestConfig.BASE_URL;
 
 /**
  * @author :zhoujian
@@ -62,7 +55,6 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
     private String phone;
     private SuperTextView stvPhoneNumber;
     private TextView tvAppVersion;
-    private HorizontalProgressBar hpbDownloading;
 
     public static final String TIPS_IS_THE_LATEST_VERSION = "当前已经是最新版本";
 
@@ -249,7 +241,7 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
             builder.setOnCancelListener(new OnCancelListener() {
                 @Override
                 public void onCancel() {
-                    releaseDownloadingView();
+                    releaseDownloading();
                 }
             });
             builder.setCustomVersionDialogListener(createCustomDialogOne());
@@ -283,48 +275,30 @@ public class AboutUsActivity extends BaseTourCooTitleActivity implements View.On
 
 
     private CustomDownloadingDialogListener createCustomDownloadingDialog() {
-
-        CustomDownloadingDialogListener listener = new CustomDownloadingDialogListener() {
+        return new CustomDownloadingDialogListener() {
             @Override
             public Dialog getCustomDownloadingDialog(Context context, int progress, UIData versionBundle) {
-                BaseUpdateDialog baseDialog = new BaseUpdateDialog(context, R.style.UpdateDialog, R.layout.custom_dialog_downloading_layout);
-                LinearLayout llUpdateContent = baseDialog.findViewById(R.id.llUpdateContent);
-                llUpdateContent.setBackgroundColor(TourCooUtil.getColor(R.color.whiteCommon));
-                hpbDownloading = baseDialog.findViewById(R.id.hpbDownloading);
-                hpbDownloading.startProgressAnimation();
-                return baseDialog;
+                return new UpdateDownloadingDialog(context, R.style.UpdateDialog, R.layout.custom_dialog_downloading_layout);
             }
 
             @Override
             public void updateUI(Dialog dialog, int progress, UIData versionBundle) {
-                hpbDownloading.setCurrentProgress(progress);
-                if(progress == 50){
-                    hpbDownloading.setProgressWithAnimation(50);
-                }
-                if(progress == 90){
-                    hpbDownloading.setProgressWithAnimation(90);
-                }
+                ((UpdateDownloadingDialog) dialog).setProgressWithTip(progress);
             }
         };
-        return listener;
     }
 
 
-    private void releaseDownloadingView() {
-        if (hpbDownloading != null) {
-              TourCooLogUtil.e(TAG,TAG+"已经执行释放" );
-            hpbDownloading = null;
-        }
-       Activity activity =  StackUtil.getInstance().getActivity(DownloadingActivity.class);
+    private void releaseDownloading() {
+        Activity activity = StackUtil.getInstance().getActivity(DownloadingActivity.class);
         if (activity != null) {
             activity.finish();
-            TourCooLogUtil.e(TAG,TAG+"DownloadingActivity已经执行释放" );
         }
     }
 
     @Override
     protected void onDestroy() {
-        releaseDownloadingView();
+        releaseDownloading();
         super.onDestroy();
     }
 }

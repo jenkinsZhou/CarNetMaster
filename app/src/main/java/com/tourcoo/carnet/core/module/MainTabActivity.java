@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.v2.callback.CustomDownloadingDialogListener;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
 import com.aries.ui.view.tab.CommonTabLayout;
@@ -29,6 +30,7 @@ import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.core.util.TourCooUtil;
 import com.tourcoo.carnet.core.widget.dialog.update.BaseUpdateDialog;
+import com.tourcoo.carnet.core.widget.dialog.update.UpdateDownloadingDialog;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.account.UserInfoEntity;
 import com.tourcoo.carnet.entity.update.VersionEntity;
@@ -189,7 +191,7 @@ public class MainTabActivity extends BaseMainActivity {
     }
 
 
-    public void updateVersion(String downloadUrl,String title,String content, boolean isForce) {
+    public void updateVersion(String downloadUrl, String title, String content, boolean isForce) {
         try {
             DownloadBuilder builder = AllenVersionChecker.getInstance()
                     .downloadOnly(
@@ -210,6 +212,7 @@ public class MainTabActivity extends BaseMainActivity {
             //如果本地有安装包缓存也会重新下载apk
             builder.setForceRedownload(true);
             //更新界面选择
+            builder.setCustomDownloadingDialogListener(createCustomDownloadingDialog());
             builder.setCustomVersionDialogListener(createCustomDialogOne());
             //自定义下载路径
             builder.setDownloadAPKPath(Environment.getExternalStorageDirectory() + "/CarNetMaster/download/");
@@ -218,8 +221,8 @@ public class MainTabActivity extends BaseMainActivity {
             ToastUtil.showFailed("下载地址有误");
             TourCooLogUtil.e(TAG, TAG + "更新异常:" + e.toString());
         }
-
     }
+
 
     /**
      * 务必用库传回来的context 实例化你的dialog
@@ -264,6 +267,20 @@ public class MainTabActivity extends BaseMainActivity {
             TourCooLogUtil.e(TAG, "错误" + e.toString());
             return null;
         }
+    }
+
+    private CustomDownloadingDialogListener createCustomDownloadingDialog() {
+        return new CustomDownloadingDialogListener() {
+            @Override
+            public Dialog getCustomDownloadingDialog(Context context, int progress, UIData versionBundle) {
+                return new UpdateDownloadingDialog(context, R.style.UpdateDialog, R.layout.custom_dialog_downloading_layout);
+            }
+
+            @Override
+            public void updateUI(Dialog dialog, int progress, UIData versionBundle) {
+                ((UpdateDownloadingDialog) dialog).setProgressWithTip(progress);
+            }
+        };
     }
 
 

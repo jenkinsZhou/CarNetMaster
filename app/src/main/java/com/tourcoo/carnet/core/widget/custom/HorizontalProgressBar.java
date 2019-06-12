@@ -1,13 +1,11 @@
 package com.tourcoo.carnet.core.widget.custom;
 
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathMeasure;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
@@ -19,8 +17,6 @@ import android.view.animation.LinearInterpolator;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.tourcoo.carnet.R;
-import com.tourcoo.carnet.core.util.TourCooUtil;
 
 import java.text.DecimalFormat;
 
@@ -169,7 +165,6 @@ public class HorizontalProgressBar extends View {
         bgPaint = getPaint(progressPaintWidth, bgColor, Paint.Style.STROKE);
         progressPaint = getPaint(progressPaintWidth, progressColor, Paint.Style.STROKE);
         tipPaint = getPaint(tipPaintWidth, progressColor, Paint.Style.FILL);
-
         initTextPaint();
     }
 
@@ -228,6 +223,8 @@ public class HorizontalProgressBar extends View {
             case MeasureSpec.EXACTLY:
                 mWidth = width;
                 break;
+            default:
+                break;
         }
         return mWidth;
     }
@@ -247,6 +244,8 @@ public class HorizontalProgressBar extends View {
                 break;
             case MeasureSpec.EXACTLY:
                 mHeight = height;
+                break;
+            default:
                 break;
         }
         return mHeight;
@@ -337,9 +336,10 @@ public class HorizontalProgressBar extends View {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
                 //进度数值只显示整数，我们自己的需求，可以忽略
-                textString = formatNum(format2Int(value));
+//                textString = formatNum(format2Int(value));
+                textString = (int) mProgress + "";
                 //把当前百分比进度转化成view宽度对应的比例
-                currentProgress = value * mWidth / 100;
+//                currentProgress = value * mWidth / 100;
                 //进度回调方法
                 if (progressListener != null) {
                     progressListener.currentProgressListener(value);
@@ -486,5 +486,25 @@ public class HorizontalProgressBar extends View {
 
     public static int format2Int(double i) {
         return (int) i;
+    }
+
+
+    public HorizontalProgressBar setBgColor(int color) {
+        bgPaint.setColor(color);
+        invalidate();
+        return this;
+    }
+
+    public HorizontalProgressBar setProgressColor(int color) {
+        progressPaint.setColor(color);
+        invalidate();
+        return this;
+    }
+
+
+    public HorizontalProgressBar setTipColor(int color) {
+        tipPaint.setColor(color);
+        invalidate();
+        return this;
     }
 }

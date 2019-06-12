@@ -30,10 +30,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
                 android:layout_marginBottom="@dimen/dp_10" />
-
+            <TextView
+                android:text="正在下载最新版本..."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <Button
-                android:id="@id/versionchecklib_loading_dialog_cancel"
+                android:id="@+id/versionchecklib_loading_dialog_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_35"
                 android:layout_marginTop="@dimen/dp_10"

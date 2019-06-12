@@ -18,4 +18,7 @@ public class BaseUpdateDialog extends Dialog {
         setCanceledOnTouchOutside(false);
     }
 
+    public BaseUpdateDialog(Context context) {
+        super(context);
+    }
 }
