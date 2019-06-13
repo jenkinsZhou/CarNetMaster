@@ -1,4 +1,4 @@
-package com.tourcoo.carnet.obd.report;
+package com.tourcoo.carnet.ui.obd.report;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +12,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.base.activity.BaseActivity;
-import com.tourcoo.carnet.core.module.MineFragment;
 import com.tourcoo.carnet.core.widget.custom.EmiViewPager;
 
 import java.util.ArrayList;
@@ -60,10 +59,9 @@ public class DrivingReportActivity extends BaseActivity implements View.OnClickL
         tvTimeIntervalReport = findViewById(R.id.tvTimeIntervalReport);
         mViewPager.addOnPageChangeListener(this);
         List<Fragment> fragmentList = new ArrayList<>();
-        //故障报修
-        fragmentList.add(MineFragment.newInstance());
-        //上门服务
-        fragmentList.add(MineFragment.newInstance());
+        fragmentList.add(DriveReportPageListFragment.newInstance());
+        fragmentList.add(DailyReportFragment.newInstance());
+        fragmentList.add(DailyReportFragment.newInstance());
         MyPagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentList);
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setAdapter(pagerAdapter);
@@ -157,4 +155,6 @@ public class DrivingReportActivity extends BaseActivity implements View.OnClickL
             return fragmentList.size();
         }
     }
+
+
 }

@@ -80,6 +80,7 @@ public class MainTabActivity extends BaseMainActivity {
 
     @Override
     public void setTabLayout(CommonTabLayout tabLayout) {
+
     }
 
     @Override

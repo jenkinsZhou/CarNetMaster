@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.core.frame.delegate.MainTabDelegate;
 import com.tourcoo.carnet.core.frame.interfaces.IHomeView;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 
 import androidx.viewpager.widget.ViewPager;
 
@@ -50,7 +51,6 @@ public abstract class BaseMainActivity extends BaseActivity implements IHomeView
 
     @Override
     public void onTabReselect(int position) {
-
     }
 
     @Override
@@ -74,4 +74,14 @@ public abstract class BaseMainActivity extends BaseActivity implements IHomeView
         }
         super.onDestroy();
     }
+
+
+    protected void setBackgroundColor(int color){
+        if(mMainTabDelegate != null && mMainTabDelegate.mTabLayout != null ){
+            mMainTabDelegate.mTabLayout.setBackgroundColor(color);
+        }
+    }
+
+
+
 }

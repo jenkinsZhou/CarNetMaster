@@ -299,9 +299,6 @@ public interface ApiService {
     Observable<BaseEntity> requestAppVersionInfo(@QueryMap Map<String, Object> map);
 
 
-
-
-
     /**
      * 修改个人资料
      *
@@ -426,6 +423,7 @@ public interface ApiService {
 
     /**
      * 客服热线
+     *
      * @return
      */
     @GET("custom-service/phone")
@@ -434,8 +432,26 @@ public interface ApiService {
 
     /**
      * 注册条例
+     *
      * @return
      */
     @POST("signLogin/findOrdinance")
     Observable<BaseEntity<String>> findOrdinance();
+
+
+    /**
+     * 行驶日报告接口
+     * @param map
+     * @return
+     */
+    @GET("obd/real-time-trip-report")
+    Observable<BaseEntity> requestDriveReportDaily(@QueryMap Map<String, Object> map);
+
+    /**
+     * 行驶日报告接口分页
+     * @param map
+     * @return
+     */
+    @POST("obd/get-trip-report-page")
+    Observable<BaseEntity> requestDriveTripReportPage(@Body Map<String, Object> map);
 }

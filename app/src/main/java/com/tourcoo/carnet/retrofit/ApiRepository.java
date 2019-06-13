@@ -607,6 +607,7 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 客服热线
+     *
      * @return
      */
     public Observable<String> getServicePhone() {
@@ -615,6 +616,7 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 注册条例
+     *
      * @return
      */
     public Observable<BaseEntity<String>> findOrdinance() {
@@ -624,6 +626,7 @@ public class ApiRepository extends BaseRepository {
 
     /**
      * 获取后台最新app版本信息
+     *
      * @return
      */
     public Observable<BaseEntity> requestAppVersionInfo() {
@@ -632,6 +635,21 @@ public class ApiRepository extends BaseRepository {
         return TourCoolTransformer.switchSchedulersIo(getApiService().requestAppVersionInfo(params).retryWhen(new RetryWhen()));
     }
 
+
+    public Observable<BaseEntity> requestDriveReportDaily(int carId) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("carId", carId + "");
+        return TourCoolTransformer.switchSchedulersIo(getApiService().requestDriveReportDaily(params).retryWhen(new RetryWhen()));
+    }
+
+    public Observable<BaseEntity> requestDriveTripReportPage(int carId, int pageIndex) {
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("carId", carId + "");
+        params.put("pageIndex", pageIndex);
+        //固定每次取10条
+        params.put("pageSize", 10);
+        return TourCoolTransformer.switchSchedulersIo(getApiService().requestDriveTripReportPage(params).retryWhen(new RetryWhen()));
+    }
 
 
 }

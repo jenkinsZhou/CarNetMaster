@@ -54,6 +54,7 @@ import com.tourcoo.carnet.entity.event.CarRefreshEvent;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.tourcoo.carnet.ui.MsgSystemActivity;
 import com.tourcoo.carnet.ui.car.AddCarActivity;
+import com.tourcoo.carnet.ui.obd.bind.BindObdActivity;
 import com.tourcoo.carnet.ui.repair.FastSearchActivity;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 
@@ -66,6 +67,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
@@ -283,7 +285,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
                 startActivityForResult(intent, CODE_REQUEST_MSG);
                 break;
             case R.id.ivBindObd:
-                ToastUtil.show("obd功能暂未开放");
+                TourCooUtil.startActivity(mContext, BindObdActivity.class);
                 break;
             default:
                 break;
@@ -377,8 +379,6 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
     }
 
 
-
-
     @Override
     public void loadData() {
         super.loadData();
@@ -466,8 +466,6 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
     }
 
 
-
-
     /**
      * 初始化车辆品类选择器
      */
@@ -532,6 +530,7 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
             ToastUtil.show("请输入车辆id");
             return;
         }
+         TourCooLogUtil.i(TAG,TAG+"车辆id:"+carInfoEntity.getId() );
         ApiRepository.getInstance().setDefaultCar(carInfoEntity.getId() + "").compose(bindUntilEvent(FragmentEvent.DESTROY)).
                 subscribe(new BaseLoadingObserver<BaseEntity>() {
                     @Override
@@ -652,8 +651,8 @@ public class HomeFragment extends BaseTitleFragment implements View.OnClickListe
     }
 
 
-    private void loadUserCarInfoList( List<CarInfoEntity> carInfoEntityList){
-        if(carInfoEntityList == null){
+    private void loadUserCarInfoList(List<CarInfoEntity> carInfoEntityList) {
+        if (carInfoEntityList == null) {
             return;
         }
         myCarList.clear();

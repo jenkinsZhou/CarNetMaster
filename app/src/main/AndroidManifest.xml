@@ -156,8 +156,9 @@
         <activity android:name=".ui.factory.NearbyRepairFactoryActivity" />
         <activity android:name=".ui.repair.InsuranceCompanyDetailActivity" />
         <activity
-            android:name=".obd.report.DrivingReportActivity"
+            android:name=".ui.obd.report.DrivingReportActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.obd.bind.BindObdActivity" />
 
         <!-- Required SDK 核心功能 -->
         <!-- since 3.0.9 Required SDK 核心功能 -->

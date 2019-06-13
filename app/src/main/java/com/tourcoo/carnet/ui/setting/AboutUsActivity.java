@@ -38,7 +38,7 @@ import com.tourcoo.carnet.core.widget.dialog.update.BaseUpdateDialog;
 import com.tourcoo.carnet.core.widget.dialog.update.UpdateDownloadingDialog;
 import com.tourcoo.carnet.entity.BaseEntity;
 import com.tourcoo.carnet.entity.update.VersionEntity;
-import com.tourcoo.carnet.obd.report.DrivingReportActivity;
+import com.tourcoo.carnet.ui.obd.report.DrivingReportActivity;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
