@@ -2,15 +2,22 @@ package com.tourcoo.carnet.ui.obd.report;
 
 import android.os.Bundle;
 
+import com.alibaba.fastjson.JSON;
 import com.tourcoo.carnet.R;
 import com.tourcoo.carnet.adapter.obd.DriveReportInfoAdapter;
+import com.tourcoo.carnet.core.frame.UiConfigManager;
 import com.tourcoo.carnet.core.frame.base.fragment.BaseRefreshFragment;
 import com.tourcoo.carnet.core.frame.retrofit.BaseLoadingObserver;
+import com.tourcoo.carnet.core.frame.retrofit.BaseObserver;
+import com.tourcoo.carnet.core.log.TourCooLogUtil;
 import com.tourcoo.carnet.core.util.ToastUtil;
 import com.tourcoo.carnet.entity.BaseEntity;
+import com.tourcoo.carnet.entity.obd.DriveReportEntity;
 import com.tourcoo.carnet.entity.obd.DriveReportInfo;
 import com.tourcoo.carnet.retrofit.ApiRepository;
 import com.trello.rxlifecycle3.android.FragmentEvent;
+
+import java.util.ArrayList;
 
 import static com.tourcoo.carnet.core.common.RequestConfig.CODE_REQUEST_SUCCESS;
 
@@ -38,7 +45,7 @@ public class DriveReportPageListFragment extends BaseRefreshFragment<DriveReport
 
     @Override
     public DriveReportInfoAdapter getAdapter() {
-        mAdapter = new DriveReportInfoAdapter();
+        mAdapter = new DriveReportInfoAdapter(mContext);
         return mAdapter;
     }
 
@@ -57,15 +64,22 @@ public class DriveReportPageListFragment extends BaseRefreshFragment<DriveReport
             page = 1;
         }
         ApiRepository.getInstance().requestDriveTripReportPage(carId, page).compose(bindUntilEvent(FragmentEvent.DESTROY)).
-                subscribe(new BaseLoadingObserver<BaseEntity>() {
+                subscribe(new BaseObserver<BaseEntity>() {
                     @Override
                     public void onRequestNext(BaseEntity entity) {
                         if (entity != null) {
                             if (entity.code == CODE_REQUEST_SUCCESS) {
                                 if (entity.data != null) {
+                                    DriveReportEntity driveReportEntity = parseDriveReportEntity(entity.data);
+                                    if (driveReportEntity != null) {
+                                        UiConfigManager.getInstance().getHttpRequestControl().httpRequestSuccess(getIHttpRequestControl(), driveReportEntity.getElements() == null ? new ArrayList<>() : driveReportEntity.getElements(), null);
+                                    }else {
+                                        showErrorLayout();
+                                    }
                                 }
                             } else {
                                 ToastUtil.showFailed(entity.message);
+                                showErrorLayout();
                             }
                         }
                     }
@@ -80,5 +94,14 @@ public class DriveReportPageListFragment extends BaseRefreshFragment<DriveReport
         return fragment;
     }
 
+
+    private DriveReportEntity parseDriveReportEntity(Object object) {
+        try {
+            return JSON.parseObject(JSON.toJSONString(object), DriveReportEntity.class);
+        } catch (Exception e) {
+            TourCooLogUtil.e(TAG, e.toString());
+            return null;
+        }
+    }
 
 }

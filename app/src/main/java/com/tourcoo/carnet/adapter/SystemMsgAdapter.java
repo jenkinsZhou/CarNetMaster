@@ -23,7 +23,7 @@ public class SystemMsgAdapter extends BaseQuickAdapter<MessageInfo.MessageBean, 
 
     @Override
     protected void convert(BaseViewHolder helper, MessageInfo.MessageBean item) {
-        helper.setText(R.id.tvMsgTime, DateUtil.getTimeStringChina(item.getCreateTime()));
+        helper.setText(R.id.tvMsgTime, DateUtil.getTimeStringChinaToDay(item.getCreateTime()));
         helper.setText(R.id.tvMsgContent, item.getMessage());
         if (item.getReadStatus() == 1) {
             helper.setVisible(R.id.tvRedDot, false);

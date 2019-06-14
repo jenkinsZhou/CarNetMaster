@@ -16,6 +16,7 @@ import com.tourcoo.carnet.core.frame.manager.WrapContentLinearLayoutManager;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import me.bakumon.statuslayoutmanager.library.StatusLayoutManager;
 
 /**
@@ -167,4 +168,23 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment implements IRe
         super.onDestroy();
     }
 
+
+    protected void showErrorLayout() {
+        if (mStatusManager != null && mStatusManager.getErrorLayout() != null) {
+            mStatusManager.showErrorLayout();
+        }
+    }
+
+    protected void showEmptyLayout() {
+        if (mStatusManager != null && mStatusManager.getEmptyLayout() != null) {
+            mStatusManager.showEmptyLayout();
+        }
+    }
+
+
+    protected void showLoadingLayout() {
+        if (mStatusManager != null && mStatusManager.getLoadingLayout() != null) {
+            mStatusManager.showLoadingLayout();
+        }
+    }
 }

@@ -23,7 +23,9 @@ public class DateUtil {
     private final static String PATTERN_NO_SPLIT = "yyyyMMddHHmmss";
     private final static String PATTERN_DATE = "yyyy-MM-dd";
 
-    private final static String PATTERN_DATE_CHINA = "yyyy年MM月dd日";
+    private final static String PATTERN_DATE_CHINA_TO_DAY = "yyyy年MM月dd日";
+
+    private final static String PATTERN_DATE_CHINA_TO_MINUTE = "yyyy年MM月dd日 HH:mm";
 
     private final static int TIME_LENGTH = 14;
 
@@ -49,13 +51,19 @@ public class DateUtil {
         }
     }
 
-    public static String getTimeStringChina(String timeMillis) {
-        final FastDateFormat df = FastDateFormat.getInstance(PATTERN_DATE_CHINA);
+    /**
+     * 精确到日
+     *
+     * @param timeMillis
+     * @return
+     */
+    public static String getTimeStringChinaToDay(String timeMillis) {
+        final FastDateFormat df = FastDateFormat.getInstance(PATTERN_DATE_CHINA_TO_DAY);
         if (StringUtils.isNotEmpty(timeMillis)) {
             try {
                 long time = Long.parseLong(timeMillis);
                 return df.format(new Date(time));
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return "";
             }
         } else {
@@ -63,6 +71,18 @@ public class DateUtil {
         }
     }
 
+    public static String getTimeStringChinaToMinute(String timeMillis) {
+        if (TextUtils.isEmpty(timeMillis)) {
+            return "";
+        }
+        final FastDateFormat df = FastDateFormat.getInstance(PATTERN_DATE_CHINA_TO_MINUTE);
+        try {
+            long time = Long.parseLong(timeMillis);
+            return df.format(new Date(time));
+        } catch (NumberFormatException e) {
+            return "";
+        }
+    }
 
 
     /**
@@ -102,11 +122,11 @@ public class DateUtil {
 
     public static String getDateString(Date date) {
         final FastDateFormat df = FastDateFormat.getInstance(PATTERN_DATE);
-            try {
-                return df.format(date);
-            } catch (NumberFormatException e) {
-                return "";
-            }
+        try {
+            return df.format(date);
+        } catch (NumberFormatException e) {
+            return "";
+        }
     }
 
     public static String getTimeChineseCharacter(String timeValue) {
@@ -178,7 +198,7 @@ public class DateUtil {
     public static String stampToDateChineseCharacter(String s) {
         String res = "";
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_DATE_CHINA);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_DATE_CHINA_TO_DAY);
             long lt = Long.valueOf(dateToStamp(s));
             Date date = new Date(lt);
             res = simpleDateFormat.format(date);

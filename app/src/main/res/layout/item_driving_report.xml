@@ -1,19 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp_5"
+    android:layout_marginBottom="@dimen/dp_5"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:src="@mipmap/ic_return"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/whiteCommon"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingBottom="@dimen/dp_5">
+
+            <ImageView
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/icon_order_number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:text="行程报告"
+                android:textColor="#171717"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvUpdateTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="更新于2019年01月16日 13:29"
+                android:textColor="#B6B6B6" />
+        </LinearLayout>
+
         <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:id="@+id/tvDriveReportContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_5"
+            android:text="暂无数据"
+            android:textColor="#666666"
+            android:textSize="@dimen/sp_12" />
     </LinearLayout>
 </LinearLayout>
