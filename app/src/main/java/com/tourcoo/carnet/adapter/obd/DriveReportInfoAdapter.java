@@ -114,7 +114,7 @@ public class DriveReportInfoAdapter extends BaseQuickAdapter<DriveReportInfo, Ba
                 }
             });
 // 第一个参数表示一个Latlng(经纬度)，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
-            RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 50, GeocodeSearch.AMAP);
+            RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 100, GeocodeSearch.AMAP);
             search.getFromLocationAsyn(query);
         } catch (Exception e) {
             e.printStackTrace();
